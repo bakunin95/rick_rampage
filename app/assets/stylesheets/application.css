@@ -11,3 +11,24 @@
  *= require_self
  *= require_tree .
  */
+
+/* used in game.html.erb */
+#stats {
+	clear: right;
+}
+
+/* used in game.html.erb */
+.score_th {
+	text-align: center;
+}
+
+/* used in game.html.erb */
+.score_div {
+	float: right;
+	display: inline-block;
+}
+
+/* used in game.html.erb */
+.score_table {
+	border: 1px solid black;
+}
