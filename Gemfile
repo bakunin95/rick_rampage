@@ -43,3 +43,22 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+# Authentication
+gem 'devise'
+gem 'omniauth'
+gem 'omniauth-facebook'
+
+# Environment private vars
+gem 'dotenv'
+
+group :development do
+  gem 'pry-rails'
+end
+
+# user friendly id & permalinks
+gem 'friendly_id'
+
+# for testing
+gem 'rspec-rails'
+gem 'capybara'
