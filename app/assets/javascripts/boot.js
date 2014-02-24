@@ -1,4 +1,4 @@
-Rick = Rick || {};
+var Rick = Rick || {};
 
 Rick.Boot = function (game) {
 
