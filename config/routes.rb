@@ -1,4 +1,5 @@
 RickRampage::Application.routes.draw do
+  devise_for :users
   get "statics/aboutus"
   get "statics/game"
 
