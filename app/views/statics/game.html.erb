@@ -1,12 +1,8 @@
-<% content_for(:scripts) do
-  javascript_include_tag :phaser
-  javascript_include_tag :game
-end %>
+<%= content_for(:scripts) do %>
+  <%= javascript_include_tag :phaser %>
+  <%= javascript_include_tag :game %>
+<% end %>
 <h1>Rick Rampage</h1>
-
-<canvas id="gameCanvas" style="border: 1px solid black;">
- 
-</canvas>
 
 
 <div class="score_div">
