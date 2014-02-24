@@ -1,4 +1,8 @@
 RickRampage::Application.routes.draw do
+  get "statics/aboutus"
+  get "statics/game"
+
+  root 'statics#game'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
