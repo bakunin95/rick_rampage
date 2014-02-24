@@ -29,8 +29,8 @@ function buildLedge() {
 	// platforms = game.add.group()
 
 		
-	generatedLedge = platforms.create(getRandom(300, 800), 220, 'ground');
-	generatedLedge.body.velocity.x = -80;
+	generatedLedge = platforms.create(getRandom(800, 1100), getRandom(100, 400), 'ground');
+	generatedLedge.body.velocity.x = -120;
   	generatedLedge.body.immovable = true;
 
 }
@@ -47,27 +47,27 @@ function create(){
     	
     	// here are preset ledges
     	var ledge = platforms.create(50, 200, 'ground');
-    	ledge.body.velocity.x = -80;
+    	ledge.body.velocity.x = -120;
     	ledge.body.immovable = true;
 
     	ledge = platforms.create(350, 300, 'ground');
-    	ledge.body.velocity.x = -80;
+    	ledge.body.velocity.x = -120;
     	ledge.body.immovable = true;
 
     	ledge = platforms.create(700, 300, 'ground');
-    	ledge.body.velocity.x = -80;
+    	ledge.body.velocity.x = -120;
     	ledge.body.immovable = true;
 
 
 		// here are the generated ledges
-		setInterval(buildLedge, 3000);
+		setInterval(buildLedge, 2000);
 		
 
 
     player = game.add.sprite(100, 0, 'dude');
 
     // player.body.bounce.y = 0.1;
-    player.body.gravity.y = 8;
+    player.body.gravity.y = 10;
     player.body.collideWorldBounds = false;
 
     //  Our two animations, walking left and right.
@@ -116,7 +116,10 @@ function update(){
 
     // Allow player to jump if they are touching the ground
     if (cursor.up.isDown && player.body.touching.down){
-        player.body.velocity.y = -300
+        player.body.velocity.y = -400
+    }
+    else if (cursor.up.isDown && !(player.body.touching.down)){
+    	player.body.velocity.y = -200
     }
 
     if (fireButton.isDown) {
