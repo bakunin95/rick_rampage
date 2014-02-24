@@ -104,7 +104,9 @@
 				<td class="score_th">Current Score</td>
 		  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
 				<!--<td class="score_th"><%= @score %></td>-->
-				<td class="score_th"><%= %>JQuery Input</td>
+
+				<!-- Modify the CSS attribute to 'display: inline-block;' when a score exists (i.e. a user finishes the game and AJAX sends the score value), otherwise no current score displayed -->
+				<td class="score_th" id="score_ajax"><%= %>JQuery Input</td> 
 
 		  </tr>
 	      

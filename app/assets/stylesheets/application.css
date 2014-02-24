@@ -13,6 +13,13 @@
  */
 
 /* used in game.html.erb */
+#score_ajax {
+
+ display: none; /* default is not to display score unless a score exists */
+
+}
+
+/* used in game.html.erb */
 #stats {
 	clear: right;
 }
