@@ -19,6 +19,8 @@ var cursors;
 var stars;
 var fireButton;
 var generatedLedge;
+var doubleJump = false;
+var grounded = player.body.touching.down;
 
 function getRandom(min, max) {
 	return Math.random() * (max - min) + min;
@@ -46,7 +48,8 @@ function create(){
     	platforms = game.add.group()
     	
     	// here are preset ledges
-    	var ledge = platforms.create(50, 200, 'ground');
+    	var ledge = platforms.create(50, 300, 'ground');
+    	ledge.scale.setTo(2,1)
     	ledge.body.velocity.x = -120;
     	ledge.body.immovable = true;
 
@@ -57,6 +60,7 @@ function create(){
     	ledge = platforms.create(700, 300, 'ground');
     	ledge.body.velocity.x = -120;
     	ledge.body.immovable = true;
+
 
 
 		// here are the generated ledges
@@ -114,16 +118,20 @@ function update(){
     //     player.frame = 4;
     // }
 
+    
+
     // Allow player to jump if they are touching the ground
+    // if (cursor.up.isDown && !grounded && doubleJump === true){
+    // 	player.body.velocity.y += -200
+    // 	doubleJump = false;
+    // }
     if (cursor.up.isDown && player.body.touching.down){
         player.body.velocity.y = -400
-    }
-    else if (cursor.up.isDown && !(player.body.touching.down)){
-    	player.body.velocity.y = -200
+        doubleJump = true;
     }
 
     if (fireButton.isDown) {
-    	star = stars.create((player.x + 40), player.y, 'star');
+    	var star = stars.create((player.x + 40), player.y, 'star');
         star.body.velocity.x = 800;
     }
 
