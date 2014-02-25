@@ -8,6 +8,21 @@
 
 <h1>Rick Rampage</h1>
 
+<div id="gameContainer"></div>
+
+<script>
+  $(document).ready(function(){
+    var game = new Phaser.Game(800, 500, Phaser.AUTO, 'gameContainer');
+
+    // game.state.add('Boot', Rick.Boot);
+    // game.state.add('Preloader', Rick.Preloader);
+    // game.state.add('MainMenu', Rick.MainMenu);
+    game.state.add('Game', Rick.Game);
+
+    //game.state.start('Boot');
+    game.state.start('Game');
+  });
+</script>
 
 <div id="gameContainer"></div>
 
