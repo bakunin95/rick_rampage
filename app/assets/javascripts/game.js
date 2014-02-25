@@ -208,6 +208,13 @@ Rick.Game.prototype = {
   },
 
   createPlatform: function() {
+    this.platforms.forEachAlive(function(platform){
+      if (platform.offset.x < 0) {
+        debugger;
+        platform.outOfBoundsKill = true;
+      }
+    });
+
     if (this.game.time.now > this.platformsTime) {
       this.platform = this.game.add.sprite(0, 0, 'ground');
 
