@@ -50,15 +50,15 @@ Rick.Game.prototype = {
     this.platforms = this.game.add.group()
 
     // here are preset ledges
-    var ledge = platforms.create(50, 200, 'ground');
+    var ledge = this.platforms.create(50, 200, 'ground');
     ledge.body.velocity.x = -120;
     ledge.body.immovable = true;
 
-    ledge = platforms.create(350, 300, 'ground');
+    ledge = this.platforms.create(350, 300, 'ground');
     ledge.body.velocity.x = -120;
     ledge.body.immovable = true;
 
-    ledge = platforms.create(700, 300, 'ground');
+    ledge = this.platforms.create(700, 300, 'ground');
     ledge.body.velocity.x = -120;
     ledge.body.immovable = true;
 
@@ -73,29 +73,31 @@ Rick.Game.prototype = {
     this.player.body.gravity.y = 6;
     this.player.body.collideWorldBounds = false;
 
+    this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
+    this.player.animations.add('jump', [8], 10, false);
+
     // Adds Keyboard controls
     this.keybord = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-    stars = game.add.group();
-
+    this.stars = this.game.add.group();
 
     // Add Enemies
     setInterval( this.createEnemy.bind(this), 3000 );
 
-    // Make player not fall through platforms
-    this.game.physics.collide(this.player, this.platforms);
-
   },
 
   update: function () {
+
+    // Make player not fall through platforms
+    this.game.physics.collide(this.player, this.platforms);
 
     if (this.player.body.touching.down)
       this.player.animations.play('right');
 
     if (this.keybord.up.isDown && this.player.body.touching.down){
       this.player.animations.play('jump');
-      this.player.body.velocity.y = -200
+      this.player.body.velocity.y = -400
     }
 
     if (this.enemy) {
@@ -104,8 +106,8 @@ Rick.Game.prototype = {
 
 
     if (this.fireButton.isDown) {
-    	this.star = stars.create((this.player.x + 40), this.player.y, 'star');
-      this.star.body.velocity.x = 800;
+    	var star = this.stars.create((this.player.x + 40), this.player.y, 'star');
+      star.body.velocity.x = 800;
     }
 
     //Kill player if they touch the ground
