@@ -49,7 +49,7 @@ Rick.Game = function (game) {
 Rick.Game.prototype = {
 
   preload: function () {
-    this.game.load.image('ground', 'assets/platform.png');
+    this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
