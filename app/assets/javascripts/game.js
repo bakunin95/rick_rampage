@@ -25,6 +25,9 @@ Rick.Game = function (game) {
   this.stars;
   this.fireButton;
   this.generatedLedge;
+  this.jumpcount = 0;
+  this.jumpTimeEnd;
+  this.jumpTimeBegin;
 
   // You can use any of these from any function within this State.
   // But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -35,7 +38,7 @@ Rick.Game.prototype = {
 
   preload: function () {
     this.game.load.image('sky', 'assets/sky.png');
-    this.game.load.image('ground', 'assets/platform.png');
+    this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('star', 'assets/star.png');
     this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
@@ -51,27 +54,31 @@ Rick.Game.prototype = {
 
     // here are preset ledges
     var ledge = this.platforms.create(50, 200, 'ground');
-    ledge.body.velocity.x = -120;
+    // ledge.scale.setTo(4,1);
+    ledge.body.velocity.x = -190;
     ledge.body.immovable = true;
 
-    ledge = this.platforms.create(350, 300, 'ground');
-    ledge.body.velocity.x = -120;
+    ledge = this.platforms.create(350, 400, 'ground');
+    ledge.scale.setTo(3,1);
+    ledge.body.velocity.x = -190;
     ledge.body.immovable = true;
 
-    ledge = this.platforms.create(700, 300, 'ground');
-    ledge.body.velocity.x = -120;
+    ledge = this.platforms.create(700, 400, 'ground');
+    ledge.scale.setTo(2.5,1);
+    ledge.body.velocity.x = -190;
     ledge.body.immovable = true;
 
     // here are the generated ledges
-    setInterval(this.buildLedge.bind(this), 2000);
+    setInterval(this.buildLedge.bind(this), 3000);
 
 
     // this.player = this.game.add.sprite(32, 0, 'dude');
-    this.player = this.game.add.sprite(32, 0, 'rick');
+    this.player = this.game.add.sprite(60, 0, 'rick');
 
     // this.player.body.bounce.y = 0.3;
-    this.player.body.gravity.y = 6;
-    this.player.body.collideWorldBounds = false;
+    this.player.body.gravity.y = 10;
+    // set collideWorldBounds to left only, or kill player on touching bottom
+    this.player.body.collideWorldBounds = true;
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
@@ -92,13 +99,35 @@ Rick.Game.prototype = {
     // Make player not fall through platforms
     this.game.physics.collide(this.player, this.platforms);
 
-    if (this.player.body.touching.down)
-      this.player.animations.play('right');
+    if (this.player.body.touching.down) {
+    	this.player.animations.play('right');
+    }
+      
+    // var _this = this; 
+    // this.game.input.keyboard.addCallbacks(this.keybord.up, function() {
+    // 	_this.player.animations.play('jump');
+   	// 	_this.player.body.velocity.y = -350;
+    // 	jumpcount++
+    // } )
 
     if (this.keybord.up.isDown && this.player.body.touching.down){
+      this.jumpcount = 0;	
       this.player.animations.play('jump');
-      this.player.body.velocity.y = -400
+      this.player.body.velocity.y = -350;
+      this.jumpcount++
+      this.jumpTimeBegin = this.game.time.now + 300;
+      this.jumpTimeEnd = this.game.time.now + 800;
+      console.log('BIGJump ' + 'jumpcount - ' + this.jumpcount);
+    } else if (this.keybord.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
+    	this.player.animations.play('jump');
+      	this.player.body.velocity.y = -400;
+      	console.log('smallJump');
+      	this.jumpcount++
     }
+
+    // if (this.player.x !== 60 ) {
+    // 	this.player.x = 60;
+    // }
 
     if (this.enemy) {
       this.animateEnemy();
@@ -106,7 +135,7 @@ Rick.Game.prototype = {
 
 
     if (this.fireButton.isDown) {
-    var star = this.stars.create((this.player.x + 40), this.player.y, 'star');
+    var star = this.stars.create((this.player.x + 85), this.player.y + 45, 'star');
       star.body.velocity.x = 800;
     }
 
@@ -141,8 +170,9 @@ Rick.Game.prototype = {
   },
 
   buildLedge: function () {
-    this.generatedLedge = this.platforms.create(this.getRandom(800, 1100), this.getRandom(100, 400), 'ground');
-    this.generatedLedge.body.velocity.x = -120;
+    this.generatedLedge = this.platforms.create(this.getRandom(800, 1000), this.getRandom(250, 450), 'ground');
+    this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
+    this.generatedLedge.body.velocity.x = -190;
     this.generatedLedge.body.immovable = true;
   }
 
