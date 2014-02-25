@@ -166,14 +166,14 @@ http://apidock.com/rails/ActionView/Helpers/FormHelper/form_for
 	      	<!-- USER ID'S -->
 	      	<% if !score.user_id.nil? %>
 	        	<td class="score_th"><%= score.user_id %></td>	
-			<% elsif %>
+			<% else %>
 		        <td></td>
 			<% end %>
 
 			<!-- USER SCORE DETAILS -->
 		    <% if !score.points.nil? %> 
 		        <td class="score_th"><%= score.points %></td>
-		    <% elsif %>
+		    <% else %>
 		        <td></td>
 			<% end %>
 
