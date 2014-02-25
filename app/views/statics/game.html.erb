@@ -24,58 +24,10 @@
   });
 </script>
 
-<div class="score_div">
-
-	<h2>Top Scores:</h2>
-
-	<table style="border: 1px solid black; ">
-
-	  <thead>
-	    <tr>
-	      <th class="score_th">Rank</th>
-	      <th class="score_th">Player</th>
-		  <th class="score_th">Score</th>
-	    </tr>
-	  </thead>
-
-	  <tbody>
-	  	<% i = 0 %>
-	  	<% @scores.each do |score| %>
-	  	  <% i += 1 %>
-	      <tr style="background-color:<%= cycle("#ffeeff", "#cceeff", name: "colors") -%>">
-
-			<!-- RANK -->
-			<td class="score_th"><%= i %></td>	
-
-	      	<!-- USER ID'S -->
-	      	<% if !score.user_id.nil? %>
-	        	<td class="score_th"><%= score.user_id %></td>	
-			<% elsif %>
-		        <td></td>
-			<% end %>
-
-			<!-- USER SCORE DETAILS -->
-		    <% if !score.points.nil? %> 
-		        <td style="text-align:center"><%= score.points %></td>
-		    <% elsif %>
-		        <td></td>
-			<% end %>
-
-		  </tr>
-		<% end %>
-
-		<% reset_cycle("colors") %>
-
-	  </tbody>
-
-	</table>
-
-</div>
-
 <div class="score_div" id="stats">
 
 
-	<h2>User Statistics:</h2>
+	<h2>Player Stats:</h2>
 
 	<table class="score_table">
 
@@ -88,17 +40,16 @@
 
 	  <tbody>
 
-	      <tr>
+	    <!--  <tr>
 
 		      	<td class="score_th">Player ID</td>
-		      		<!-- USER ID -->
-			      	<% if !current_user.id.nil? %>
+			      	<%# if !current_user.id.nil? %>
 			        	<td class="score_th"><%= current_user.id %></td>	
-					<% elsif %>
+					<%# elsif %>
 				        <td></td>
-					<% end %>
+					<%# end %>
 
-		  </tr>
+		  </tr> -->
 
 		  <tr>
 
@@ -116,13 +67,27 @@
 
 		  <tr>
 
-				<td class="score_th">Current Score</td>
+				<td class="score_th">Latest Score</td>
 		  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
 				<!--<td class="score_th"><%= @score %></td>-->
-				<td class="score_th"><%= %>JQuery Input</td>
+
+				<!-- Modify the CSS attribute to 'display: inline-block;' when a score exists (i.e. a user finishes the game and AJAX sends the score value), otherwise no current score displayed -->
+				<td class="score_th" id="latest_score">
+
+				</td> 
 
 		  </tr>
-	      
+
+		  <tr>
+
+				<td class="score_th">History of Scores</td>
+
+				<td class="score_th" id="all_scores">
+
+				</td> 
+
+		  </tr>
+
 		  <tr>
 
 				<td class="score_th">Time Left</td>
@@ -138,16 +103,145 @@
 
 		  </tr>
 
-		  <tr>
+		<!--  <tr>
 
-				<td class="score_th">Game Progress (%)</td>
-		  		<!-- GAME PROGRESS --> 	
-				<td class="score_th"><%= number_to_percentage(50, precision: 1) %></td>
+				<td class="score_th">Game Progress (%)</td> 	
+				<td class="score_th"><%#= number_to_percentage(50, precision: 1) %></td>
 
-		  </tr>
+		  </tr> -->
 
 	  </tbody>
 
 	</table>
 
 </div>
+
+
+<!--<div class="score_div">
+
+	<h2>Latest Score Save:</h2>
+
+	<%#= form_for @score, url: scores_path(remote: true), html: { method: :post, action: "create" } do |f| %>
+
+		Enter Latest Score:
+		  	<%#= f.text_field :score %>
+			<%#= f.submit %>
+	<%# end %>
+
+</div> -->
+
+<!-- 
+	RELEVANT LINKS
+http://stackoverflow.com/questions/18322637/rails-4-link-to-submit-form-using-ajax-how-to-imitate-post-request
+http://apidock.com/rails/ActionView/Helpers/FormHelper/form_for
+-->
+
+<!-- # remote:true triggers AJAX functionality -->
+
+
+
+<div class="score_div" id="topscores">
+
+	<h2>Top Scores:</h2>
+
+	<table class="score_table">
+
+	  <thead>
+	    <tr>
+	      <th class="score_th">Rank</th>
+	      <th class="score_th">Player</th>
+		  <th class="score_th">Score</th>
+	    </tr>
+	  </thead>
+
+	  <tbody>
+	  	<% i = 0 %>
+	  	<% @scores.each do |score| %>
+	  	  <% i += 1 %>
+	      <tr style="background-color:<%= cycle("#ffeeff", "#cceeff", name: "colors") -%>;">
+
+			<!-- RANK -->
+			<td class="score_th"><%= i %></td>	
+
+	      	<!-- USER ID'S -->
+	      	<% if !score.user_id.nil? %>
+	        	<td class="score_th"><%= score.user_id %></td>	
+			<% else %>
+		        <td></td>
+			<% end %>
+
+			<!-- USER SCORE DETAILS -->
+		    <% if !score.points.nil? %> 
+		        <td class="score_th"><%= score.points %></td>
+		    <% else %>
+		        <td></td>
+			<% end %>
+
+		  </tr>
+		<% end %>
+
+		<% reset_cycle("colors") %>
+
+	  </tbody>
+
+	</table>
+
+</div>
+
+
+<!--<script id="score-template" type="text/template">
+	<li><%#= latest_score %></li>
+</script>-->
+
+<script>
+
+	var url = '';
+	var urlPrefix = 'http://localhost:3000/scores/';
+	var urlPostfix = '.json?remote=true';
+
+	// adds current users latest score to the play statistics panel
+	function addLatestScores(data) {
+		var latestScore = document.getElementById('latest_score'); 
+		latestScore.innerHTML = data;
+	}
+
+
+	// var fetchLatestScores = function() { 
+
+	// create fn storing variable and within fn create function to getJSON
+
+
+
+		// 	var latestScoreTemplate = $('#score-template').html();
+
+		// 	// console.log(data.Search[0].score);
+
+		// 	$(data.Search).each(function() { 
+		// 		$('#latest_scores').append(_.template(latestScoreTemplate, { 
+		// 			latest_score: this.score
+
+		// 		}));
+		// 	});
+
+		// }
+
+		// var res = $.ajax({ // save AJAX response to a variable
+		// 	url: urlPrefix + $('form').find('input').val() + urlPostfix,
+		// 	dataType: 'json',
+		// 	type: 'get'
+		// });
+
+		// res.done(function(data) {
+		// 	console.log(data);
+		//   	addLatestScores(data);
+		// })
+
+	// }
+
+	// $('form').on('submit', function(event) { // prevent default action of form being submitted
+	// 	event.preventDefault();
+	//  	console.log('submit form');
+	//  	fetchLatestScores();
+	// })
+
+</script>
