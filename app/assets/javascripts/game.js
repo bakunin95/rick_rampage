@@ -33,7 +33,12 @@ Rick.Game = function (game) {
 
   // enemies
   this.enemies;
-  this.enemiesTime = 0;
+  this.enemiesTime = 0; // used to create enemies in a time interval
+  this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
+
+  // levels
+  this.levelTime;
+  this.changeLevelTime = 5000; // interval
 
   // explosion
   this.explosions;
@@ -103,17 +108,21 @@ Rick.Game.prototype = {
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     // Add Enemies
-    this.enemiesTime = this.game.time.now + 5000;
+    this.enemiesTime = this.game.time.now + this.nextEnemyTime;
     this.enemies = this.game.add.group();
 
     // An explosion pool
     this.explosions = this.game.add.group();
     this.explosions.createMultiple(30, 'explosion');
     this.explosions.forEach(this.setUpExplosions, this);
+
+    // Level
+    this.levelTime = this.game.time.now + this.changeLevelTime;
   },
 
   update: function () {
 
+    this.setLevel();
     this.createEnemy();
 
     // collisions
@@ -178,7 +187,7 @@ Rick.Game.prototype = {
       if (this.enemy) {
         // And fire it
         this.enemy.body.velocity.x = -200;
-        this.enemiesTime = this.game.time.now + 3000;
+        this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
     }
   },
@@ -208,6 +217,17 @@ Rick.Game.prototype = {
       }
     }
 
+  },
+
+  setLevel: function() {
+    // increase difficult
+    if (this.game.time.now > this.levelTime) {
+      if (this.nextEnemyTime > 500) {
+        this.nextEnemyTime -= 500;
+      }
+
+      this.levelTime += this.changeLevelTime;
+    }
   }
 
 };
