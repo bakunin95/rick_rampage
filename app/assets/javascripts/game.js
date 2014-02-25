@@ -1,3 +1,5 @@
+'use strict';
+
 Rick.Game = function (game) {
 
   // When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
@@ -20,7 +22,11 @@ Rick.Game = function (game) {
 
   this.background;
 
+  // platforms
   this.platforms;
+  this.platformVelocity = -190;
+  this.platformsTime = 0;
+
   this.player;
   this.keybord;
   this.fireButton;
@@ -75,26 +81,16 @@ Rick.Game.prototype = {
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     this.platforms = this.game.add.group();
+    this.platforms.createMultiple(30, 'ground');
+    this.platforms.setAll('anchor.x', 0);
+    this.platforms.setAll('anchor.y', 0);
+    this.platforms.setAll('outOfBoundsKill', true);
 
-    // here are preset ledges
-    var ledge = this.platforms.create(50, 200, 'ground');
-    // ledge.scale.setTo(4,1);
-    ledge.body.velocity.x = -190;
-    ledge.body.immovable = true;
-
-    ledge = this.platforms.create(350, 400, 'ground');
-    ledge.scale.setTo(3,1);
-    ledge.body.velocity.x = -190;
-    ledge.body.immovable = true;
-
-    ledge = this.platforms.create(700, 400, 'ground');
-    ledge.scale.setTo(2.5,1);
-    ledge.body.velocity.x = -190;
-    ledge.body.immovable = true;
-
-    // here are the generated ledges
-    setInterval(this.buildLedge.bind(this), 3000);
-
+    this.platform = this.platforms.getFirstExists(false);
+    this.platform.reset(200, 400);
+    this.platform.scale.setTo(4,2);
+    this.platform.body.velocity.x = this.platformVelocity;
+    this.platform.body.immovable = true;
 
     // Create player
     this.player = this.game.add.sprite(32, 0, 'rick');
@@ -126,6 +122,8 @@ Rick.Game.prototype = {
 
   update: function () {
 
+    this.createPlatform();
+
     this.createEnemy();
 
     // collisions
@@ -150,11 +148,11 @@ Rick.Game.prototype = {
       this.jumpcount = 0;
       this.player.animations.play('jump');
       this.player.body.velocity.y = -350;
-      this.jumpcount++
+      this.jumpcount++;
       this.jumpTimeBegin = this.game.time.now + 300;
     } else if (this.keybord.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
       this.player.body.velocity.y = -400;
-      this.jumpcount++
+      this.jumpcount++;
     }
   },
 
@@ -201,8 +199,25 @@ Rick.Game.prototype = {
     }
   },
 
+  createPlatform: function() {
+    if (this.game.time.now > this.platformsTime) {
+      this.platform = this.platforms.getFirstExists(false);
+
+      if (this.platform) {
+        //  And fire it
+        var xPos = [400, 450, 500];
+        var yPos = [400, 500];
+        this.platform.scale.setTo(2,2);
+        this.platform.reset(xPos[this.getRandom(0, 2)], yPos[this.getRandom(0, 1)]);
+        this.platform.body.velocity.x = this.platformVelocity;
+        this.platform.body.immovable = true;
+        this.platformsTime = this.game.time.now + 1000;
+      }
+    }
+  },
+
   getRandom: function (min, max) {
-    return Math.random() * (max - min) + min;
+    return Math.round(Math.random() * (max - min) + min);
   },
 
   buildLedge: function () {
