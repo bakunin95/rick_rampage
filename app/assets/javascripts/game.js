@@ -96,7 +96,8 @@ Rick.Game.prototype = {
 
 
     // Create player
-    this.player = this.game.add.sprite(32, 0, 'rick');
+    this.player = this.game.add.sprite(60, 0, 'rick');
+    this.player.body.setSize(60, 90, 0, 0);
     this.player.anchor.setTo(0.5, 0.5);
 
     // this.player.body.bounce.y = 0.3;
@@ -140,9 +141,10 @@ Rick.Game.prototype = {
     if (this.keybord.up.isDown && this.player.body.touching.down){
       this.jumpcount = 0;	
       this.player.animations.play('jump');
+      // this sets the bounding box (collision area) to be smaller, for more precise collision
       this.player.body.velocity.y = -350;
       this.jumpcount++
-      this.jumpTimeBegin = this.game.time.now + 100;
+      this.jumpTimeBegin = this.game.time.now + 300;
       this.jumpTimeEnd = this.game.time.now + 800;
       console.log('BIGJump ' + 'jumpcount - ' + this.jumpcount);
     } 
@@ -226,6 +228,8 @@ Rick.Game.prototype = {
   createEnemy: function () {
     if (this.game.time.now > this.enemiesTime) {
       this.enemy = this.game.add.sprite(600, 100, 'wasp');
+      // this sets the bounding box (collision area) to be smaller, for more precise collision
+      this.enemy.body.setSize(170, 110, 0, 0);
       this.enemy.animations.add('left', [0,1,2], 10, true);
       this.enemy.animations.play('left');
       this.enemy.outOfBoundsKill =  true;
