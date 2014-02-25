@@ -43,6 +43,7 @@ Rick.Game = function (game) {
   this.enemies;
   this.enemiesTime = 0; // used to create enemies in a time interval
   this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
+  this.enemyKillPoint = 20;
 
   // levels
   this.levelTime;
@@ -50,6 +51,11 @@ Rick.Game = function (game) {
 
   // explosion
   this.explosions;
+
+  // text
+  this.score = 0;
+  this.scoreString;
+  this.scoreText;
 
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -96,7 +102,7 @@ Rick.Game.prototype = {
     this.platforms.add(this.platform);
 
     // Create player
-    this.player = this.game.add.sprite(32, 0, 'rick');
+    this.player = this.game.add.sprite(100, 0, 'rick');
     this.player.anchor.setTo(0.5, 0.5);
 
     // this.player.body.bounce.y = 0.3;
@@ -124,6 +130,11 @@ Rick.Game.prototype = {
 
     // Level
     this.levelTime = this.game.time.now + this.changeLevelTime;
+
+
+    // The score
+    this.scoreString = 'Score : ';
+    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { fontSize: '34px', fill: '#fff' });
   },
 
   update: function () {
@@ -166,6 +177,9 @@ Rick.Game.prototype = {
     //  When a bullet hits an alien we kill them both
     bullet.kill();
     enemy.kill();
+
+    this.score += this.enemyKillPoint;
+    this.scoreText.content = this.scoreString + this.score;
 
     //  And create an explosion :)
     var explosion = this.explosions.getFirstDead();
