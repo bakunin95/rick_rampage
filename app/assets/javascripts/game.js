@@ -57,7 +57,7 @@ Rick.Game.prototype = {
     //this.game.load.image('star', 'assets/star.png');
     //this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 
-    this.game.load.image('ground', 'assets/platform.png');
+    this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
@@ -151,10 +151,11 @@ Rick.Game.prototype = {
     // Make player not fall through platforms
     this.game.physics.collide(this.player, this.platforms);
 
-    if (this.player.body.touching.down)
+    if (this.player.body.touching.down) {
       this.player.animations.play('right');
+  	}
 
-    if (this.keybord.up.isDown && this.player.body.touching.down){
+    if (this.keybord.up.isDown && this.player.body.touching.down) {
       this.player.animations.play('jump');
       this.player.body.velocity.y = -400
     }
@@ -166,7 +167,8 @@ Rick.Game.prototype = {
 
     if (this.fireButton.isDown) {
     	var star = this.stars.create((this.player.x + 40), this.player.y, 'star');
-      star.body.velocity.x = 800;
+        star.body.velocity.x = 800;
+    }
 
     this.createEnemy();
 
@@ -197,7 +199,7 @@ Rick.Game.prototype = {
     	this.player.animations.play('jump');
       	this.player.body.velocity.y = -400;
       	console.log('smallJump');
-      	this.jumpcount++
+      	this.jumpcount++;
     }
 
     //  Firing?
