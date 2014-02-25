@@ -43,15 +43,20 @@
 	position: relative;
 }
 
+#stats { 
+	margin-left: 600px;
+	clear: left;
+	width: 200px;
+}
+
 #topscores {
 	margin-left: 600px;
 	clear: left;
 }
 
-#stats { 
+#testscoresave {
 	margin-left: 600px;
 	clear: left;
-	width: 200px;
 }
 
 /* used in game.html.erb */

@@ -117,18 +117,18 @@
 </div>
 
 
-<!--<div class="score_div">
+<div class="score_div" id="testscoresave">
 
 	<h2>Latest Score Save:</h2>
 
-	<%#= form_for @score, url: scores_path(remote: true), html: { method: :post, action: "create" } do |f| %>
+	<%= form_for @score, url: scores_path, remote: true, html: { method: :post, action: "create" } do |f| %>
 
 		Enter Latest Score:
-		  	<%#= f.text_field :score %>
-			<%#= f.submit %>
-	<%# end %>
+		  	<%= f.text_field :score %>
+			<%= f.submit %>
+	<% end %>
 
-</div> -->
+</div>
 
 <!-- 
 	RELEVANT LINKS
