@@ -140,6 +140,10 @@ Rick.Game.prototype = {
     this.explosions.createMultiple(30, 'explosion');
     this.explosions.forEach(this.setUpExplosions, this);
 
+    // Add Player Statistics 
+
+    this.playerStats($('.score_div'));
+
   },
 
   update: function () {
@@ -264,6 +268,14 @@ Rick.Game.prototype = {
     this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
     this.generatedLedge.body.velocity.x = -190;
     this.generatedLedge.body.immovable = true;
+  },
+
+  playerStats: function(node) {
+	node.fadeIn(300, function() {
+		$('.score_th').fadeIn( 1200 );
+	});
+	return false;
+
   },
 
   fireBullet: function() {
