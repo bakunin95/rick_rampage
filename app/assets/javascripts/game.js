@@ -28,7 +28,7 @@ Rick.Game = function (game) {
   this.platformsTime = 0;
 
   this.player;
-  this.keybord;
+  this.keyboard;
   this.fireButton;
   this.generatedLedge;
   this.jumpcount = 0;
@@ -68,9 +68,10 @@ Rick.Game.prototype = {
     this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
+    this.game.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
-    this.game.load.spritesheet('explosion', 'assets/enemy_explosion.png', 53, 105);
+    this.game.load.spritesheet('explosion', 'assets/enemy_explosion.png', 132, 262);
   },
 
   create: function () {
@@ -85,7 +86,7 @@ Rick.Game.prototype = {
 
     //  Our bullet group
     this.bullets = this.game.add.group();
-    this.bullets.createMultiple(30, 'bullet');
+    this.bullets.createMultiple(30, 'bullets', 3);
     this.bullets.setAll('anchor.x', 0.5);
     this.bullets.setAll('anchor.y', 1);
     this.bullets.setAll('outOfBoundsKill', true);
@@ -116,7 +117,7 @@ Rick.Game.prototype = {
     this.player.animations.add('jump', [8], 10, false);
 
     // Adds Keyboard controls
-    this.keybord = this.game.input.keyboard.createCursorKeys();
+    this.keyboard = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     // Add Enemies
@@ -161,13 +162,13 @@ Rick.Game.prototype = {
   },
 
   checkPlayerJump: function() {
-    if (this.keybord.up.isDown && this.player.body.touching.down){
+    if (this.keyboard.up.isDown && this.player.body.touching.down){
       this.jumpcount = 0;
       this.player.animations.play('jump');
       this.player.body.velocity.y = -350;
       this.jumpcount++;
       this.jumpTimeBegin = this.game.time.now + 300;
-    } else if (this.keybord.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
+    } else if (this.keyboard.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
       this.player.body.velocity.y = -400;
       this.jumpcount++;
     }
@@ -224,7 +225,6 @@ Rick.Game.prototype = {
   createPlatform: function() {
     this.platforms.forEachAlive(function(platform){
       if (platform.offset.x < 0) {
-        debugger;
         platform.outOfBoundsKill = true;
       }
     });
