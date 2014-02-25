@@ -18,11 +18,13 @@ Rick.Game = function (game) {
   this.physics;	//	the physics manager
   this.rnd;		//	the repeatable random number generator
 
-
   this.platforms;
   this.player;
   this.keybord;
   this.enemy;
+  this.stars;
+  this.fireButton;
+  this.generatedLedge;
 
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -47,38 +49,46 @@ Rick.Game.prototype = {
     //  The platforms group contains the ground and the 2 ledges we can jump on
     this.platforms = this.game.add.group()
 
-    var ledge = this.platforms.create(350, 400, 'ground');
+    // here are preset ledges
+    var ledge = platforms.create(50, 200, 'ground');
+    ledge.body.velocity.x = -120;
     ledge.body.immovable = true;
 
-    ledge = this.platforms.create(0, 250, 'ground');
+    ledge = platforms.create(350, 300, 'ground');
+    ledge.body.velocity.x = -120;
     ledge.body.immovable = true;
+
+    ledge = platforms.create(700, 300, 'ground');
+    ledge.body.velocity.x = -120;
+    ledge.body.immovable = true;
+
+    // here are the generated ledges
+    setInterval(this.buildLedge.bind(this), 2000);
+
 
     // this.player = this.game.add.sprite(32, 0, 'dude');
     this.player = this.game.add.sprite(32, 0, 'rick');
 
-    this.player.body.bounce.y = 0.3;
+    // this.player.body.bounce.y = 0.3;
     this.player.body.gravity.y = 6;
-    this.player.body.collideWorldBounds = true;
-
-    //  Our two animations, walking left and right.
-    // this.player.animations.add('left', [0,1,2,3], 10, true);
-    this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
-    this.player.animations.add('jump', [8], 10, false);
+    this.player.body.collideWorldBounds = false;
 
     // Adds Keyboard controls
     this.keybord = this.game.input.keyboard.createCursorKeys();
+    this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+    stars = game.add.group();
 
 
     // Add Enemies
     setInterval( this.createEnemy.bind(this), 3000 );
 
+    // Make player not fall through platforms
+    this.game.physics.collide(this.player, this.platforms);
 
   },
 
   update: function () {
-
-    // Make player not fall through platforms
-    this.game.physics.collide(this.player, this.platforms);
 
     if (this.player.body.touching.down)
       this.player.animations.play('right');
@@ -91,6 +101,17 @@ Rick.Game.prototype = {
     if (this.enemy) {
       this.animateEnemy();
     }
+
+
+    if (this.fireButton.isDown) {
+    	this.star = stars.create((this.player.x + 40), this.player.y, 'star');
+      this.star.body.velocity.x = 800;
+    }
+
+    //Kill player if they touch the ground
+    // if (player.y > 450) {
+    // 	player.kill()
+    // }
 
   },
 
@@ -111,6 +132,16 @@ Rick.Game.prototype = {
 
   animateEnemy: function () {
     this.enemy.body.velocity.x = -200
+  },
+
+  getRandom: function (min, max) {
+    return Math.random() * (max - min) + min;
+  },
+
+  buildLedge: function () {
+    this.generatedLedge = this.platforms.create(this.getRandom(800, 1100), this.getRandom(100, 400), 'ground');
+    this.generatedLedge.body.velocity.x = -120;
+    this.generatedLedge.body.immovable = true;
   }
 
 };
