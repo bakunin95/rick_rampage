@@ -41,6 +41,9 @@ Rick.Game = function (game) {
   // explosion
   this.explosions;
 
+  // check if dead or not
+  this.dead = false;
+
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
 
@@ -49,7 +52,7 @@ Rick.Game = function (game) {
 Rick.Game.prototype = {
 
   preload: function () {
-    this.game.load.image('ground', 'assets/platform.png');
+    this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
@@ -101,7 +104,7 @@ Rick.Game.prototype = {
     // this.player.body.bounce.y = 0.3;
     this.player.body.gravity.y = 10;
     // set collideWorldBounds to left only, or kill player on touching bottom
-    this.player.body.collideWorldBounds = true;
+    this.player.body.collideWorldBounds = false;
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
@@ -127,27 +130,23 @@ Rick.Game.prototype = {
     // collisions
     this.game.physics.collide(this.bullets, this.enemies, this.collisionHandler, null, this);
     this.game.physics.collide(this.player, this.platforms);
+    this.game.physics.collide(this.player, this.enemies, this.collisionHandlerHitEnemy, null, this);
 
     if (this.player.body.touching.down) {
     	this.player.animations.play('right');
     }
       
-    // var _this = this; 
-    // this.game.input.keyboard.addCallbacks(this.keybord.up, function() {
-    // 	_this.player.animations.play('jump');
-   	// 	_this.player.body.velocity.y = -350;
-    // 	jumpcount++
-    // } )
 
     if (this.keybord.up.isDown && this.player.body.touching.down){
       this.jumpcount = 0;	
       this.player.animations.play('jump');
       this.player.body.velocity.y = -350;
       this.jumpcount++
-      this.jumpTimeBegin = this.game.time.now + 300;
+      this.jumpTimeBegin = this.game.time.now + 100;
       this.jumpTimeEnd = this.game.time.now + 800;
       console.log('BIGJump ' + 'jumpcount - ' + this.jumpcount);
-    } else if (this.keybord.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
+    } 
+    else if (this.keybord.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
     	this.player.animations.play('jump');
       	this.player.body.velocity.y = -400;
       	console.log('smallJump');
@@ -159,10 +158,15 @@ Rick.Game.prototype = {
       this.fireBullet();
     }
 
-    //Kill player if they touch the ground
-    // if (player.y > 450) {
-    // player.kill()
-    // }
+    // Kill player if they touch the ground
+    if (this.player.y > 450 && !this.dead) {
+    	this.collisionHandlerFall(this.player);
+    }
+
+    if (this.player.x < -10 && !this.dead) {
+    	this.collisionHandlerFall(this.player);
+    }
+
 
   },
 
@@ -175,6 +179,33 @@ Rick.Game.prototype = {
     var explosion = this.explosions.getFirstDead();
     explosion.reset(enemy.body.x + 50, enemy.body.y + 30);
     explosion.play('explosion', 30, false, true);
+  },
+
+  collisionHandlerHitEnemy: function(player, enemy) {
+  	player.kill();
+  	enemy.kill();
+
+  	//  And create an explosion :)
+    var explosion = this.explosions.getFirstDead();
+    explosion.reset(enemy.body.x + 50, enemy.body.y + 30);
+    explosion.play('explosion', 30, false, true);
+
+    //  And create an explosion :)
+    explosion = this.explosions.getFirstDead();
+    explosion.reset(player.body.x + 50, player.body.y + 30);
+    explosion.play('explosion', 30, false, true);
+  },
+
+  collisionHandlerFall: function(player){
+  	
+
+  	//  And create an explosion :)
+    var explosion = this.explosions.getFirstDead();
+    explosion.reset(player.body.x + 50, player.body.y + 30);
+    explosion.play('explosion', 30, false, true);
+    
+    player.kill();
+    this.dead = true;
   },
 
   setUpExplosions: function(explosion) {
@@ -230,7 +261,7 @@ Rick.Game.prototype = {
       if (this.bullet) {
         //  And fire it
         this.bullet.reset(this.player.x + 40, this.player.y + 10);
-        this.bullet.body.velocity.x = 400;
+        this.bullet.body.velocity.x = 600;
         this.bulletTime = this.game.time.now + 200;
       }
     }
