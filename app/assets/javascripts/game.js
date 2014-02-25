@@ -1,152 +1,149 @@
-$(document).ready(function(){
+Rick.Game = function (game) {
 
-var game = new Phaser.Game(800, 500, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+  // When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
 
-// addKeyCapture(32);
+  this.game; // a reference to the currently running game
+  this.add; // used to add sprites, text, groups, etc
+  this.camera; // a reference to the game camera
+  this.cache; // the game cache
+  this.input; // the global input manager (you can access this.input.keyboard, this.input.mouse, as well from it)
+  this.load; // for preloading assets
+  this.math; // lots of useful common math operations
+  this.sound; // the sound manager - add a sound, play one, set-up markers, etc
+  this.stage; // the game stage
+  this.time; // the clock
+  this.tweens; // the tween manager
+  this.world; // the game world
+  this.particles; // the particle manager
+  this.physics; // the physics manager
+  this.rnd; // the repeatable random number generator
 
-function preload(){
+  this.platforms;
+  this.player;
+  this.keybord;
+  this.enemy;
+  this.stars;
+  this.fireButton;
+  this.generatedLedge;
 
-	game.load.image('sky', 'assets/sky.png');
-    game.load.image('ground', 'assets/platform.png');
-    game.load.image('star', 'assets/star.png');
-    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+  // You can use any of these from any function within this State.
+  // But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
 
-}
+};
 
-var player;
-var platforms;
-var cursors;
-var stars;
-var fireButton;
-var generatedLedge;
-var doubleJump = false;
-var grounded = player.body.touching.down;
+Rick.Game.prototype = {
 
-function getRandom(min, max) {
-	return Math.random() * (max - min) + min;
-}
+  preload: function () {
+    this.game.load.image('sky', 'assets/sky.png');
+    this.game.load.image('ground', 'assets/platform.png');
+    this.game.load.image('star', 'assets/star.png');
+    this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
+  },
 
-function buildLedge() {
+  create: function () {
 
-	// platforms = game.add.group()
+    // Add background
+    this.game.add.sprite(0,0, 'sky');
 
-		
-	generatedLedge = platforms.create(getRandom(800, 1100), getRandom(100, 400), 'ground');
-	generatedLedge.body.velocity.x = -120;
-  	generatedLedge.body.immovable = true;
+    //  The platforms group contains the ground and the 2 ledges we can jump on
+    this.platforms = this.game.add.group()
 
-}
+    // here are preset ledges
+    var ledge = this.platforms.create(50, 200, 'ground');
+    ledge.body.velocity.x = -120;
+    ledge.body.immovable = true;
 
-function create(){
+    ledge = this.platforms.create(350, 300, 'ground');
+    ledge.body.velocity.x = -120;
+    ledge.body.immovable = true;
 
-	
+    ledge = this.platforms.create(700, 300, 'ground');
+    ledge.body.velocity.x = -120;
+    ledge.body.immovable = true;
 
-	// A simple background for our game
-    game.add.sprite(0,0, 'sky');
-
-
-    	platforms = game.add.group()
-    	
-    	// here are preset ledges
-    	var ledge = platforms.create(50, 300, 'ground');
-    	ledge.scale.setTo(2,1)
-    	ledge.body.velocity.x = -120;
-    	ledge.body.immovable = true;
-
-    	ledge = platforms.create(350, 300, 'ground');
-    	ledge.body.velocity.x = -120;
-    	ledge.body.immovable = true;
-
-    	ledge = platforms.create(700, 300, 'ground');
-    	ledge.body.velocity.x = -120;
-    	ledge.body.immovable = true;
-
-
-
-		// here are the generated ledges
-		setInterval(buildLedge, 2000);
-		
+    // here are the generated ledges
+    setInterval(this.buildLedge.bind(this), 2000);
 
 
-    player = game.add.sprite(100, 0, 'dude');
+    // this.player = this.game.add.sprite(32, 0, 'dude');
+    this.player = this.game.add.sprite(32, 0, 'rick');
 
-    // player.body.bounce.y = 0.1;
-    player.body.gravity.y = 10;
-    player.body.collideWorldBounds = false;
+    // this.player.body.bounce.y = 0.3;
+    this.player.body.gravity.y = 6;
+    this.player.body.collideWorldBounds = false;
 
-    //  Our two animations, walking left and right.
-     player.animations.add('left', [0,1,2,3], 10, true);
-     player.animations.add('right', [5,6,7,8], 10, true);
+    this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
+    this.player.animations.add('jump', [8], 10, false);
 
     // Adds Keyboard controls
-    cursor = game.input.keyboard.createCursorKeys();
-    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.keybord = this.game.input.keyboard.createCursorKeys();
+    this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-    stars = game.add.group();
+    this.stars = this.game.add.group();
 
-}
+    // Add Enemies
+    setInterval( this.createEnemy.bind(this), 3000 );
 
-function update(){
+  },
 
-	// Make player not fall through platforms
-    game.physics.collide(player, platforms);
-    // game.physics.collide(player, generatedLedge);
+  update: function () {
 
-    //  Reset the players velocity (movement)
-    player.body.velocity.x = 0;
+    // Make player not fall through platforms
+    this.game.physics.collide(this.player, this.platforms);
 
-    // if (cursor.left.isDown)
-    // {
-    //     //  Move to the left
-    //     player.body.velocity.x = -150;
- 
-    //     player.animations.play('left');
-    // }
-    // else if (cursor.right.isDown)
-    // {
-    //     //  Move to the right
-    //     player.body.velocity.x = 150;
- 
-    //     player.animations.play('right');
-    // }
-    // else
-    // {
-    //     //  Stand still
-    //     player.animations.stop();
-        
-    //     // sets player sprite to frame 4 which is standing still idle looking at user
-    //     player.frame = 4;
-    // }
+    if (this.player.body.touching.down)
+      this.player.animations.play('right');
 
-    
-
-    // Allow player to jump if they are touching the ground
-    // if (cursor.up.isDown && !grounded && doubleJump === true){
-    // 	player.body.velocity.y += -200
-    // 	doubleJump = false;
-    // }
-    if (cursor.up.isDown && player.body.touching.down){
-        player.body.velocity.y = -400
-        doubleJump = true;
+    if (this.keybord.up.isDown && this.player.body.touching.down){
+      this.player.animations.play('jump');
+      this.player.body.velocity.y = -400
     }
 
-    if (fireButton.isDown) {
-    	var star = stars.create((player.x + 40), player.y, 'star');
-        star.body.velocity.x = 800;
+    if (this.enemy) {
+      this.animateEnemy();
+    }
+
+
+    if (this.fireButton.isDown) {
+    var star = this.stars.create((this.player.x + 40), this.player.y, 'star');
+      star.body.velocity.x = 800;
     }
 
     //Kill player if they touch the ground
     // if (player.y > 450) {
-    // 	player.kill()
+    // player.kill()
     // }
 
-}
+  },
 
+  quitGame: function (pointer) {
 
-});
+    // Here you should destroy anything you no longer need.
+    // Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
+    // Then let's go back to the main menu.
+    this.game.state.start('MainMenu');
+  },
 
+  createEnemy: function () {
+    this.enemy = this.game.add.sprite(500, 100, 'dude');
+    this.enemy.animations.add('left', [0,1,2,3], 10, true);
+    this.enemy.animations.play('left');
+  },
 
+  animateEnemy: function () {
+    this.enemy.body.velocity.x = -200
+  },
 
+  getRandom: function (min, max) {
+    return Math.random() * (max - min) + min;
+  },
 
+  buildLedge: function () {
+    this.generatedLedge = this.platforms.create(this.getRandom(800, 1100), this.getRandom(100, 400), 'ground');
+    this.generatedLedge.body.velocity.x = -120;
+    this.generatedLedge.body.immovable = true;
+  }
 
+};
