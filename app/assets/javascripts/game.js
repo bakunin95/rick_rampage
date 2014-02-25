@@ -23,7 +23,6 @@ Rick.Game = function (game) {
   this.platforms;
   this.player;
   this.keybord;
-  this.enemy;
   this.fireButton;
   this.generatedLedge;
 
@@ -31,6 +30,10 @@ Rick.Game = function (game) {
   this.bullets;
   this.bullet;
   this.bulletTime  = 0;
+
+  // enemies
+  this.enemies;
+  this.enemiesTime = 0;
 
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -52,15 +55,16 @@ Rick.Game.prototype = {
     // The scrolling background
     this.background = this.game.add.sprite(0, 0, 'desert');
 
-    //  The platforms group contains the ground and the 2 ledges we can jump on
-    this.platforms = this.game.add.group();
-
     //  Our bullet group
     this.bullets = this.game.add.group();
     this.bullets.createMultiple(30, 'bullet');
     this.bullets.setAll('anchor.x', 0.5);
     this.bullets.setAll('anchor.y', 1);
     this.bullets.setAll('outOfBoundsKill', true);
+
+
+    //  The platforms group contains the ground and the 2 ledges we can jump on
+    this.platforms = this.game.add.group();
 
     // here are preset ledges
     var ledge = this.platforms.create(0, 400, 'ground');
@@ -94,14 +98,14 @@ Rick.Game.prototype = {
     this.keybord = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-//    // Add Enemies
-//    setInterval( this.createEnemy.bind(this), 3000 );
-
+    // Add Enemies
+    this.enemiesTime = this.game.time.now + 5000;
+    this.enemies = this.game.add.group();
   },
 
   update: function () {
 
-    //this.background.tilePosition.x += 2;
+    this.createEnemy();
 
     // Make player not fall through platforms
     this.game.physics.collide(this.player, this.platforms);
@@ -112,10 +116,6 @@ Rick.Game.prototype = {
     if (this.keybord.up.isDown && this.player.body.touching.down){
       this.player.animations.play('jump');
       this.player.body.velocity.y = -400
-    }
-
-    if (this.enemy) {
-      this.animateEnemy();
     }
 
     //  Firing?
@@ -140,13 +140,20 @@ Rick.Game.prototype = {
   },
 
   createEnemy: function () {
-    this.enemy = this.game.add.sprite(500, 100, 'wasp');
-    this.enemy.animations.add('left', [0,1,2], 10, true);
-    this.enemy.animations.play('left');
-  },
+    if (this.game.time.now > this.enemiesTime) {
+      this.enemy = this.game.add.sprite(600, 100, 'wasp');
+      this.enemy.animations.add('left', [0,1,2], 10, true);
+      this.enemy.animations.play('left');
+      this.enemy.outOfBoundsKill =  true;
 
-  animateEnemy: function () {
-    this.enemy.body.velocity.x = -200
+      this.enemies.add(this.enemy);
+
+      if (this.enemy) {
+        // And fire it
+        this.enemy.body.velocity.x = -200;
+        this.enemiesTime = this.game.time.now + 3000;
+      }
+    }
   },
 
   getRandom: function (min, max) {
