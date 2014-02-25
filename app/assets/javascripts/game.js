@@ -18,13 +18,19 @@ Rick.Game = function (game) {
   this.physics;	//	the physics manager
   this.rnd;		//	the repeatable random number generator
 
+  this.background;
+
   this.platforms;
   this.player;
   this.keybord;
   this.enemy;
-  this.stars;
   this.fireButton;
   this.generatedLedge;
+
+  // bullets
+  this.bullets;
+  this.bullet;
+  this.bulletTime  = 0;
 
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -34,44 +40,52 @@ Rick.Game = function (game) {
 Rick.Game.prototype = {
 
   preload: function () {
-    this.game.load.image('sky', 'assets/sky.png');
     this.game.load.image('ground', 'assets/platform.png');
-    this.game.load.image('star', 'assets/star.png');
-    this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    this.game.load.image('bullet', 'assets/bullet.png');
+    this.game.load.image('desert', 'assets/desert.png');
+    this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
   },
 
   create: function () {
 
-    // Add background
-    this.game.add.sprite(0,0, 'sky');
+    // The scrolling background
+    this.background = this.game.add.sprite(0, 0, 'desert');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
-    this.platforms = this.game.add.group()
+    this.platforms = this.game.add.group();
+
+    //  Our bullet group
+    this.bullets = this.game.add.group();
+    this.bullets.createMultiple(30, 'bullet');
+    this.bullets.setAll('anchor.x', 0.5);
+    this.bullets.setAll('anchor.y', 1);
+    this.bullets.setAll('outOfBoundsKill', true);
 
     // here are preset ledges
-    var ledge = this.platforms.create(50, 200, 'ground');
-    ledge.body.velocity.x = -120;
+    var ledge = this.platforms.create(0, 400, 'ground');
+    ledge.scale.setTo(3,2);
     ledge.body.immovable = true;
+//
+//    ledge = this.platforms.create(350, 300, 'ground');
+//    ledge.body.velocity.x = -120;
+//    ledge.body.immovable = true;
+//
+//    ledge = this.platforms.create(700, 300, 'ground');
+//    ledge.body.velocity.x = -120;
+//    ledge.body.immovable = true;
+//
+//    // here are the generated ledges
+//    setInterval(this.buildLedge.bind(this), 2000);
 
-    ledge = this.platforms.create(350, 300, 'ground');
-    ledge.body.velocity.x = -120;
-    ledge.body.immovable = true;
 
-    ledge = this.platforms.create(700, 300, 'ground');
-    ledge.body.velocity.x = -120;
-    ledge.body.immovable = true;
-
-    // here are the generated ledges
-    setInterval(this.buildLedge.bind(this), 2000);
-
-
-    // this.player = this.game.add.sprite(32, 0, 'dude');
+    // Create player
     this.player = this.game.add.sprite(32, 0, 'rick');
+    this.player.anchor.setTo(0.5, 0.5);
 
     // this.player.body.bounce.y = 0.3;
     this.player.body.gravity.y = 6;
-    this.player.body.collideWorldBounds = false;
+    this.player.body.collideWorldBounds = true;
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
@@ -80,14 +94,14 @@ Rick.Game.prototype = {
     this.keybord = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-    this.stars = this.game.add.group();
-
-    // Add Enemies
-    setInterval( this.createEnemy.bind(this), 3000 );
+//    // Add Enemies
+//    setInterval( this.createEnemy.bind(this), 3000 );
 
   },
 
   update: function () {
+
+    //this.background.tilePosition.x += 2;
 
     // Make player not fall through platforms
     this.game.physics.collide(this.player, this.platforms);
@@ -104,10 +118,9 @@ Rick.Game.prototype = {
       this.animateEnemy();
     }
 
-
+    //  Firing?
     if (this.fireButton.isDown) {
-    	var star = this.stars.create((this.player.x + 40), this.player.y, 'star');
-      star.body.velocity.x = 800;
+      this.fireBullet();
     }
 
     //Kill player if they touch the ground
@@ -127,8 +140,8 @@ Rick.Game.prototype = {
   },
 
   createEnemy: function () {
-    this.enemy = this.game.add.sprite(500, 100, 'dude');
-    this.enemy.animations.add('left', [0,1,2,3], 10, true);
+    this.enemy = this.game.add.sprite(500, 100, 'wasp');
+    this.enemy.animations.add('left', [0,1,2], 10, true);
     this.enemy.animations.play('left');
   },
 
@@ -144,6 +157,23 @@ Rick.Game.prototype = {
     this.generatedLedge = this.platforms.create(this.getRandom(800, 1100), this.getRandom(100, 400), 'ground');
     this.generatedLedge.body.velocity.x = -120;
     this.generatedLedge.body.immovable = true;
+  },
+
+  fireBullet: function() {
+
+    //  To avoid them being allowed to fire too fast we set a time limit
+    if (this.game.time.now > this.bulletTime) {
+      //  Grab the first bullet we can from the pool
+      this.bullet = this.bullets.getFirstExists(false);
+
+      if (this.bullet) {
+        //  And fire it
+        this.bullet.reset(this.player.x + 40, this.player.y + 10);
+        this.bullet.body.velocity.x = 400;
+        this.bulletTime = this.game.time.now + 200;
+      }
+    }
+
   }
 
 };
