@@ -35,6 +35,9 @@ Rick.Game = function (game) {
   this.enemies;
   this.enemiesTime = 0;
 
+  // explosion
+  this.explosions;
+
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
 
@@ -48,6 +51,7 @@ Rick.Game.prototype = {
     this.game.load.image('desert', 'assets/desert.png');
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
+    this.game.load.spritesheet('explosion', 'assets/enemy_explosion.png', 53, 105);
   },
 
   create: function () {
@@ -101,13 +105,19 @@ Rick.Game.prototype = {
     // Add Enemies
     this.enemiesTime = this.game.time.now + 5000;
     this.enemies = this.game.add.group();
+
+    // An explosion pool
+    this.explosions = this.game.add.group();
+    this.explosions.createMultiple(30, 'explosion');
+    this.explosions.forEach(this.setUpExplosions, this);
   },
 
   update: function () {
 
     this.createEnemy();
 
-    // Make player not fall through platforms
+    // collisions
+    this.game.physics.collide(this.bullets, this.enemies, this.collisionHandler, null, this);
     this.game.physics.collide(this.player, this.platforms);
 
     if (this.player.body.touching.down)
@@ -130,13 +140,30 @@ Rick.Game.prototype = {
 
   },
 
+  collisionHandler: function(bullet, enemy) {
+    //  When a bullet hits an alien we kill them both
+    bullet.kill();
+    enemy.kill();
+
+    //  And create an explosion :)
+    var explosion = this.explosions.getFirstDead();
+    explosion.reset(enemy.body.x + 50, enemy.body.y + 30);
+    explosion.play('explosion', 30, false, true);
+  },
+
+  setUpExplosions: function(explosion) {
+    explosion.anchor.x = 0.5;
+    explosion.anchor.y = 0.5;
+    explosion.animations.add('explosion');
+  },
+
   quitGame: function (pointer) {
 
     //	Here you should destroy anything you no longer need.
     //	Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
     //	Then let's go back to the main menu.
-    this.game.state.start('MainMenu');
+    this.game.state.start('Game');
   },
 
   createEnemy: function () {
