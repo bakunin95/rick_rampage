@@ -136,6 +136,10 @@ Rick.Game.prototype = {
     // The score
     this.scoreString = 'Score : ';
     this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { fontSize: '34px', fill: '#fff' });
+
+	  // Add Player Statistics
+    this.playerStats($('.score_div'));
+
   },
 
   update: function () {
@@ -248,6 +252,13 @@ Rick.Game.prototype = {
 
   getRandom: function (min, max) {
     return Math.round(Math.random() * (max - min) + min);
+  },
+
+  playerStats: function(node) {
+	node.fadeIn(300, function() {
+		$('.score_th').fadeIn( 1200 );
+	});
+	return false;
   },
 
   buildLedge: function () {
