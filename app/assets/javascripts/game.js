@@ -118,6 +118,11 @@ Rick.Game.prototype = {
     this.explosions = this.game.add.group();
     this.explosions.createMultiple(30, 'explosion');
     this.explosions.forEach(this.setUpExplosions, this);
+
+	// Add Player Statistics 
+
+    this.playerStats($('.score_div'));
+
   },
 
   update: function () {
@@ -218,6 +223,13 @@ Rick.Game.prototype = {
 
   getRandom: function (min, max) {
     return Math.round(Math.random() * (max - min) + min);
+  },
+
+  playerStats: function(node) {
+	node.fadeIn(300, function() {
+		$('.score_th').fadeIn( 1200 );
+	});
+	return false;
   },
 
   buildLedge: function () {
