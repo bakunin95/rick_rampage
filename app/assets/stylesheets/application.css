@@ -12,23 +12,49 @@
  *= require_tree .
  */
 
+#gameContainer {
+
+	display: inline-block;
+	position: absolute;
+	z-index: -1;
+
+}
+
 /* used in game.html.erb */
-#stats {
-	clear: right;
+.score_th {
+
+	display: none; /* default is not to display so it will fade in later than div called in game.js */
+
 }
 
 /* used in game.html.erb */
 .score_th {
 	text-align: center;
+    zoom: 1.0;
 }
 
 /* used in game.html.erb */
 .score_div {
-	float: right;
-	display: inline-block;
+	/* float: left; */
+	opacity: 50%;
+	float: left;
+	margin-top: 0px;
+	z-index: 2;
+	position: relative;
+}
+
+#topscores {
+	margin-left: 600px;
+	clear: left;
+}
+
+#stats { 
+	margin-left: 600px;
+	clear: left;
+	width: 200px;
 }
 
 /* used in game.html.erb */
 .score_table {
-	border: 1px solid black;
+	border: 1px solid gray;
 }
