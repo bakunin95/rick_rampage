@@ -1,30 +1,38 @@
+'use strict';
+
 Rick.Game = function (game) {
 
-  //	When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
+  // When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
 
-  this.game;		//	a reference to the currently running game
-  this.add;		//	used to add sprites, text, groups, etc
-  this.camera;	//	a reference to the game camera
-  this.cache;		//	the game cache
-  this.input;		//	the global input manager (you can access this.input.keyboard, this.input.mouse, as well from it)
-  this.load;		//	for preloading assets
-  this.math;		//	lots of useful common math operations
-  this.sound;		//	the sound manager - add a sound, play one, set-up markers, etc
-  this.stage;		//	the game stage
-  this.time;		//	the clock
-  this.tweens;	//	the tween manager
-  this.world;		//	the game world
-  this.particles;	//	the particle manager
-  this.physics;	//	the physics manager
-  this.rnd;		//	the repeatable random number generator
+  this.game; // a reference to the currently running game
+  this.add; // used to add sprites, text, groups, etc
+  this.camera; // a reference to the game camera
+  this.cache; // the game cache
+  this.input; // the global input manager (you can access this.input.keyboard, this.input.mouse, as well from it)
+  this.load; // for preloading assets
+  this.math; // lots of useful common math operations
+  this.sound; // the sound manager - add a sound, play one, set-up markers, etc
+  this.stage; // the game stage
+  this.time; // the clock
+  this.tweens; // the tween manager
+  this.world; // the game world
+  this.particles; // the particle manager
+  this.physics; // the physics manager
+  this.rnd; // the repeatable random number generator
 
   this.background;
 
+  // platforms
   this.platforms;
+  this.platformVelocity = -190;
+  this.platformsTime = 0;
+
   this.player;
   this.keybord;
   this.fireButton;
   this.generatedLedge;
+  this.jumpcount = 0;
+  this.jumpTimeBegin;
 
   // bullets
   this.bullets;
@@ -51,7 +59,7 @@ Rick.Game = function (game) {
 Rick.Game.prototype = {
 
   preload: function () {
-    this.game.load.image('ground', 'assets/platform.png');
+    this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
@@ -60,6 +68,11 @@ Rick.Game.prototype = {
   },
 
   create: function () {
+
+    // TODO delete when the boot.js will be activated
+    // because must be there
+    this.game.stage.disableVisibilityChange = true;
+    // TODO
 
     // The scrolling background
     this.background = this.game.add.sprite(0, 0, 'desert');
@@ -71,33 +84,26 @@ Rick.Game.prototype = {
     this.bullets.setAll('anchor.y', 1);
     this.bullets.setAll('outOfBoundsKill', true);
 
-
     //  The platforms group contains the ground and the 2 ledges we can jump on
     this.platforms = this.game.add.group();
 
-    // here are preset ledges
-    var ledge = this.platforms.create(0, 400, 'ground');
-    ledge.scale.setTo(3,2);
-    ledge.body.immovable = true;
-//
-//    ledge = this.platforms.create(350, 300, 'ground');
-//    ledge.body.velocity.x = -120;
-//    ledge.body.immovable = true;
-//
-//    ledge = this.platforms.create(700, 300, 'ground');
-//    ledge.body.velocity.x = -120;
-//    ledge.body.immovable = true;
-//
-//    // here are the generated ledges
-//    setInterval(this.buildLedge.bind(this), 2000);
+    this.platform = this.game.add.sprite(0,0, 'ground');
+    this.platform.reset(200, 400);
+    this.platform.scale.setTo(4,2);
+    this.platform.body.velocity.x = this.platformVelocity;
+    this.platform.body.immovable = true;
 
+    this.platforms.add(this.platform);
 
     // Create player
     this.player = this.game.add.sprite(32, 0, 'rick');
     this.player.anchor.setTo(0.5, 0.5);
 
     // this.player.body.bounce.y = 0.3;
-    this.player.body.gravity.y = 6;
+
+    // this.player.body.bounce.y = 0.3;
+    this.player.body.gravity.y = 10;
+    // set collideWorldBounds to left only, or kill player on touching bottom
     this.player.body.collideWorldBounds = true;
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
@@ -122,6 +128,7 @@ Rick.Game.prototype = {
 
   update: function () {
 
+    this.createPlatform();
     this.setLevel();
     this.createEnemy();
 
@@ -129,24 +136,30 @@ Rick.Game.prototype = {
     this.game.physics.collide(this.bullets, this.enemies, this.collisionHandler, null, this);
     this.game.physics.collide(this.player, this.platforms);
 
-    if (this.player.body.touching.down)
-      this.player.animations.play('right');
-
-    if (this.keybord.up.isDown && this.player.body.touching.down){
-      this.player.animations.play('jump');
-      this.player.body.velocity.y = -400
+    if (this.player.body.touching.down) {
+    	this.player.animations.play('right');
     }
+
+    this.checkPlayerJump();
 
     //  Firing?
     if (this.fireButton.isDown) {
       this.fireBullet();
     }
 
-    //Kill player if they touch the ground
-    // if (player.y > 450) {
-    // 	player.kill()
-    // }
+  },
 
+  checkPlayerJump: function() {
+    if (this.keybord.up.isDown && this.player.body.touching.down){
+      this.jumpcount = 0;
+      this.player.animations.play('jump');
+      this.player.body.velocity.y = -350;
+      this.jumpcount++;
+      this.jumpTimeBegin = this.game.time.now + 300;
+    } else if (this.keybord.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
+      this.player.body.velocity.y = -400;
+      this.jumpcount++;
+    }
   },
 
   collisionHandler: function(bullet, enemy) {
@@ -168,8 +181,8 @@ Rick.Game.prototype = {
 
   quitGame: function (pointer) {
 
-    //	Here you should destroy anything you no longer need.
-    //	Stop music, delete sprites, purge caches, free resources, all that good stuff.
+    // Here you should destroy anything you no longer need.
+    // Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
     //	Then let's go back to the main menu.
     this.game.state.start('Game');
@@ -185,20 +198,41 @@ Rick.Game.prototype = {
       this.enemies.add(this.enemy);
 
       if (this.enemy) {
-        // And fire it
+        var xPos = [400, 450, 500];
+        var yPos = [100, 150, 200, 250];
+        this.enemy.reset(xPos[this.getRandom(0, xPos.length)], yPos[this.getRandom(0, yPos.length)]);
         this.enemy.body.velocity.x = -200;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
     }
   },
 
+  createPlatform: function() {
+    if (this.game.time.now > this.platformsTime) {
+      this.platform = this.game.add.sprite(0, 0, 'ground');
+
+      this.platforms.add(this.platform);
+
+      if (this.platform) {
+        var xPos = [800, 850, 900];
+        var yPos = [350, 400, 450];
+        this.platform.scale.setTo(2,2);
+        this.platform.reset(xPos[this.getRandom(0, xPos.length)], yPos[this.getRandom(0, yPos.length)]);
+        this.platform.body.velocity.x = this.platformVelocity;
+        this.platform.body.immovable = true;
+        this.platformsTime = this.game.time.now + 700;
+      }
+    }
+  },
+
   getRandom: function (min, max) {
-    return Math.random() * (max - min) + min;
+    return Math.round(Math.random() * (max - min) + min);
   },
 
   buildLedge: function () {
-    this.generatedLedge = this.platforms.create(this.getRandom(800, 1100), this.getRandom(100, 400), 'ground');
-    this.generatedLedge.body.velocity.x = -120;
+    this.generatedLedge = this.platforms.create(this.getRandom(800, 1000), this.getRandom(250, 450), 'ground');
+    this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
+    this.generatedLedge.body.velocity.x = -190;
     this.generatedLedge.body.immovable = true;
   },
 
@@ -212,8 +246,8 @@ Rick.Game.prototype = {
       if (this.bullet) {
         //  And fire it
         this.bullet.reset(this.player.x + 40, this.player.y + 10);
-        this.bullet.body.velocity.x = 400;
-        this.bulletTime = this.game.time.now + 200;
+        this.bullet.body.velocity.x = 800;
+        this.bulletTime = this.game.time.now + 300;
       }
     }
 
@@ -231,9 +265,3 @@ Rick.Game.prototype = {
   }
 
 };
-
-
-
-
-
-
