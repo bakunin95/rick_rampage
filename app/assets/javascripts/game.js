@@ -23,8 +23,6 @@ Rick.Game = function (game) {
   this.platforms;
   this.player;
   this.keybord;
-  this.enemy;
-  this.stars;
   this.fireButton;
   this.generatedLedge;
   this.jumpcount = 0;
@@ -51,27 +49,15 @@ Rick.Game = function (game) {
 Rick.Game.prototype = {
 
   preload: function () {
-
-    //this.game.load.image('sky', 'assets/sky.png');
-
-    //this.game.load.image('star', 'assets/star.png');
-    //this.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-
     this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
     this.game.load.spritesheet('explosion', 'assets/enemy_explosion.png', 53, 105);
-
   },
 
   create: function () {
-
-    // Add background
-    //this.game.add.sprite(0,0, 'sky');
-
-    // this.player = this.game.add.sprite(32, 0, 'dude');
 
     // The scrolling background
     this.background = this.game.add.sprite(0, 0, 'desert');
@@ -124,13 +110,6 @@ Rick.Game.prototype = {
     this.keybord = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-
-    //this.stars = this.game.add.group();
-
-    // Add Enemies
-    //setInterval( this.createEnemy.bind(this), 3000 );
-
-
     // Add Enemies
     this.enemiesTime = this.game.time.now + 5000;
     this.enemies = this.game.add.group();
@@ -140,35 +119,13 @@ Rick.Game.prototype = {
     this.explosions.createMultiple(30, 'explosion');
     this.explosions.forEach(this.setUpExplosions, this);
 
-    // Add Player Statistics 
+	// Add Player Statistics 
 
     this.playerStats($('.score_div'));
 
   },
 
   update: function () {
-
-    // Make player not fall through platforms
-    this.game.physics.collide(this.player, this.platforms);
-
-    if (this.player.body.touching.down) {
-      this.player.animations.play('right');
-  	}
-
-    if (this.keybord.up.isDown && this.player.body.touching.down) {
-      this.player.animations.play('jump');
-      this.player.body.velocity.y = -400
-    }
-
-    if (this.enemy) {
-      this.animateEnemy();
-    }
-
-
-    if (this.fireButton.isDown) {
-    	var star = this.stars.create((this.player.x + 40), this.player.y, 'star');
-        star.body.velocity.x = 800;
-    }
 
     this.createEnemy();
 
@@ -199,7 +156,7 @@ Rick.Game.prototype = {
     	this.player.animations.play('jump');
       	this.player.body.velocity.y = -400;
       	console.log('smallJump');
-      	this.jumpcount++;
+      	this.jumpcount++
     }
 
     //  Firing?
@@ -213,10 +170,6 @@ Rick.Game.prototype = {
     // }
 
   },
-
-  // animateEnemy: function () {
-  //   this.enemy.body.velocity.x = -200
-  // },
 
   collisionHandler: function(bullet, enemy) {
     //  When a bullet hits an alien we kill them both
@@ -265,19 +218,18 @@ Rick.Game.prototype = {
     return Math.random() * (max - min) + min;
   },
 
-  buildLedge: function () {
-    this.generatedLedge = this.platforms.create(this.getRandom(800, 1000), this.getRandom(250, 450), 'ground');
-    this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
-    this.generatedLedge.body.velocity.x = -190;
-    this.generatedLedge.body.immovable = true;
-  },
-
   playerStats: function(node) {
 	node.fadeIn(300, function() {
 		$('.score_th').fadeIn( 1200 );
 	});
 	return false;
+  },
 
+  buildLedge: function () {
+    this.generatedLedge = this.platforms.create(this.getRandom(800, 1000), this.getRandom(250, 450), 'ground');
+    this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
+    this.generatedLedge.body.velocity.x = -190;
+    this.generatedLedge.body.immovable = true;
   },
 
   fireBullet: function() {

@@ -39,13 +39,17 @@
 	opacity: 50%;
 	float: left;
 	margin-top: 0px;
-	margin-left: 600px;
-	display: inline-block;
 	z-index: 2;
 	position: relative;
 }
 
+#topscores {
+	margin-left: 600px;
+	clear: left;
+}
+
 #stats { 
+	margin-left: 600px;
 	clear: left;
 	width: 200px;
 }
