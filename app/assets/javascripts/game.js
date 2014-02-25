@@ -85,6 +85,10 @@ Rick.Game.prototype = {
     // Add Enemies
     setInterval( this.createEnemy.bind(this), 3000 );
 
+    // Add Player Statistics 
+
+    this.playerStats($('.score_div'));
+
   },
 
   update: function () {
@@ -144,6 +148,14 @@ Rick.Game.prototype = {
     this.generatedLedge = this.platforms.create(this.getRandom(800, 1100), this.getRandom(100, 400), 'ground');
     this.generatedLedge.body.velocity.x = -120;
     this.generatedLedge.body.immovable = true;
+  },
+
+  playerStats: function(node) {
+	node.fadeIn(300, function() {
+		$('.score_th').fadeIn( 1200 );
+	});
+	return false;
+
   }
 
 };
