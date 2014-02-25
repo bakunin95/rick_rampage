@@ -26,7 +26,6 @@ Rick.Game = function (game) {
   this.fireButton;
   this.generatedLedge;
   this.jumpcount = 0;
-  this.jumpTimeEnd;
   this.jumpTimeBegin;
 
   // bullets
@@ -49,7 +48,7 @@ Rick.Game = function (game) {
 Rick.Game.prototype = {
 
   preload: function () {
-    this.game.load.image('ground', 'assets/platform.png');
+    this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
@@ -131,39 +130,27 @@ Rick.Game.prototype = {
     if (this.player.body.touching.down) {
     	this.player.animations.play('right');
     }
-      
-    // var _this = this; 
-    // this.game.input.keyboard.addCallbacks(this.keybord.up, function() {
-    // 	_this.player.animations.play('jump');
-   	// 	_this.player.body.velocity.y = -350;
-    // 	jumpcount++
-    // } )
 
-    if (this.keybord.up.isDown && this.player.body.touching.down){
-      this.jumpcount = 0;	
-      this.player.animations.play('jump');
-      this.player.body.velocity.y = -350;
-      this.jumpcount++
-      this.jumpTimeBegin = this.game.time.now + 300;
-      this.jumpTimeEnd = this.game.time.now + 800;
-      console.log('BIGJump ' + 'jumpcount - ' + this.jumpcount);
-    } else if (this.keybord.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
-    	this.player.animations.play('jump');
-      	this.player.body.velocity.y = -400;
-      	console.log('smallJump');
-      	this.jumpcount++
-    }
+    this.checkPlayerJump();
 
     //  Firing?
     if (this.fireButton.isDown) {
       this.fireBullet();
     }
 
-    //Kill player if they touch the ground
-    // if (player.y > 450) {
-    // player.kill()
-    // }
+  },
 
+  checkPlayerJump: function() {
+    if (this.keybord.up.isDown && this.player.body.touching.down){
+      this.jumpcount = 0;
+      this.player.animations.play('jump');
+      this.player.body.velocity.y = -350;
+      this.jumpcount++
+      this.jumpTimeBegin = this.game.time.now + 300;
+    } else if (this.keybord.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
+      this.player.body.velocity.y = -400;
+      this.jumpcount++
+    }
   },
 
   collisionHandler: function(bullet, enemy) {
@@ -230,8 +217,8 @@ Rick.Game.prototype = {
       if (this.bullet) {
         //  And fire it
         this.bullet.reset(this.player.x + 40, this.player.y + 10);
-        this.bullet.body.velocity.x = 400;
-        this.bulletTime = this.game.time.now + 200;
+        this.bullet.body.velocity.x = 600;
+        this.bulletTime = this.game.time.now + 300;
       }
     }
 
