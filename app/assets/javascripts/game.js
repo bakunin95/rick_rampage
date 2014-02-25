@@ -58,6 +58,11 @@ Rick.Game.prototype = {
 
   create: function () {
 
+    // TODO delete when the boot.js will be activated
+    // because must be there
+    this.game.stage.disableVisibilityChange = true;
+    // TODO
+
     // The scrolling background
     this.background = this.game.add.sprite(0, 0, 'desert');
 
