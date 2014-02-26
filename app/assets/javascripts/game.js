@@ -1,5 +1,11 @@
 'use strict';
 
+//overriding the framework so rick doesn't get stuck on those platform transitions
+Phaser.Physics.Arcade.prototype.separate = function (body1, body2) {
+
+        this._result = (this.separateY(body1, body2) || this.separateX(body1, body2));
+    }
+
 Rick.Game = function (game) {
 
   // When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
@@ -45,7 +51,7 @@ Rick.Game = function (game) {
   this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
   this.enemyKillPoint = 20;
 
-  // levels
+  // levels (of difficulty)
   this.levelTime;
   this.changeLevelTime = 5000; // interval
 
@@ -61,7 +67,8 @@ Rick.Game = function (game) {
   this.scoreString;
   this.scoreText;
 
-  //lives 
+
+  //Lives
   this.lives;
 
 
@@ -76,11 +83,12 @@ Rick.Game.prototype = {
     this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
-    this.game.load.image('head', 'assets/rick_head.png')
+    this.game.load.image('head', 'assets/rick_head.png');
     this.game.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
     this.game.load.spritesheet('explosion', 'assets/enemy_explosion.png', 132, 262);
+    this.game.load.image('head', 'assets/rick_head.png');
   },
 
   create: function () {
@@ -237,7 +245,6 @@ Rick.Game.prototype = {
     	player.kill();
     	this.quitGame();
     }
-  	
 
   	//  And create an explosion :)
     var explosion = this.explosions.getFirstDead();
@@ -248,16 +255,14 @@ Rick.Game.prototype = {
     explosion = this.explosions.getFirstDead();
     explosion.reset(player.body.x + 50, player.body.y + 30);
     explosion.play('explosion', 30, false, true);
+
   },
 
-  collisionHandlerFall: function(player){
-  	
 
-  	//  And create an explosion :)
-    var explosion = this.explosions.getFirstDead();
-    explosion.reset(player.body.x + 50, player.body.y + 30);
-    explosion.play('explosion', 30, false, true);
-    
+
+  collisionHandlerFall: function(player){
+
+  	
     // get the first head (out of the 3 that exist)
   	var live = this.lives.getFirstAlive();
 
@@ -276,9 +281,15 @@ Rick.Game.prototype = {
     	player.kill();
     	this.quitGame();
     	this.dead = true;
+    	// this stops multiple deaths when he falls, set to false everywhere else
     }
-    // this stops multiple deaths when he falls, set to false everywhere else
+
+    //  And create an explosion :)
+    var explosion = this.explosions.getFirstDead();
+    explosion.reset(player.body.x + 50, player.body.y + 30);
+    explosion.play('explosion', 30, false, true);
     
+   
   },
 
   setUpExplosions: function(explosion) {
@@ -308,7 +319,7 @@ Rick.Game.prototype = {
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
-},
+  },
 
   createEnemy: function () {
     if (this.game.time.now > this.enemiesTime) {
@@ -324,7 +335,7 @@ Rick.Game.prototype = {
       if (this.enemy) {
         var xPos = [400, 450, 500];
         var yPos = [100, 150, 200, 250];
-        this.enemy.reset(xPos[this.getRandom(0, xPos.length)], yPos[this.getRandom(0, yPos.length)]);
+        this.enemy.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.enemy.body.velocity.x = -200;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
@@ -347,7 +358,7 @@ Rick.Game.prototype = {
         var xPos = [800, 850, 900];
         var yPos = [350, 400, 450];
         this.platform.scale.setTo(2,2);
-        this.platform.reset(xPos[this.getRandom(0, xPos.length)], yPos[this.getRandom(0, yPos.length)]);
+        this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
         this.platform.body.immovable = true;
         this.platformsTime = this.game.time.now + 700;
