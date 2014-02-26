@@ -13,11 +13,12 @@
  */
 
 #gameContainer {
+  width: 800px;
+  margin: 0 auto;
+}
 
-	display: inline-block;
-	position: absolute;
-	z-index: -1;
-
+#gameContainer > canvas {
+  margin: 0 auto;
 }
 
 /* used in game.html.erb */
