@@ -43,6 +43,10 @@
 	position: relative;
 }
 
+#tweeting {
+	margin-left: 600px;
+}
+
 #stats { 
 	margin-left: 600px;
 	clear: left;

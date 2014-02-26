@@ -143,7 +143,7 @@ Rick.Game.prototype = {
     this.scoreString = 'Score : ';
     this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { fontSize: '34px', fill: '#fff' });
 
-	  // Add Player Statistics
+	  // Add Player Statistics menus onload
     this.playerStats($('.score_div'));
 
   },
@@ -212,8 +212,6 @@ Rick.Game.prototype = {
     explosion.reset(enemy.body.x + 50, enemy.body.y + 30);
     explosion.play('explosion', 30, false, true);
 
-    this.updatePlayerStats(this.score);
-
   },
 
   collisionHandlerHitEnemy: function(player, enemy) {
@@ -241,6 +239,9 @@ Rick.Game.prototype = {
     
     player.kill();
     this.dead = true;
+
+    this.quitGame();
+
   },
 
   setUpExplosions: function(explosion) {
@@ -251,10 +252,14 @@ Rick.Game.prototype = {
 
   quitGame: function (pointer) {
 
+	this.updatePlayerStats(this.score, $('#player_id').html());
+
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
 
     //	Then let's go back to the main menu.
+
+    this.dead = false;
     this.game.state.start('Game');
 
   },
@@ -308,19 +313,22 @@ Rick.Game.prototype = {
     return Math.round(Math.random() * (max - min) + min);
   },
 
-  playerStats: function(node) {
+  playerStats: function(node) { // player states load
 	node.fadeIn(300, function() {
 		$('.score_th').fadeIn( 1200 );
 	});
 	return false;
   },
 
-  updatePlayerStats: function(latestScore) {
+  updatePlayerStats: function(latestScore, playerID) {
+
+	console.log(playerID);
 
 	var res = $.ajax({
 	  type: 'POST',
 	  url: "/scores",
 	  data: JSON.stringify({
+	  	"user_id":playerID,
 	    "points":latestScore
 	  }),
 	  error: function(e) {
@@ -332,7 +340,8 @@ Rick.Game.prototype = {
 
 	var addGameStats = function(data) {
 		console.log("data is: " + data);
-		$('#current_score').html(data.points); // update current_score id dom element in html.erb
+		$('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
+		$('#latest_score').html(data.points);
 
 	}
 

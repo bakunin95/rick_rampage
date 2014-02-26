@@ -16,6 +16,8 @@ class StaticsController < ApplicationController
 	# last score of the current player assigned to the @score variable
 	@score = Score.where(:user_id => current_user.id).first
 
+	@my_latest_score = Score.where(:user_id => current_user.id).order('created_at DESC').first
+
 	# last rank of the current player assigned to the @rank variable
 
 	#@rank = Score.order('points DESC').first.points.inspect

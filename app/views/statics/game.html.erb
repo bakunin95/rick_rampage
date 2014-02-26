@@ -24,6 +24,18 @@
   });
 </script>
 
+<div class="score_div" id="tweeting">
+	<br>
+	<% @email_string = (current_user.email).split("@")[0] %>
+
+	<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= @email_string %>" data-size="large" data-hashtags="rickyrampage" data-text="My Latest Score: <%= @my_latest_score.points %>"></a>
+
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+	</script>
+
+
+</div>
+
 <div class="score_div" id="stats">
 
 
@@ -43,8 +55,10 @@
 	      <tr>
 
 		      	<td class="score_th">Player ID</td>
-			      	<% if !current_user.id.nil? %>
-			        	<td class="score_th"><%= current_user.id %></td>	
+			      	<% if !current_user.email.nil? %>
+			        	<td class="score_th" id="player_id">
+			        		<%= current_user.id %>
+			        	</td>	
 					<% elsif %>
 				        <td></td>
 					<% end %>
@@ -67,20 +81,7 @@
 
 		  <tr>
 
-				<td class="score_th">Current Score</td>
-		  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
-				<!--<td class="score_th"><%= @score %></td>-->
-
-				<!-- Modify the CSS attribute to 'display: inline-block;' when a score exists (i.e. a user finishes the game and AJAX sends the score value), otherwise no current score displayed -->
-				<td class="score_th" id="current_score">
-
-				</td> 
-
-		  </tr>
-
-		  <tr>
-
-				<td class="score_th">Previous Score</td>
+				<td class="score_th">Prev. Score</td>
 		  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
 				<!--<td class="score_th"><%= @score %></td>-->
 
@@ -181,7 +182,7 @@
 		var latestScore = document.getElementById('latest_score'); 
 		latestScore.innerHTML = data;
 	}
-	
+
 	// DISUSED BUT WORKING
 	//
 	// upon form submission of score update the Player Stats table with data
