@@ -27,6 +27,10 @@ Rick.Preloader.prototype = {
 //    this.load.image('titlepage', 'images/title.jpg');
       this.load.image('playButton', 'assets/playButton.jpeg');
       this.load.audio('titleMusic', ['assets/soundtrack.mp3']);
+      this.load.audio('explosionSound', ['assets/explosion.mp3']);
+      this.load.audio('shootSound', ['assets/shoot.mp3']);
+      this.load.audio('dieSound', ['assets/kill.mp3']);
+      this.load.audio('deathSound', ['assets/death.mp3']);
 //    this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
     //	+ lots of other required assets here
 
