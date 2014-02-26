@@ -28,11 +28,62 @@
 	<br>
 	<% @email_string = (current_user.email).split("@")[0] %>
 
-	<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= @email_string %>" data-size="large" data-hashtags="rickyrampage" data-text="My Latest Score: <%= @my_latest_score.points %>"></a>
+	<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= @email_string %>" data-size="large" data-hashtags="rickyrampage" data-text="My Latest Score: "></a>
+	<!-- error undefined method `points' for nil:NilClass when database is empty -->
+	<!-- <%#= @my_latest_score.points %> -->
 
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 	</script>
 
+
+</div>
+
+
+<div class="score_div" id="topscores">
+
+	<h2>Top Ranks:</h2>
+
+	<table class="score_table">
+
+	  <thead>
+	    <tr>
+	      <th class="score_th">Rank</th>
+	      <th class="score_th">Player</th>
+		  <th class="score_th">Score</th>
+	    </tr>
+	  </thead>
+
+	  <tbody>
+	  	<% i = 0 %>
+	  	<% @high_scores.each do |score| %>
+	  	  <% i += 1 %>
+	      <tr style="background-color:<%= cycle("#ffeeff", "#cceeff", name: "colors") -%>;">
+
+			<!-- RANK -->
+			<td class="score_th"><%= i %></td>	
+
+	      	<!-- USER ID'S -->
+	      	<% if !score.user_id.nil? %>
+	        	<td class="score_th"><%= score.user_id %></td>	
+			<% else %>
+		        <td></td>
+			<% end %>
+
+			<!-- USER SCORE DETAILS -->
+		    <% if !score.points.nil? %> 
+		        <td class="score_th"><%= score.points %></td>
+		    <% else %>
+		        <td></td>
+			<% end %>
+
+		  </tr>
+		<% end %>
+
+		<% reset_cycle("colors") %>
+
+	  </tbody>
+
+	</table>
 
 </div>
 
@@ -67,14 +118,35 @@
 
 		  <tr>
 
-				<td class="score_th">Last Ranked</td>
+				<td class="score_th">Best Rank</td>
 					<!-- RANK -->
 					<% k = 0 %>
-			  		<% @scores.each do |score| %>
+			  		<% @scores_from_top.each do |score| %>
 			  	  		<% k += 1 %>
 			  	  		<% if score.user_id === current_user.id %>
 			  	  			<td class="score_th"><%= k %></td>	
+			  	  			<% break %>
 			  	  		<% end %>
+			  	  	<% end %>	
+
+		  </tr>
+
+		  <tr>
+
+				<td class="score_th">Worst Rank</td>
+					<!-- RANK -->
+					<% a = 0 %>
+					<% @scores_from_bottom.each do |score| %>
+					<% 	@b = a + 1 %>
+					<% end %>
+
+					<% j = @b %>
+			  		<% @scores_from_bottom.each do |score| %>
+			  	  		<% if score.user_id === current_user.id %>
+			  	  			<td class="score_th"><%= j %></td>	
+			  	  			<% break %>
+			  	  		<% end %>
+			  	  		<% j = j + 1 %>
 			  	  	<% end %>	
 
 		  </tr>
@@ -122,54 +194,6 @@
 
 </div>
 -->
-
-<div class="score_div" id="topscores">
-
-	<h2>Top Ranks:</h2>
-
-	<table class="score_table">
-
-	  <thead>
-	    <tr>
-	      <th class="score_th">Rank</th>
-	      <th class="score_th">Player</th>
-		  <th class="score_th">Score</th>
-	    </tr>
-	  </thead>
-
-	  <tbody>
-	  	<% i = 0 %>
-	  	<% @scores.each do |score| %>
-	  	  <% i += 1 %>
-	      <tr style="background-color:<%= cycle("#ffeeff", "#cceeff", name: "colors") -%>;">
-
-			<!-- RANK -->
-			<td class="score_th"><%= i %></td>	
-
-	      	<!-- USER ID'S -->
-	      	<% if !score.user_id.nil? %>
-	        	<td class="score_th"><%= score.user_id %></td>	
-			<% else %>
-		        <td></td>
-			<% end %>
-
-			<!-- USER SCORE DETAILS -->
-		    <% if !score.points.nil? %> 
-		        <td class="score_th"><%= score.points %></td>
-		    <% else %>
-		        <td></td>
-			<% end %>
-
-		  </tr>
-		<% end %>
-
-		<% reset_cycle("colors") %>
-
-	  </tbody>
-
-	</table>
-
-</div>
 
 <script>
 

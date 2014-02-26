@@ -147,9 +147,6 @@ Rick.Game.prototype = {
         head.alpha = 0.4;
     }
 
-	// Add Player Statistics
-    this.playerStats($('.score_div'));
-
   },
 
   update: function () {
@@ -373,42 +370,39 @@ Rick.Game.prototype = {
     return Math.round(Math.random() * (max - min) + min);
   },
 
-  playerStats: function(node) { // player states load
-	node.fadeIn(300, function() {
-		$('.score_th').fadeIn( 1200 );
-	});
-	return false;
-  },
-
   updatePlayerStats: function(latestScore, playerID) {
 
 	console.log(playerID);
+	console.log(latestScore);
+	// only store score if score not equal to zero and not the same score as the previous game score
+	if (latestScore !== 0 && latestScore !== $('#latest_score').html()) { 
+		var res = $.ajax({
+		  type: 'POST',
+		  url: "/scores",
+		  data: JSON.stringify({
+		  	"user_id":playerID,
+		    "points":latestScore
+		  }),
+		  error: function(e) {
+		    console.log(e);
+		  },
+		  dataType: "json",
+		  contentType: "application/json"
+		})
 
-	var res = $.ajax({
-	  type: 'POST',
-	  url: "/scores",
-	  data: JSON.stringify({
-	  	"user_id":playerID,
-	    "points":latestScore
-	  }),
-	  error: function(e) {
-	    console.log(e);
-	  },
-	  dataType: "json",
-	  contentType: "application/json"
-	})
+		var addGameStats = function(data) {
+			console.log("data is: " + data);
+			$('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
+			$('#latest_score').html(data.points);
 
-	var addGameStats = function(data) {
-		console.log("data is: " + data);
-		$('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
-		$('#latest_score').html(data.points);
+		}
 
-	}
+		res.done(function(data, textStatus, xhr) {
+		  		addGameStats(data);
+		  		console.log(data);
+		})
 
-	res.done(function(data, textStatus, xhr) {
-	  	addGameStats(data);
-	  	console.log(data);
-	})
+	};
 
   },
 

@@ -11,10 +11,16 @@ class StaticsController < ApplicationController
 	# database - display table: select * from <table_name>;
 
   	# all high scores assigned to @scores variable
-	@scores = Score.order('points DESC').limit(5).all
+	@high_scores = Score.order('points DESC').limit(5).all
 
 	# last score of the current player assigned to the @score variable
 	@score = Score.where(:user_id => current_user.id).first
+
+	# best rank
+	@scores_from_top = Score.order('points DESC').all
+
+	# worst rank
+	@scores_from_bottom = Score.order('points ASC').all
 
 	@my_latest_score = Score.where(:user_id => current_user.id).order('created_at DESC').first
 

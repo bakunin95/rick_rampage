@@ -21,9 +21,10 @@
 }
 
 /* used in game.html.erb */
-.score_th {
+.score_div {
 
-	display: none; /* default is not to display so it will fade in later than div called in game.js */
+/* display: none; */  /* default is not to display so it will fade in later than div called in game.js */
+
 
 }
 
