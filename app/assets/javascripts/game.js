@@ -120,7 +120,7 @@ Rick.Game.prototype = {
     // Adds Keyboard controls
     this.keyboard = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.pauseButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    // this.pauseButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
     // Add Enemies
     this.enemiesTime = this.game.time.now + this.nextEnemyTime;
@@ -304,7 +304,6 @@ Rick.Game.prototype = {
 
     //	Then let's go back to the main menu.
     this.game.state.start('Game');
-
   },
 
    createPlayer: function () {
@@ -357,7 +356,8 @@ Rick.Game.prototype = {
         var yPos = [350, 400, 450];
         this.platform.scale.setTo(2,2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
-        this.platform.body.velocity.x = this.platformVelocity;
+        this.platform.body.velocity.x = (this.platformVelocity - (this.game.time.totalElapsedSeconds()));
+        console.log(this.game.time.totalElapsedSeconds());
         this.platform.body.immovable = true;
         this.platformsTime = this.game.time.now + 2000;
       }
