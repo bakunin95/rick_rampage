@@ -52,10 +52,15 @@ Rick.Game = function (game) {
   // explosion
   this.explosions;
 
+
+  // check if dead or not
+  this.dead = false;
+
   // text
   this.score = 0;
   this.scoreString;
   this.scoreText;
+
 
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -104,6 +109,7 @@ Rick.Game.prototype = {
 
     // Create player
     this.player = this.game.add.sprite(100, 0, 'rick');
+    this.player.body.setSize(60, 90, 0, 0);
     this.player.anchor.setTo(0.5, 0.5);
 
     // this.player.body.bounce.y = 0.3;
@@ -111,7 +117,7 @@ Rick.Game.prototype = {
     // this.player.body.bounce.y = 0.3;
     this.player.body.gravity.y = 10;
     // set collideWorldBounds to left only, or kill player on touching bottom
-    this.player.body.collideWorldBounds = true;
+    this.player.body.collideWorldBounds = false;
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
@@ -151,19 +157,34 @@ Rick.Game.prototype = {
     // collisions
     this.game.physics.collide(this.bullets, this.enemies, this.collisionHandler, null, this);
     this.game.physics.collide(this.player, this.platforms);
+    this.game.physics.collide(this.player, this.enemies, this.collisionHandlerHitEnemy, null, this);
 
     if (this.player.body.touching.down) {
     	this.player.animations.play('right');
     }
 
+
     this.checkPlayerJump();
+
 
     //  Firing?
     if (this.fireButton.isDown) {
       this.fireBullet();
     }
 
+
+    // Kill player if they touch the ground
+    if (this.player.y > 450 && !this.dead) {
+    	this.collisionHandlerFall(this.player);
+    }
+
+    // Kill player if they go out of left side of screen
+    if (this.player.x < -10 && !this.dead) {
+    	this.collisionHandlerFall(this.player);
+    }
+
   },
+
 
   checkPlayerJump: function() {
     if (this.keyboard.up.isDown && this.player.body.touching.down){
@@ -195,6 +216,33 @@ Rick.Game.prototype = {
 
   },
 
+  collisionHandlerHitEnemy: function(player, enemy) {
+  	player.kill();
+  	enemy.kill();
+
+  	//  And create an explosion :)
+    var explosion = this.explosions.getFirstDead();
+    explosion.reset(enemy.body.x + 50, enemy.body.y + 30);
+    explosion.play('explosion', 30, false, true);
+
+    //  And create an explosion :)
+    explosion = this.explosions.getFirstDead();
+    explosion.reset(player.body.x + 50, player.body.y + 30);
+    explosion.play('explosion', 30, false, true);
+  },
+
+  collisionHandlerFall: function(player){
+  	
+
+  	//  And create an explosion :)
+    var explosion = this.explosions.getFirstDead();
+    explosion.reset(player.body.x + 50, player.body.y + 30);
+    explosion.play('explosion', 30, false, true);
+    
+    player.kill();
+    this.dead = true;
+  },
+
   setUpExplosions: function(explosion) {
     explosion.anchor.x = 0.5;
     explosion.anchor.y = 0.5;
@@ -214,6 +262,8 @@ Rick.Game.prototype = {
   createEnemy: function () {
     if (this.game.time.now > this.enemiesTime) {
       this.enemy = this.game.add.sprite(600, 100, 'wasp');
+      // this sets the bounding box (collision area) to be smaller, for more precise collision
+      this.enemy.body.setSize(170, 110, 0, 0);
       this.enemy.animations.add('left', [0,1,2], 10, true);
       this.enemy.animations.play('left');
       this.enemy.outOfBoundsKill =  true;
