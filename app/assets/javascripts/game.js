@@ -1,5 +1,11 @@
 'use strict';
 
+//overriding the framework so rick doesn't get stuck on those platform transitions
+Phaser.Physics.Arcade.prototype.separate = function (body1, body2) {
+
+        this._result = (this.separateY(body1, body2) || this.separateX(body1, body2));
+    }
+
 Rick.Game = function (game) {
 
   // When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
@@ -45,7 +51,7 @@ Rick.Game = function (game) {
   this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
   this.enemyKillPoint = 20;
 
-  // levels
+  // levels (of difficulty)
   this.levelTime;
   this.changeLevelTime = 5000; // interval
 
@@ -61,6 +67,9 @@ Rick.Game = function (game) {
   this.scoreString;
   this.scoreText;
 
+  //Lives
+  this.lives;
+
 
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -73,10 +82,12 @@ Rick.Game.prototype = {
     this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
+    this.game.load.image('head', 'assets/rick_head.png');
     this.game.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
     this.game.load.spritesheet('explosion', 'assets/enemy_explosion.png', 132, 262);
+    this.game.load.image('head', 'assets/rick_head.png');
   },
 
   create: function () {
@@ -112,9 +123,7 @@ Rick.Game.prototype = {
     this.player.body.setSize(60, 90, 0, 0);
     this.player.anchor.setTo(0.5, 0.5);
 
-    // this.player.body.bounce.y = 0.3;
-
-    // this.player.body.bounce.y = 0.3;
+    
     this.player.body.gravity.y = 10;
     // set collideWorldBounds to left only, or kill player on touching bottom
     this.player.body.collideWorldBounds = false;
@@ -145,6 +154,17 @@ Rick.Game.prototype = {
 
 	  // Add Player Statistics
     this.playerStats($('.score_div'));
+
+    //  Lives Display
+    this.lives = this.game.add.group();
+    this.game.add.text( 15, this.game.world.height - 40, 'Lives : ', { fontSize: '34px', fill: '#fff' });
+
+     for (var i = 0; i < 3; i++) 
+    {
+        var head = this.lives.create(110 + (55 * i), this.game.world.height - 60, 'head');
+        
+        head.alpha = 0.7;
+    }
 
   },
 
@@ -214,8 +234,27 @@ Rick.Game.prototype = {
   },
 
   collisionHandlerHitEnemy: function(player, enemy) {
-  	player.kill();
+  	// player.kill();
   	enemy.kill();
+
+    var live = this.lives.getFirstAlive();
+
+    if (live){
+        live.kill();
+        // Create player
+        this.player = this.game.add.sprite(100, 0, 'rick');
+        this.player.body.setSize(60, 90, 0, 0);
+        this.player.anchor.setTo(0.5, 0.5);
+
+        
+        this.player.body.gravity.y = 10;
+        // set collideWorldBounds to left only, or kill player on touching bottom
+        this.player.body.collideWorldBounds = false;
+
+        this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
+        this.player.animations.add('jump', [8], 10, false);
+
+    }
 
   	//  And create an explosion :)
     var explosion = this.explosions.getFirstDead();
@@ -226,9 +265,40 @@ Rick.Game.prototype = {
     explosion = this.explosions.getFirstDead();
     explosion.reset(player.body.x + 50, player.body.y + 30);
     explosion.play('explosion', 30, false, true);
+
+    // When the player dies
+    if (this.lives.countLiving() < 1)
+    {
+
+        player.kill();
+        this.quitGame();
+    }
+
   },
 
+
+
   collisionHandlerFall: function(player){
+
+    var live = this.lives.getFirstAlive();
+
+    if (live){
+        live.kill();
+        // Create player
+        this.player = this.game.add.sprite(100, 0, 'rick');
+        this.player.body.setSize(60, 90, 0, 0);
+        this.player.anchor.setTo(0.5, 0.5);
+
+        
+        this.player.body.gravity.y = 10;
+        // set collideWorldBounds to left only, or kill player on touching bottom
+        this.player.body.collideWorldBounds = false;
+
+        this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
+        this.player.animations.add('jump', [8], 10, false);
+
+        this.dead = false;
+    }
   	
 
   	//  And create an explosion :)
@@ -236,8 +306,12 @@ Rick.Game.prototype = {
     explosion.reset(player.body.x + 50, player.body.y + 30);
     explosion.play('explosion', 30, false, true);
     
-    player.kill();
-    this.dead = true;
+    if (this.lives.countLiving() < 1){
+      player.kill();
+      this.dead = true;
+      this.quitGame();
+      // this.game.input.onTap.addOnce(restart,this);
+    }
   },
 
   setUpExplosions: function(explosion) {
@@ -253,6 +327,7 @@ Rick.Game.prototype = {
 
     //	Then let's go back to the main menu.
     this.game.state.start('Game');
+    this.dead = false;
   },
 
   createEnemy: function () {
@@ -269,7 +344,7 @@ Rick.Game.prototype = {
       if (this.enemy) {
         var xPos = [400, 450, 500];
         var yPos = [100, 150, 200, 250];
-        this.enemy.reset(xPos[this.getRandom(0, xPos.length)], yPos[this.getRandom(0, yPos.length)]);
+        this.enemy.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.enemy.body.velocity.x = -200;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
@@ -292,7 +367,7 @@ Rick.Game.prototype = {
         var xPos = [800, 850, 900];
         var yPos = [350, 400, 450];
         this.platform.scale.setTo(2,2);
-        this.platform.reset(xPos[this.getRandom(0, xPos.length)], yPos[this.getRandom(0, yPos.length)]);
+        this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
         this.platform.body.immovable = true;
         this.platformsTime = this.game.time.now + 700;
