@@ -61,6 +61,9 @@ Rick.Game = function (game) {
   this.scoreString;
   this.scoreText;
 
+  //lives 
+  this.lives;
+
 
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -73,6 +76,7 @@ Rick.Game.prototype = {
     this.game.load.image('ground', 'assets/platform4.png');
     this.game.load.image('bullet', 'assets/bullet.png');
     this.game.load.image('desert', 'assets/desert.png');
+    this.game.load.image('head', 'assets/rick_head.png')
     this.game.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
     this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
@@ -108,19 +112,7 @@ Rick.Game.prototype = {
     this.platforms.add(this.platform);
 
     // Create player
-    this.player = this.game.add.sprite(100, 0, 'rick');
-    this.player.body.setSize(60, 90, 0, 0);
-    this.player.anchor.setTo(0.5, 0.5);
-
-    // this.player.body.bounce.y = 0.3;
-
-    // this.player.body.bounce.y = 0.3;
-    this.player.body.gravity.y = 10;
-    // set collideWorldBounds to left only, or kill player on touching bottom
-    this.player.body.collideWorldBounds = false;
-
-    this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
-    this.player.animations.add('jump', [8], 10, false);
+    this.createPlayer();
 
     // Adds Keyboard controls
     this.keyboard = this.game.input.keyboard.createCursorKeys();
@@ -142,6 +134,18 @@ Rick.Game.prototype = {
     // The score
     this.scoreString = 'Score : ';
     this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { fontSize: '34px', fill: '#fff' });
+
+    // Lives display
+    this.lives = this.game.add.group();
+    this.game.add.text(10, 450, 'Lives : ', { fontSize: '34px', fill: '#fff' });
+
+    // The 3 lives as objects (head)
+    for (var i = 0; i < 3; i++) 
+    {
+        var head = this.lives.create(120 + (50 * i), 460, 'head');
+        head.anchor.setTo(0.5, 0.5);
+        head.alpha = 0.4;
+    }
 
 	  // Add Player Statistics
     this.playerStats($('.score_div'));
@@ -214,8 +218,26 @@ Rick.Game.prototype = {
   },
 
   collisionHandlerHitEnemy: function(player, enemy) {
-  	player.kill();
   	enemy.kill();
+
+  	// get the first head (out of the 3 that exist)
+  	var live = this.lives.getFirstAlive();
+
+  	// if any lives exist, kill them
+  	if (live)
+    {
+        live.kill();
+        player.kill();
+        this.createPlayer();
+
+    }
+
+  	// When the player dies
+    if (this.lives.countLiving() < 1){
+    	player.kill();
+    	this.quitGame();
+    }
+  	
 
   	//  And create an explosion :)
     var explosion = this.explosions.getFirstDead();
@@ -236,8 +258,27 @@ Rick.Game.prototype = {
     explosion.reset(player.body.x + 50, player.body.y + 30);
     explosion.play('explosion', 30, false, true);
     
-    player.kill();
-    this.dead = true;
+    // get the first head (out of the 3 that exist)
+  	var live = this.lives.getFirstAlive();
+
+  	// if any lives exist, kill them
+  	if (live)
+    {
+        live.kill();
+        player.kill();
+        this.createPlayer();
+        // this stops multiple deaths when he falls
+        this.dead = false;
+
+    }
+  	// When the player dies
+    if (this.lives.countLiving() < 1){
+    	player.kill();
+    	this.quitGame();
+    	this.dead = true;
+    }
+    // this stops multiple deaths when he falls, set to false everywhere else
+    
   },
 
   setUpExplosions: function(explosion) {
@@ -253,7 +294,21 @@ Rick.Game.prototype = {
 
     //	Then let's go back to the main menu.
     this.game.state.start('Game');
+    this.dead = false;
   },
+
+   createPlayer: function () {
+  	// Create player
+    this.player = this.game.add.sprite(100, 0, 'rick');
+    this.player.body.setSize(60, 90, 0, 0);
+    this.player.anchor.setTo(0.5, 0.5);
+    this.player.body.gravity.y = 10;
+    // player will still die, but will survive if in the air at the time
+    this.player.body.collideWorldBounds = true;
+
+    this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
+    this.player.animations.add('jump', [8], 10, false);
+},
 
   createEnemy: function () {
     if (this.game.time.now > this.enemiesTime) {
