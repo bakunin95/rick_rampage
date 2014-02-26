@@ -14,15 +14,21 @@ class StaticsController < ApplicationController
 	@high_scores = Score.order('points DESC').limit(5).all
 
 	# last score of the current player assigned to the @score variable
-	@score = Score.where(:user_id => current_user.id).first
+	#@score = Score.where(:user_id => current_user.id).first
 
 	# best rank
-	@scores_from_top = Score.order('points DESC').all
+	@scores_from_top = Score.order('points DESC, created_at DESC').all
 
 	# worst rank
-	@scores_from_bottom = Score.order('points ASC').all
+	@scores_from_bottom = Score.order('points ASC, created_at DESC').all
+
+	@scores_length = @scores_from_bottom.length;
 
 	@my_latest_score = Score.where(:user_id => current_user.id).order('created_at DESC').first
+
+	@my_avg_score = Score.where(:user_id => current_user.id).order('created_at DESC').average('points').to_i
+
+	#@avg = number_to_rounded(@my_avg_score, precision: 2)
 
 	# last rank of the current player assigned to the @rank variable
 

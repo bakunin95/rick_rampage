@@ -28,9 +28,10 @@
 	<br>
 	<% @email_string = (current_user.email).split("@")[0] %>
 
-	<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= @email_string %>" data-size="large" data-hashtags="rickyrampage" data-text="My Latest Score: "></a>
+	<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= %>" data-size="large" data-hashtags="rickyrampage" data-text="My Latest Score: <%= @my_latest_score.points if @my_latest_score %>"></a>
 	<!-- error undefined method `points' for nil:NilClass when database is empty -->
 	<!-- <%#= @my_latest_score.points %> -->
+	<!-- add @email_string to data-via but assumes email prefix is their twitter handle -->
 
 	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 	</script>
@@ -101,7 +102,7 @@
 	    </tr>
 	  </thead>
 
-	  <tbody>
+	  <tbody style="background-color:<%= cycle("#ffeeff", "#cceeff", name: "colors2") -%>;">
 
 	      <tr>
 
@@ -135,18 +136,13 @@
 
 				<td class="score_th">Worst Rank</td>
 					<!-- RANK -->
-					<% a = 0 %>
-					<% @scores_from_bottom.each do |score| %>
-					<% 	@b = a + 1 %>
-					<% end %>
-
-					<% j = @b %>
+					<% j = @scores_length %> 
 			  		<% @scores_from_bottom.each do |score| %>
 			  	  		<% if score.user_id === current_user.id %>
 			  	  			<td class="score_th"><%= j %></td>	
 			  	  			<% break %>
 			  	  		<% end %>
-			  	  		<% j = j + 1 %>
+			  	  		<% j = j - 1 %>
 			  	  	<% end %>	
 
 		  </tr>
@@ -159,24 +155,43 @@
 
 				<!-- Modify the CSS attribute to 'display: inline-block;' when a score exists (i.e. a user finishes the game and AJAX sends the score value), otherwise no current score displayed -->
 				<td class="score_th" id="latest_score">
-
+					<%= @my_latest_score.points if @my_latest_score %>
 				</td> 
 
 		  </tr>
 
 		  <tr>
 
-				<td class="score_th">History of Scores</td>
+				<td class="score_th">Avg. Score</td>
+		  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
+				<!--<td class="score_th"><%= @score %></td>-->
 
-				<td class="score_th" id="all_scores">
-						<%= button_tag(link_to 'Display', scores_path, class: "btn btn-default") %>
+				<!-- Modify the CSS attribute to 'display: inline-block;' when a score exists (i.e. a user finishes the game and AJAX sends the score value), otherwise no current score displayed -->
+				<td class="score_th" id="avg_score">
+					<%= @my_avg_score %>
+					<%= @avg %>
 				</td> 
 
 		  </tr>
 
+		  <tr>
+
+				<td class="score_th">Past Scores</td>
+
+				<td class="score_th" id="all_scores">
+						<%= link_to 'Display', scores_path %>
+				</td> 
+
+		  </tr>
+
+		
+		
 	  </tbody>
 
+	  <% reset_cycle("colors2") %>
+
 	</table>
+
 
 </div>
 
