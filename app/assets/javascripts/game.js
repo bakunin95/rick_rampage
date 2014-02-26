@@ -116,6 +116,7 @@ Rick.Game.prototype = {
     // Adds Keyboard controls
     this.keyboard = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.pauseButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
     // Add Enemies
     this.enemiesTime = this.game.time.now + this.nextEnemyTime;
