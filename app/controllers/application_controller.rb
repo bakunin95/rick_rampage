@@ -4,7 +4,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   # Devise authenticate 
-  
-  before_action :authenticate_user! 
+
+  # the user doesn't have to be authenticated to play
+  # before_action :authenticate_user!
 
 end

@@ -91,6 +91,10 @@ Rick.Game.prototype = {
 
     // Rock!!!
     this.music = this.add.audio('titleMusic');
+    this.explosionSound = this.add.audio('explosionSound');
+    this.shootSound = this.add.audio('shootSound');
+    this.dieSound = this.add.audio('dieSound');
+    this.deathSound = this.add.audio('deathSound');
     this.music.play();
 
     // The scrolling background
@@ -212,6 +216,7 @@ Rick.Game.prototype = {
     bullet.kill();
     enemy.kill();
 
+    this.explosionSound.play();
     this.score += this.enemyKillPoint;
     this.scoreText.content = this.scoreString + this.score;
 
@@ -223,6 +228,7 @@ Rick.Game.prototype = {
 
   collisionHandlerHitEnemy: function(player, enemy) {
   	enemy.kill();
+    this.explosionSound.play();
 
   	// get the first head (out of the 3 that exist)
   	var live = this.lives.getFirstAlive();
@@ -232,6 +238,7 @@ Rick.Game.prototype = {
     {
         live.kill();
         player.kill();
+        this.dieSound.play();
         this.enemies.removeAll();
         this.createPlayer();
 
@@ -240,6 +247,7 @@ Rick.Game.prototype = {
   	// When the player dies
     if (this.lives.countLiving() < 1){
     	player.kill();
+      this.deathSound.play();
     	this.quitGame();
     }
 
@@ -270,16 +278,14 @@ Rick.Game.prototype = {
         live.kill();
         player.kill();
         this.enemies.removeAll();
-        
-        // this stops multiple deaths when he falls
-        
+        this.dieSound.play();
         this.createPlayer();
     }
   	// When the player dies
     if (this.lives.countLiving() < 1){
     	player.kill();
     	this.quitGame();
-    	
+      	this.deathSound.play();
     	// this stops multiple deaths when he falls, set to false everywhere else
     }
 
@@ -297,13 +303,21 @@ Rick.Game.prototype = {
     explosion.animations.add('explosion');
   },
 
-  quitGame: function (pointer) {
+  quitGame: function () {
 
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
+    this.game.cache.destroy();
+    this.enemies.removeAll();
 
-    //	Then let's go back to the main menu.
-    this.game.state.start('Game');
+
+    this.score = 0;
+    this.nextEnemyTime = 3000;
+
+    this.player.revive();
+    this.lives.callAll('revive');
+
+    this.game.state.start('MainMenu');
   },
 
    createPlayer: function () {
@@ -391,6 +405,7 @@ Rick.Game.prototype = {
 
       if (this.bullet) {
         //  And fire it
+        this.shootSound.play();
         this.bullet.reset(this.player.x + 40, this.player.y + 10);
         this.bullet.body.velocity.x = 800;
         this.bulletTime = this.game.time.now + 300;
