@@ -24,11 +24,20 @@ Rick.Preloader.prototype = {
 
     //	Here we load the rest of the assets our game needs.
     //	As this is just a Project Template I've not provided these assets, swap them for your own.
-    this.load.image('titlepage', 'images/title.jpg');
-    this.load.atlas('playButton', 'images/play_button.png', 'images/play_button.json');
-    this.load.audio('titleMusic', ['audio/main_menu.mp3']);
-    this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
+//    this.load.image('titlepage', 'images/title.jpg');
+      this.load.image('playButton', 'assets/playButton.jpeg');
+      this.load.audio('titleMusic', ['assets/soundtrack.mp3']);
+//    this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
     //	+ lots of other required assets here
+
+    this.load.image('ground', 'assets/platform4.png');
+    this.load.image('bullet', 'assets/bullet.png');
+    this.load.image('desert', 'assets/desert.png');
+    this.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
+    this.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
+    this.load.spritesheet('rick', 'assets/rick.png', 94, 100);
+    this.load.spritesheet('explosion', 'assets/enemy_explosion.png', 132, 262);
+
 
   },
 

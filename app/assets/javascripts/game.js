@@ -70,21 +70,14 @@ Rick.Game = function (game) {
 Rick.Game.prototype = {
 
   preload: function () {
-    this.game.load.image('ground', 'assets/platform4.png');
-    this.game.load.image('bullet', 'assets/bullet.png');
-    this.game.load.image('desert', 'assets/desert.png');
-    this.game.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
-    this.game.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
-    this.game.load.spritesheet('rick', 'assets/rick.png', 94, 100);
-    this.game.load.spritesheet('explosion', 'assets/enemy_explosion.png', 132, 262);
+
   },
 
   create: function () {
 
-    // TODO delete when the boot.js will be activated
-    // because must be there
-    this.game.stage.disableVisibilityChange = true;
-    // TODO
+    // Rock!!!
+    this.music = this.add.audio('titleMusic');
+    this.music.play();
 
     // The scrolling background
     this.background = this.game.add.sprite(0, 0, 'desert');
