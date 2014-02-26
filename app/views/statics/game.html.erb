@@ -40,16 +40,16 @@
 
 	  <tbody>
 
-	    <!--  <tr>
+	      <tr>
 
 		      	<td class="score_th">Player ID</td>
-			      	<%# if !current_user.id.nil? %>
+			      	<% if !current_user.id.nil? %>
 			        	<td class="score_th"><%= current_user.id %></td>	
-					<%# elsif %>
+					<% elsif %>
 				        <td></td>
-					<%# end %>
+					<% end %>
 
-		  </tr> -->
+		  </tr>
 
 		  <tr>
 
@@ -80,7 +80,7 @@
 
 		  <tr>
 
-				<td class="score_th">Latest Score</td>
+				<td class="score_th">Previous Score</td>
 		  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
 				<!--<td class="score_th"><%= @score %></td>-->
 
@@ -98,21 +98,6 @@
 				<td class="score_th" id="all_scores">
 						<%= button_tag(link_to 'Display', scores_path, class: "btn btn-default") %>
 				</td> 
-
-		  </tr>
-
-		  <tr>
-
-				<td class="score_th">Time Left</td>
-		  		<!-- TIME LEFT --> 	
-				<td class="score_th"><%=  %>TBC</td>
-		  </tr>
-
-		  <tr>
-
-				<td class="score_th">Lives Left</td>
-		  		<!-- LIVES LEFT --> 	
-				<td class="score_th"><%=  %>TBC</td>
 
 		  </tr>
 
@@ -139,7 +124,7 @@
 
 <div class="score_div" id="topscores">
 
-	<h2>Top 5 Scores:</h2>
+	<h2>Top Ranks:</h2>
 
 	<table class="score_table">
 
