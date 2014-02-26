@@ -61,7 +61,7 @@ Rick.Game = function (game) {
 
 
   // check if dead or not
-  this.dead = false;
+  
 
   // text
   this.score = 0;
@@ -85,6 +85,9 @@ Rick.Game.prototype = {
   },
 
   create: function () {
+
+  	// check if dead or not
+  	
 
     // Rock!!!
     this.music = this.add.audio('titleMusic');
@@ -179,12 +182,12 @@ Rick.Game.prototype = {
 
 
     // Kill player if they touch the ground
-    if (this.player.y > 450 && !this.dead) {
+    if (this.player.y > 450 ) {
     	this.collisionHandlerFall(this.player);
     }
 
     // Kill player if they go out of left side of screen
-    if (this.player.x < -10 && !this.dead) {
+    if (this.player.x < -10 ) {
     	this.collisionHandlerFall(this.player);
     }
 
@@ -259,6 +262,7 @@ Rick.Game.prototype = {
   	
     // get the first head (out of the 3 that exist)
   	var live = this.lives.getFirstAlive();
+  	
 
   	// if any lives exist, kill them
   	if (live)
@@ -266,16 +270,16 @@ Rick.Game.prototype = {
         live.kill();
         player.kill();
         this.enemies.removeAll();
-        this.createPlayer();
+        
         // this stops multiple deaths when he falls
-        this.dead = false;
-
+        
+        this.createPlayer();
     }
   	// When the player dies
     if (this.lives.countLiving() < 1){
     	player.kill();
     	this.quitGame();
-    	this.dead = true;
+    	
     	// this stops multiple deaths when he falls, set to false everywhere else
     }
 
@@ -300,7 +304,7 @@ Rick.Game.prototype = {
 
     //	Then let's go back to the main menu.
     this.game.state.start('Game');
-    this.dead = false;
+
   },
 
    createPlayer: function () {
