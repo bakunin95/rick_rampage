@@ -227,6 +227,7 @@ Rick.Game.prototype = {
     {
         live.kill();
         player.kill();
+        this.enemies.removeAll();
         this.createPlayer();
 
     }
@@ -262,6 +263,7 @@ Rick.Game.prototype = {
     {
         live.kill();
         player.kill();
+        this.enemies.removeAll();
         this.createPlayer();
         // this stops multiple deaths when he falls
         this.dead = false;
@@ -324,9 +326,8 @@ Rick.Game.prototype = {
       this.enemies.add(this.enemy);
 
       if (this.enemy) {
-        var xPos = [400, 450, 500];
-        var yPos = [100, 150, 200, 250];
-        this.enemy.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
+        var yPos = [100, 125, 150, 175, 200, 225, 250];
+        this.enemy.reset(750, yPos[this.getRandom(0, yPos.length - 1)]);
         this.enemy.body.velocity.x = -200;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
