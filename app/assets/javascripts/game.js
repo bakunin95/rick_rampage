@@ -50,7 +50,7 @@ Rick.Game = function (game) {
   this.enemiesTime = 0; // used to create enemies in a time interval
   this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
   this.enemyKillPoint = 20;
-  this.enemeyVelocity = -400;
+  this.enemyVelocity = -400;
 
   // levels (of difficulty)
   this.levelTime;
@@ -351,7 +351,7 @@ Rick.Game.prototype = {
       if (this.enemy) {
         var yPos = [100, 125, 150, 175, 200, 225, 250];
         this.enemy.reset(750, yPos[this.getRandom(0, yPos.length - 1)]);
-        this.enemy.body.velocity.x = this.enemeyVelocity;
+        this.enemy.body.velocity.x = this.enemyVelocity;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
     }

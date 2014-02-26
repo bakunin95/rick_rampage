@@ -24,11 +24,11 @@ class StaticsController < ApplicationController
 
 	@scores_length = @scores_from_bottom.length;
 
-	@my_latest_score = Score.where(:user_id => current_user.id).order('created_at DESC').first
+	#current_user.nil? ? Score.none : current_user.scores.last
+	
+	current_user.nil? ? Score.none : @my_latest_score = Score.where(:user_id => current_user.id).order('created_at DESC').first
 
-	@my_avg_score = Score.where(:user_id => current_user.id).order('created_at DESC').average('points').to_i
-
-	#@avg = number_to_rounded(@my_avg_score, precision: 2)
+	current_user.nil? ? Score.none : @my_avg_score = Score.where(:user_id => current_user.id).order('created_at DESC').average('points').to_i
 
 	# last rank of the current player assigned to the @rank variable
 

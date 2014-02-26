@@ -26,7 +26,8 @@
 
 <div class="score_div" id="tweeting">
 	<br>
-	<% @email_string = (current_user.email).split("@")[0] %>
+
+	<%# @email_string = (current_user.email).split("@")[0] %>
 
 	<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= %>" data-size="large" data-hashtags="rickyrampage" data-text="My Latest Score: <%= @my_latest_score.points if @my_latest_score %>"></a>
 	<!-- error undefined method `points' for nil:NilClass when database is empty -->
@@ -107,7 +108,7 @@
 	      <tr>
 
 		      	<td class="score_th">Player ID</td>
-			      	<% if !current_user.email.nil? %>
+			      	<% if (!current_user.nil? && !current_user.email.nil?) %>
 			        	<td class="score_th" id="player_id">
 			        		<%= current_user.id %>
 			        	</td>	
@@ -121,14 +122,18 @@
 
 				<td class="score_th">Best Rank</td>
 					<!-- RANK -->
-					<% k = 0 %>
-			  		<% @scores_from_top.each do |score| %>
-			  	  		<% k += 1 %>
-			  	  		<% if score.user_id === current_user.id %>
-			  	  			<td class="score_th"><%= k %></td>	
-			  	  			<% break %>
-			  	  		<% end %>
-			  	  	<% end %>	
+					<% if (!current_user.nil? && !current_user.email.nil?) %>
+						<% k = 0 %>
+				  		<% @scores_from_top.each do |score| %>
+				  	  		<% k += 1 %>
+				  	  		<% if score.user_id === current_user.id %>
+				  	  			<td class="score_th"><%= k %></td>	
+				  	  			<% break %>
+				  	  		<% end %>
+				  	  	<% end %>	
+					<% elsif %>
+				        <td></td>
+					<% end %>
 
 		  </tr>
 
@@ -136,15 +141,18 @@
 
 				<td class="score_th">Worst Rank</td>
 					<!-- RANK -->
-					<% j = @scores_length %> 
-			  		<% @scores_from_bottom.each do |score| %>
-			  	  		<% if score.user_id === current_user.id %>
-			  	  			<td class="score_th"><%= j %></td>	
-			  	  			<% break %>
-			  	  		<% end %>
-			  	  		<% j = j - 1 %>
-			  	  	<% end %>	
-
+					<% if (!current_user.nil? && !current_user.email.nil?) %>
+						<% j = @scores_length %> 
+				  		<% @scores_from_bottom.each do |score| %>
+				  	  		<% if score.user_id === current_user.id %>
+				  	  			<td class="score_th"><%= j %></td>	
+				  	  			<% break %>
+				  	  		<% end %>
+				  	  		<% j = j - 1 %>
+				  	  	<% end %>	
+					<% elsif %>
+				        <td></td>
+					<% end %>
 		  </tr>
 
 		  <tr>
