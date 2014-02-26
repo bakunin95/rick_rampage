@@ -314,6 +314,8 @@ Rick.Game.prototype = {
 
     this.player.revive();
     this.lives.callAll('revive');
+
+    this.game.state.start('MainMenu');
   },
 
    createPlayer: function () {
