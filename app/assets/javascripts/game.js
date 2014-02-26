@@ -190,6 +190,9 @@ Rick.Game.prototype = {
     var explosion = this.explosions.getFirstDead();
     explosion.reset(enemy.body.x + 50, enemy.body.y + 30);
     explosion.play('explosion', 30, false, true);
+
+    this.updatePlayerStats(this.score);
+
   },
 
   setUpExplosions: function(explosion) {
@@ -205,6 +208,7 @@ Rick.Game.prototype = {
 
     //	Then let's go back to the main menu.
     this.game.state.start('Game');
+
   },
 
   createEnemy: function () {
@@ -259,6 +263,34 @@ Rick.Game.prototype = {
 		$('.score_th').fadeIn( 1200 );
 	});
 	return false;
+  },
+
+  updatePlayerStats: function(latestScore) {
+
+	var res = $.ajax({
+	  type: 'POST',
+	  url: "/scores",
+	  data: JSON.stringify({
+	    "points":latestScore
+	  }),
+	  error: function(e) {
+	    console.log(e);
+	  },
+	  dataType: "json",
+	  contentType: "application/json"
+	})
+
+	var addGameStats = function(data) {
+		console.log("data is: " + data);
+		$('#current_score').html(data.points); // update current_score id dom element in html.erb
+
+	}
+
+	res.done(function(data, textStatus, xhr) {
+	  	addGameStats(data);
+	  	console.log(data);
+	})
+
   },
 
   buildLedge: function () {

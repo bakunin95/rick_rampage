@@ -67,6 +67,19 @@
 
 		  <tr>
 
+				<td class="score_th">Current Score</td>
+		  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
+				<!--<td class="score_th"><%= @score %></td>-->
+
+				<!-- Modify the CSS attribute to 'display: inline-block;' when a score exists (i.e. a user finishes the game and AJAX sends the score value), otherwise no current score displayed -->
+				<td class="score_th" id="current_score">
+
+				</td> 
+
+		  </tr>
+
+		  <tr>
+
 				<td class="score_th">Latest Score</td>
 		  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
 				<!--<td class="score_th"><%= @score %></td>-->
@@ -83,7 +96,7 @@
 				<td class="score_th">History of Scores</td>
 
 				<td class="score_th" id="all_scores">
-
+						<%= button_tag(link_to 'Display', scores_path, class: "btn btn-default") %>
 				</td> 
 
 		  </tr>
@@ -103,46 +116,30 @@
 
 		  </tr>
 
-		<!--  <tr>
-
-				<td class="score_th">Game Progress (%)</td> 	
-				<td class="score_th"><%#= number_to_percentage(50, precision: 1) %></td>
-
-		  </tr> -->
-
 	  </tbody>
 
 	</table>
 
 </div>
 
-
+<!--
 <div class="score_div" id="testscoresave">
 
 	<h2>Latest Score Save:</h2>
 
-	<%= form_for @score, url: scores_path, remote: true, html: { method: :post, action: "create" } do |f| %>
+	<%#= form_for @score, url: scores_path(format: :json), remote: true, html: { method: :post } do |f| %>
 
-		Enter Latest Score:
-		  	<%= f.text_field :score %>
-			<%= f.submit %>
-	<% end %>
+		Enter Latest Score:<br>
+		  	<%#= f.number_field :points %>
+			<%#= f.submit %>
+	<%# end %>
 
 </div>
-
-<!-- 
-	RELEVANT LINKS
-http://stackoverflow.com/questions/18322637/rails-4-link-to-submit-form-using-ajax-how-to-imitate-post-request
-http://apidock.com/rails/ActionView/Helpers/FormHelper/form_for
 -->
-
-<!-- # remote:true triggers AJAX functionality -->
-
-
 
 <div class="score_div" id="topscores">
 
-	<h2>Top Scores:</h2>
+	<h2>Top 5 Scores:</h2>
 
 	<table class="score_table">
 
@@ -188,11 +185,6 @@ http://apidock.com/rails/ActionView/Helpers/FormHelper/form_for
 
 </div>
 
-
-<!--<script id="score-template" type="text/template">
-	<li><%#= latest_score %></li>
-</script>-->
-
 <script>
 
 	var url = '';
@@ -204,44 +196,21 @@ http://apidock.com/rails/ActionView/Helpers/FormHelper/form_for
 		var latestScore = document.getElementById('latest_score'); 
 		latestScore.innerHTML = data;
 	}
+	
+	// DISUSED BUT WORKING
+	//
+	// upon form submission of score update the Player Stats table with data
 
+	// $(function() {
+	// 	$('form')
+	// 		.bind('ajax:success', function(e, data, status, xhr) {
+	// 			console.log("success json: ", jQuery.parseJSON(xhr.responseText));
+	// 		 	$('#current_score').html(data.points);
 
-	// var fetchLatestScores = function() { 
-
-	// create fn storing variable and within fn create function to getJSON
-
-
-
-		// 	var latestScoreTemplate = $('#score-template').html();
-
-		// 	// console.log(data.Search[0].score);
-
-		// 	$(data.Search).each(function() { 
-		// 		$('#latest_scores').append(_.template(latestScoreTemplate, { 
-		// 			latest_score: this.score
-
-		// 		}));
-		// 	});
-
-		// }
-
-		// var res = $.ajax({ // save AJAX response to a variable
-		// 	url: urlPrefix + $('form').find('input').val() + urlPostfix,
-		// 	dataType: 'json',
-		// 	type: 'get'
-		// });
-
-		// res.done(function(data) {
-		// 	console.log(data);
-		//   	addLatestScores(data);
-		// })
-
-	// }
-
-	// $('form').on('submit', function(event) { // prevent default action of form being submitted
-	// 	event.preventDefault();
-	//  	console.log('submit form');
-	//  	fetchLatestScores();
+	// 		})
+	// 		.bind('ajax:error', function(e, data, status, xhr) {
+	// 			console.log("error json: ", jQuery.parseJSON(xhr.responseText));
+ 	//      });
 	// })
 
 </script>
