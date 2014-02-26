@@ -30,7 +30,7 @@ Rick.Game = function (game) {
 
   // platforms
   this.platforms;
-  this.platformVelocity = -190;
+  this.platformVelocity = -250;
   this.platformsTime = 0;
 
   this.player;
@@ -50,6 +50,7 @@ Rick.Game = function (game) {
   this.enemiesTime = 0; // used to create enemies in a time interval
   this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
   this.enemyKillPoint = 20;
+  this.enemeyVelocity = -400;
 
   // levels (of difficulty)
   this.levelTime;
@@ -228,6 +229,7 @@ Rick.Game.prototype = {
     {
         live.kill();
         player.kill();
+        this.enemies.removeAll();
         this.createPlayer();
 
     }
@@ -263,6 +265,7 @@ Rick.Game.prototype = {
     {
         live.kill();
         player.kill();
+        this.enemies.removeAll();
         this.createPlayer();
         // this stops multiple deaths when he falls
         this.dead = false;
@@ -325,10 +328,9 @@ Rick.Game.prototype = {
       this.enemies.add(this.enemy);
 
       if (this.enemy) {
-        var xPos = [400, 450, 500];
-        var yPos = [100, 150, 200, 250];
-        this.enemy.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
-        this.enemy.body.velocity.x = -200;
+        var yPos = [100, 125, 150, 175, 200, 225, 250];
+        this.enemy.reset(750, yPos[this.getRandom(0, yPos.length - 1)]);
+        this.enemy.body.velocity.x = this.enemeyVelocity;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
     }
@@ -347,13 +349,13 @@ Rick.Game.prototype = {
       this.platforms.add(this.platform);
 
       if (this.platform) {
-        var xPos = [800, 850, 900];
+        var xPos = [800, 900];
         var yPos = [350, 400, 450];
         this.platform.scale.setTo(2,2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
         this.platform.body.immovable = true;
-        this.platformsTime = this.game.time.now + 700;
+        this.platformsTime = this.game.time.now + 2000;
       }
     }
   },

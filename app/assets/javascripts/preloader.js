@@ -33,7 +33,7 @@ Rick.Preloader.prototype = {
     this.load.image('ground', 'assets/platform4.png');
     this.load.image('bullet', 'assets/bullet.png');
     this.load.image('desert', 'assets/desert.png');
-    this.load.image('head', 'assets/rick_head.png')
+    this.load.image('head', 'assets/rick_head.png');
     this.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
     this.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.load.spritesheet('rick', 'assets/rick.png', 94, 100);
