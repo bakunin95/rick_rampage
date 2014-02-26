@@ -296,10 +296,14 @@ Rick.Game.prototype = {
 
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
+    this.game.cache.destroy();
+    this.enemies.removeAll();
 
-    //	Then let's go back to the main menu.
-    this.game.state.start('Game');
-    this.dead = false;
+    this.score = 0;
+    this.nextEnemyTime = 3000;
+
+    this.player.revive();
+    this.lives.callAll('revive');
   },
 
    createPlayer: function () {
