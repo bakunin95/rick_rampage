@@ -70,7 +70,9 @@ body {
 }
 
 #tweeting {
-	/*margin-left: 600px;*/
+	/* margin-left: 600px; */ 
+	position: absolute;
+	margin-left: 20px;
 }
 
 #stats { 

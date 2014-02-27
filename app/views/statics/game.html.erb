@@ -8,13 +8,18 @@
 
 <div id="container">
 
-<h1>Rick Rampage</h1>
+<!--<h1>Rick Rampage</h1>-->
+
+
 
 <div id="gameContainer" class="blockCenter">
-	
+	<div class="score_div" id="tweeting">
+		<br>
+		<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= current_user.twitter_handle if current_user %>" data-size="large" data-hashtags="rickyrampage" data-text=""></a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+		</script>
+	</div>
 </div> <!-- end gameContainer -->
-
-
 
 <script>
   $(document).ready(function(){

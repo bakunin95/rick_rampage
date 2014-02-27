@@ -368,7 +368,10 @@ Rick.Game.prototype = {
 
   quitGame: function () {
 
-	  this.updatePlayerStats(this.score, $('#player_id').html());
+	// this.updatePlayerStats(this.score, $('#player_id').html());
+
+	// add game score to tweet button
+    //$('#tweeting').find('a').attr("data-text", "My Latest Score: " + this.score);
 
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
@@ -473,38 +476,38 @@ Rick.Game.prototype = {
     return Math.round(Math.random() * (max - min) + min);
   },
 
-  updatePlayerStats: function(latestScore, playerID) {
+  // updatePlayerStats: function(latestScore, playerID) {
 
-    // only store score if score not equal to zero and not the same score as the previous game score
-    if (latestScore !== 0 && latestScore !== $('#latest_score').html()) {
-      var res = $.ajax({
-        type: 'POST',
-        url: "/scores",
-        data: JSON.stringify({
-          "user_id":playerID,
-          "points":latestScore
-        }),
-        error: function(e) {
-          console.log(e);
-        },
-        dataType: "json",
-        contentType: "application/json"
-      });
+  //   // only store score if score not equal to zero and not the same score as the previous game score
+  //   if (latestScore !== 0 && latestScore !== $('#latest_score').html()) {
+  //     var res = $.ajax({
+  //       type: 'POST',
+  //       url: "/scores",
+  //       data: JSON.stringify({
+  //         "user_id":playerID,
+  //         "points":latestScore
+  //       }),
+  //       error: function(e) {
+  //         console.log(e);
+  //       },
+  //       dataType: "json",
+  //       contentType: "application/json"
+  //     });
 
-      var addGameStats = function(data) {
-        console.log("data is: " + data);
-        $('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
-        $('#latest_score').html(data.points);
+  //     var addGameStats = function(data) {
+  //       console.log("data is: " + data);
+  //       $('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
+  //       $('#latest_score').html(data.points);
 
-      };
+  //     };
 
-      res.done(function(data, textStatus, xhr) {
-        addGameStats(data);
-        console.log(data);
-      });
+  //     res.done(function(data, textStatus, xhr) {
+  //       addGameStats(data);
+  //       console.log(data);
+  //     });
 
-    };
-  },
+  //   };
+  // },
 
   fireBullet: function() {
 
