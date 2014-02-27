@@ -20,9 +20,7 @@ Rick.GameOver.prototype = {
     $('#tweeting').fadeOut();
     $('#tweeting').fadeIn();
     $('#tweeting').fadeOut();
-    $('#tweeting').fadeIn();
-    $('#tweeting').fadeOut();
-    $('#tweeting').fadeIn();
+    $('#tweeting').fadeToggle();
 
     // The score
     this.scoreString = 'Your score is:';
