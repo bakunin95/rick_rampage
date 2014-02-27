@@ -56,12 +56,13 @@ Rick.Game = function (game) {
   this.levelTime;
   this.changeLevelTime = 5000; // interval
 
+  //Reset player position
+  this.posResetTime = 0;
+  this.posResetIntervalTime = 2000;
+
   // explosion
   this.explosions;
-
-
-  // check if dead or not
-  this.dead = false;
+  
 
   // text
   this.score = 0;
@@ -85,6 +86,9 @@ Rick.Game.prototype = {
   },
 
   create: function () {
+
+  	// check if dead or not
+  	
 
     // Rock!!!
     this.music = this.add.audio('titleMusic');
@@ -171,20 +175,24 @@ Rick.Game.prototype = {
 
     this.checkPlayerJump();
 
+    // Reset Ricks Position
+    this.checkRickPosition();
+
+    //Increase speed of platforms for every second
+    this.platformSpeedIncrease = (this.platformVelocity - this.game.time.totalElapsedSeconds());
 
     //  Firing?
     if (this.fireButton.isDown) {
       this.fireBullet();
     }
 
-
     // Kill player if they touch the ground
-    if (this.player.y > 450 && !this.dead) {
+    if (this.player.y > 450 ) {
     	this.collisionHandlerFall(this.player);
     }
 
     // Kill player if they go out of left side of screen
-    if (this.player.x < -10 && !this.dead) {
+    if (this.player.x < -10 ) {
     	this.collisionHandlerFall(this.player);
     }
 
@@ -201,6 +209,13 @@ Rick.Game.prototype = {
     } else if (this.keyboard.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
       this.player.body.velocity.y = -400;
       this.jumpcount++;
+    }
+  },
+
+  checkRickPosition: function() {
+    if (this.game.time.now > this.posResetTime) {
+      this.player.body.x = 100; 
+      this.posResetTime = this.game.time.now + this.posResetIntervalTime;
     }
   },
 
@@ -264,6 +279,7 @@ Rick.Game.prototype = {
   	
     // get the first head (out of the 3 that exist)
   	var live = this.lives.getFirstAlive();
+  	
 
   	// if any lives exist, kill them
   	if (live)
@@ -273,16 +289,12 @@ Rick.Game.prototype = {
         this.enemies.removeAll();
         this.dieSound.play();
         this.createPlayer();
-        // this stops multiple deaths when he falls
-        this.dead = false;
-
     }
   	// When the player dies
     if (this.lives.countLiving() < 1){
     	player.kill();
     	this.quitGame();
-      this.deathSound.play();
-    	this.dead = true;
+      	this.deathSound.play();
     	// this stops multiple deaths when he falls, set to false everywhere else
     }
 
@@ -308,11 +320,13 @@ Rick.Game.prototype = {
     this.game.cache.destroy();
     this.enemies.removeAll();
 
+
     this.score = 0;
     this.nextEnemyTime = 3000;
 
     this.player.revive();
     this.lives.callAll('revive');
+    this.music.stop();
 
     this.game.state.start('MainMenu');
 
@@ -322,10 +336,11 @@ Rick.Game.prototype = {
   	// Create player
     this.player = this.game.add.sprite(100, 0, 'rick');
     this.player.body.setSize(60, 90, 0, 0);
+    this.player.fixedToCamera;
     this.player.anchor.setTo(0.5, 0.5);
     this.player.body.gravity.y = 10;
     // player will still die, but will survive if in the air at the time
-    this.player.body.collideWorldBounds = true;
+    this.player.body.collideWorldBounds = false;
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
@@ -370,6 +385,8 @@ Rick.Game.prototype = {
         this.platform.scale.setTo(2,2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
+        this.platform.body.velocity.x = this.platformSpeedIncrease;
+        console.log(this.platform.body.velocity.x)
         this.platform.body.immovable = true;
         this.platformsTime = this.game.time.now + 2000;
       }
