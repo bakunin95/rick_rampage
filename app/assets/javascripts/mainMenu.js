@@ -21,6 +21,9 @@ Rick.MainMenu.prototype = {
 
     this.playButton = this.add.button(100, 300, 'playButton', this.startGame, this, 1, 0);
 
+	  // Add Player Statistics
+    this.playerStats($('.score_div'));
+
   },
 
   update: function () {
@@ -29,13 +32,21 @@ Rick.MainMenu.prototype = {
 
   },
 
-  startGame: function (pointer) {
+  playerStats: function(node) { // player states load
+  	
+	  node.fadeIn( 1200 );
+
+  },
+
+  startGame: function () {
 
     this.musicMenu.stop();
 
+    // hide stats menus
+    $('.score_div').fadeOut( 1200 );
+
     //	And start the actual game
     this.game.state.start('Game');
-
   }
 
 };
