@@ -27,9 +27,7 @@
 <div class="score_div" id="tweeting">
 	<br>
 
-	<%# @email_string = (current_user.email).split("@")[0] %>
-
-	<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= %>" data-size="large" data-hashtags="rickyrampage" data-text="My Latest Score: <%= @my_latest_score.points if @my_latest_score %>"></a>
+	<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= current_user.twitter_handle if current_user %>" data-size="large" data-hashtags="rickyrampage" data-text="My Latest Score: <%= @my_latest_score.points if @my_latest_score %>"></a>
 	<!-- error undefined method `points' for nil:NilClass when database is empty -->
 	<!-- <%#= @my_latest_score.points %> -->
 	<!-- add @email_string to data-via but assumes email prefix is their twitter handle -->
