@@ -243,7 +243,9 @@ Rick.Game.prototype = {
     if (this.game.time.now > this.speedTime) {
       if (this.platformVelocity < -100){
         this.platformVelocity -= 1;
-        this.platformsTimeAdd -= 10;
+        if (this.platformsTimeAdd > 300){
+            this.platformsTimeAdd -= 10;
+        }
         this.speedTime = this.game.time.now + 1000;
       }
       
