@@ -12,21 +12,38 @@
  *= require_tree .
  */
 
+
+
+
 #gameContainer {
   width: 800px;
   margin: 0 auto;
-
+  /*display: inline-block;*/
+  /*position: absolute;*/
+  z-index: -1;
+  border: 22px solid #313844;
 }
 
 #gameContainer > canvas {
   margin: 0 auto;
-  margin-bottom: 200px;
 }
 
-/* used in game.html.erb */
-.score_th {
+#stats {
+}
 
-	display: none; /* default is not to display so it will fade in later than div called in game.js */
+.navbar-text {
+	float:right;
+	margin-right: 20px;
+	color: white;
+	margin-top: -10px;
+}
+
+
+/* used in game.html.erb */
+.score_div {
+
+/* display: none; */  /* default is not to display so it will fade in later than div called in game.js */
+
 
 }
 
@@ -44,7 +61,16 @@
 	margin-top: 0px;
 	z-index: 2;
 	position: relative;
-	display:none;
+}
+
+#tweeting {
+	margin-left: 600px;
+}
+
+#stats { 
+	margin-left: 600px;
+	clear: left;
+	width: 200px;
 }
 
 #topscores {
@@ -52,10 +78,9 @@
 	clear: left;
 }
 
-#stats { 
+#testscoresave {
 	margin-left: 600px;
 	clear: left;
-	width: 200px;
 }
 
 /* used in game.html.erb */

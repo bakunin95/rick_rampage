@@ -10,7 +10,190 @@
 
 <h1>Rick Rampage</h1>
 
-<div id="gameContainer" class="blockCenter"></div>
+<div id="gameContainer" class="blockCenter">
+	
+</div> <!-- end gameContainer -->
+
+<div id="stats">
+
+	<div class="score_div" id="tweeting">
+		<br>
+
+		<a href="https://twitter.com/share" class="twitter-share-button" data-via="<%= current_user.twitter_handle if current_user %>" data-size="large" data-hashtags="rickyrampage" data-text="My Latest Score: <%= @my_latest_score.points if @my_latest_score %>"></a>
+		<!-- error undefined method `points' for nil:NilClass when database is empty -->
+		<!-- <%#= @my_latest_score.points %> -->
+		<!-- add @email_string to data-via but assumes email prefix is their twitter handle -->
+
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+		</script>
+
+
+	</div>
+
+
+	<div class="score_div" id="topscores">
+
+		<h2>Top Ranks:</h2>
+
+		<table class="score_table">
+
+		  <thead>
+		    <tr>
+		      <th class="score_th">Rank</th>
+		      <th class="score_th">Player</th>
+			  <th class="score_th">Score</th>
+		    </tr>
+		  </thead>
+
+		  <tbody>
+		  	<% i = 0 %>
+		  	<% @high_scores.each do |score| %>
+		  	  <% i += 1 %>
+		      <tr style="background-color:<%= cycle("#ffeeff", "#cceeff", name: "colors") -%>;">
+
+				<!-- RANK -->
+				<td class="score_th"><%= i %></td>	
+
+		      	<!-- USER ID'S -->
+		      	<% if !score.user_id.nil? %>
+		        	<td class="score_th"><%= score.user_id %></td>	
+				<% else %>
+			        <td></td>
+				<% end %>
+
+				<!-- USER SCORE DETAILS -->
+			    <% if !score.points.nil? %> 
+			        <td class="score_th"><%= score.points %></td>
+			    <% else %>
+			        <td></td>
+				<% end %>
+
+			  </tr>
+			<% end %>
+
+			<% reset_cycle("colors") %>
+
+		  </tbody>
+
+		</table>
+
+	</div>
+
+	<div class="score_div" id="stats">
+
+
+		<h2>Player Stats:</h2>
+
+		<table class="score_table">
+
+		  <thead>
+		    <tr>
+		      <th class="score_th">Statistic</th>
+		      <th class="score_th">Value</th>
+		    </tr>
+		  </thead>
+
+		  <tbody style="background-color:<%= cycle("#ffeeff", "#cceeff", name: "colors2") -%>;">
+
+		      <tr>
+
+			      	<td class="score_th">Player ID</td>
+				      	<% if (!current_user.nil? && !current_user.email.nil?) %>
+				        	<td class="score_th" id="player_id">
+				        		<%= current_user.id %>
+				        	</td>	
+						<% elsif %>
+					        <td></td>
+						<% end %>
+
+			  </tr>
+
+			  <tr>
+
+					<td class="score_th">Best Rank</td>
+						<!-- RANK -->
+						<% if (!current_user.nil? && !current_user.email.nil?) %>
+							<% k = 0 %>
+					  		<% @scores_from_top.each do |score| %>
+					  	  		<% k += 1 %>
+					  	  		<% if score.user_id === current_user.id %>
+					  	  			<td class="score_th"><%= k %></td>	
+					  	  			<% break %>
+					  	  		<% end %>
+					  	  	<% end %>	
+						<% elsif %>
+					        <td></td>
+						<% end %>
+
+			  </tr>
+
+			  <tr>
+
+					<td class="score_th">Worst Rank</td>
+						<!-- RANK -->
+						<% if (!current_user.nil? && !current_user.email.nil?) %>
+							<% j = @scores_length %> 
+					  		<% @scores_from_bottom.each do |score| %>
+					  	  		<% if score.user_id === current_user.id %>
+					  	  			<td class="score_th"><%= j %></td>	
+					  	  			<% break %>
+					  	  		<% end %>
+					  	  		<% j = j - 1 %>
+					  	  	<% end %>	
+						<% elsif %>
+					        <td></td>
+						<% end %>
+			  </tr>
+
+			  <tr>
+
+					<td class="score_th">Prev. Score</td>
+			  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
+					<!--<td class="score_th"><%= @score %></td>-->
+
+					<!-- Modify the CSS attribute to 'display: inline-block;' when a score exists (i.e. a user finishes the game and AJAX sends the score value), otherwise no current score displayed -->
+					<td class="score_th" id="latest_score">
+						<%= @my_latest_score.points if @my_latest_score %>
+					</td> 
+
+			  </tr>
+
+			  <tr>
+
+					<td class="score_th">Avg. Score</td>
+			  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
+					<!--<td class="score_th"><%= @score %></td>-->
+
+					<!-- Modify the CSS attribute to 'display: inline-block;' when a score exists (i.e. a user finishes the game and AJAX sends the score value), otherwise no current score displayed -->
+					<td class="score_th" id="avg_score">
+						<%= @my_avg_score %>
+						<%= @avg %>
+					</td> 
+
+			  </tr>
+
+			  <tr>
+
+					<td class="score_th">Past Scores</td>
+
+					<td class="score_th" id="all_scores">
+							<%= link_to 'Display', scores_path %>
+					</td> 
+
+			  </tr>
+
+			
+			
+		  </tbody>
+
+		  <% reset_cycle("colors2") %>
+
+		</table>
+
+
+	</div>
+
+</div> <!-- end stats div -->
 
 <script>
   $(document).ready(function(){
@@ -26,174 +209,22 @@
   });
 </script>
 
-<div class="score_div" id="stats">
 
 
-	<h2>Player Stats:</h2>
-
-	<table class="score_table">
-
-	  <thead>
-	    <tr>
-	      <th class="score_th">Statistic</th>
-	      <th class="score_th">Value</th>
-	    </tr>
-	  </thead>
-
-	  <tbody>
-
-	    <!--  <tr>
-
-		      	<td class="score_th">Player ID</td>
-			      	<%# if !current_user.id.nil? %>
-			        	<td class="score_th"><%= current_user.id %></td>	
-					<%# elsif %>
-				        <td></td>
-					<%# end %>
-
-		  </tr> -->
-
-		  <tr>
-
-				<td class="score_th">Last Ranked</td>
-					<!-- RANK -->
-					<% k = 0 %>
-			  		<% @scores.each do |score| %>
-			  	  		<% k += 1 %>
-			  	  		<% if score.user_id === current_user.id %>
-			  	  			<td class="score_th"><%= k %></td>	
-			  	  		<% end %>
-			  	  	<% end %>	
-
-		  </tr>
-
-		  <tr>
-
-				<td class="score_th">Latest Score</td>
-		  		<!-- SCORE --> 	<!-- @score defined in statics_controller.rb -->
-				<!--<td class="score_th"><%= @score %></td>-->
-
-				<!-- Modify the CSS attribute to 'display: inline-block;' when a score exists (i.e. a user finishes the game and AJAX sends the score value), otherwise no current score displayed -->
-				<td class="score_th" id="latest_score">
-
-				</td> 
-
-		  </tr>
-
-		  <tr>
-
-				<td class="score_th">History of Scores</td>
-
-				<td class="score_th" id="all_scores">
-
-				</td> 
-
-		  </tr>
-
-		  <tr>
-
-				<td class="score_th">Time Left</td>
-		  		<!-- TIME LEFT --> 	
-				<td class="score_th"><%=  %>TBC</td>
-		  </tr>
-
-		  <tr>
-
-				<td class="score_th">Lives Left</td>
-		  		<!-- LIVES LEFT --> 	
-				<td class="score_th"><%=  %>TBC</td>
-
-		  </tr>
-
-		<!--  <tr>
-
-				<td class="score_th">Game Progress (%)</td> 	
-				<td class="score_th"><%#= number_to_percentage(50, precision: 1) %></td>
-
-		  </tr> -->
-
-	  </tbody>
-
-	</table>
-
-</div>
-
-
-<!--<div class="score_div">
+<!--
+<div class="score_div" id="testscoresave">
 
 	<h2>Latest Score Save:</h2>
 
-	<%#= form_for @score, url: scores_path(remote: true), html: { method: :post, action: "create" } do |f| %>
+	<%#= form_for @score, url: scores_path(format: :json), remote: true, html: { method: :post } do |f| %>
 
-		Enter Latest Score:
-		  	<%#= f.text_field :score %>
+		Enter Latest Score:<br>
+		  	<%#= f.number_field :points %>
 			<%#= f.submit %>
 	<%# end %>
 
-</div> -->
-
-<!-- 
-	RELEVANT LINKS
-http://stackoverflow.com/questions/18322637/rails-4-link-to-submit-form-using-ajax-how-to-imitate-post-request
-http://apidock.com/rails/ActionView/Helpers/FormHelper/form_for
--->
-
-<!-- # remote:true triggers AJAX functionality -->
-
-
-
-<div class="score_div" id="topscores">
-
-	<h2>Top Scores:</h2>
-
-	<table class="score_table">
-
-	  <thead>
-	    <tr>
-	      <th class="score_th">Rank</th>
-	      <th class="score_th">Player</th>
-		  <th class="score_th">Score</th>
-	    </tr>
-	  </thead>
-
-	  <tbody>
-	  	<% i = 0 %>
-	  	<% @scores.each do |score| %>
-	  	  <% i += 1 %>
-	      <tr style="background-color:<%= cycle("#ffeeff", "#cceeff", name: "colors") -%>;">
-
-			<!-- RANK -->
-			<td class="score_th"><%= i %></td>	
-
-	      	<!-- USER ID'S -->
-	      	<% if !score.user_id.nil? %>
-	        	<td class="score_th"><%= score.user_id %></td>	
-			<% else %>
-		        <td></td>
-			<% end %>
-
-			<!-- USER SCORE DETAILS -->
-		    <% if !score.points.nil? %> 
-		        <td class="score_th"><%= score.points %></td>
-		    <% else %>
-		        <td></td>
-			<% end %>
-
-		  </tr>
-		<% end %>
-
-		<% reset_cycle("colors") %>
-
-	  </tbody>
-
-	</table>
-
 </div>
-
-
-<!--<script id="score-template" type="text/template">
-	<li><%#= latest_score %></li>
-</script>-->
+-->
 
 </div> <!-- end container -->
 
@@ -209,43 +240,20 @@ http://apidock.com/rails/ActionView/Helpers/FormHelper/form_for
 		latestScore.innerHTML = data;
 	}
 
+	// DISUSED BUT WORKING
+	//
+	// upon form submission of score update the Player Stats table with data
 
-	// var fetchLatestScores = function() { 
+	// $(function() {
+	// 	$('form')
+	// 		.bind('ajax:success', function(e, data, status, xhr) {
+	// 			console.log("success json: ", jQuery.parseJSON(xhr.responseText));
+	// 		 	$('#current_score').html(data.points);
 
-	// create fn storing variable and within fn create function to getJSON
-
-
-
-		// 	var latestScoreTemplate = $('#score-template').html();
-
-		// 	// console.log(data.Search[0].score);
-
-		// 	$(data.Search).each(function() { 
-		// 		$('#latest_scores').append(_.template(latestScoreTemplate, { 
-		// 			latest_score: this.score
-
-		// 		}));
-		// 	});
-
-		// }
-
-		// var res = $.ajax({ // save AJAX response to a variable
-		// 	url: urlPrefix + $('form').find('input').val() + urlPostfix,
-		// 	dataType: 'json',
-		// 	type: 'get'
-		// });
-
-		// res.done(function(data) {
-		// 	console.log(data);
-		//   	addLatestScores(data);
-		// })
-
-	// }
-
-	// $('form').on('submit', function(event) { // prevent default action of form being submitted
-	// 	event.preventDefault();
-	//  	console.log('submit form');
-	//  	fetchLatestScores();
+	// 		})
+	// 		.bind('ajax:error', function(e, data, status, xhr) {
+	// 			console.log("error json: ", jQuery.parseJSON(xhr.responseText));
+ 	//      });
 	// })
 
 </script> -->

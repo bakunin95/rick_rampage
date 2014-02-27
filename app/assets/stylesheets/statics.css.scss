@@ -5,13 +5,33 @@
 
 body {
 	background-color: black;
+	background-color: #091338;
+	background-image: image-url('skulls.png');
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+
+h1 {
+	background-image: image-url('title.png');
+	width: 532px;
+	height: 176px;
+
+	margin-bottom: 0;
+	
+	text-indent: 100%;
+	white-space: nowrap;
+	overflow:hidden;
 }
 
 #container {
 	width: 960px;
 	margin: 0 auto;
-	background-color: #091338;
-	background-image: image-url('skulls.png');
+	// background-color: #091338;
+	// background-image: image-url('skulls.png');
+	// background-repeat: no-repeat;
+	// background-position: right top;
+
+
 }
 
 #gameContainer {
