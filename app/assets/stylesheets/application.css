@@ -12,7 +12,9 @@
  *= require_tree .
  */
 
-
+body {
+	font-family: 'Press Start 2P', cursive;
+}
 
 
 #gameContainer {
@@ -23,6 +25,7 @@
   z-index: -1;
   border: 22px solid #313844;
   font-family: 'Press Start 2P', cursive;
+
 }
 
 #gameContainer > canvas {
