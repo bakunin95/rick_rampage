@@ -209,6 +209,7 @@ Rick.Game.prototype = {
       if (this.platformVelocity < -100){
         this.platformVelocity -= 1;
         this.platformsTimeAdd -= 10;
+        // make this stop at a certain point like 500?
         this.speedTime = this.game.time.now + 1000;
       }
       
@@ -268,6 +269,14 @@ Rick.Game.prototype = {
         this.enemies.removeAll();
         this.createPlayer();
 
+        // Create a new platform for him to land on
+    this.platform = this.game.add.sprite(0,0, 'ground');
+    this.platform.reset(200, 400);
+    this.platform.scale.setTo(4,2);
+    this.platform.body.velocity.x = this.platformVelocity;
+    this.platform.body.immovable = true;
+    this.platforms.add(this.platform);
+
     }
 
   	// When the player dies
@@ -306,6 +315,14 @@ Rick.Game.prototype = {
         this.enemies.removeAll();
         this.dieSound.play();
         this.createPlayer();
+
+        // Create a new platform for him to land on
+        this.platform = this.game.add.sprite(0,0, 'ground');
+        this.platform.reset(200, 400);
+        this.platform.scale.setTo(4,2);
+        this.platform.body.velocity.x = this.platformVelocity;
+        this.platform.body.immovable = true;
+        this.platforms.add(this.platform);
     }
   	// When the player dies
     if (this.lives.countLiving() < 1){
@@ -457,12 +474,14 @@ Rick.Game.prototype = {
 
   },
 
-  buildLedge: function () {
-    this.generatedLedge = this.platforms.create(this.getRandom(800, 1000), this.getRandom(250, 450), 'ground');
-    this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
-    this.generatedLedge.body.velocity.x = -190;
-    this.generatedLedge.body.immovable = true;
-  },
+
+  // IS THIS DEAD CODE?
+  // buildLedge: function () {
+  //   this.generatedLedge = this.platforms.create(this.getRandom(800, 1000), this.getRandom(250, 450), 'ground');
+  //   this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
+  //   this.generatedLedge.body.velocity.x = -190;
+  //   this.generatedLedge.body.immovable = true;
+  // },
 
   fireBullet: function() {
 
