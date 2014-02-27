@@ -184,7 +184,6 @@ Rick.Game.prototype = {
       this.fireBullet();
     }
 
-
     // Kill player if they touch the ground
     if (this.player.y > 450 ) {
     	this.collisionHandlerFall(this.player);
@@ -316,6 +315,7 @@ Rick.Game.prototype = {
 
     this.player.revive();
     this.lives.callAll('revive');
+    this.music.stop();
 
     this.game.state.start('MainMenu');
   },
@@ -327,7 +327,7 @@ Rick.Game.prototype = {
     this.player.anchor.setTo(0.5, 0.5);
     this.player.body.gravity.y = 10;
     // player will still die, but will survive if in the air at the time
-    this.player.body.collideWorldBounds = true;
+    this.player.body.collideWorldBounds = false;
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
@@ -370,8 +370,7 @@ Rick.Game.prototype = {
         var yPos = [350, 400, 450];
         this.platform.scale.setTo(2,2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
-        this.platform.body.velocity.x = (this.platformVelocity - (this.game.time.totalElapsedSeconds()));
-        console.log(this.game.time.totalElapsedSeconds());
+        this.platform.body.velocity.x = this.platformVelocity;
         this.platform.body.immovable = true;
         this.platformsTime = this.game.time.now + 2000;
       }
