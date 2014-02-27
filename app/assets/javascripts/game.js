@@ -276,14 +276,13 @@ Rick.Game.prototype = {
 
   collisionHandler: function(bullet, enemy) {
 
-	//console.log(this.enemy.game.canvas.parentNode.childNodes($("#tweeting"));
+	//console.log(this.enemy.game.canvas.parentNode.childNodes[1].style.display);
+	//this.enemy.game.canvas.parentNode.childNodes[1].style.display = "inline-block";
+
+	//console.log(this.enemy.game.canvas.parentNode.childNodes.$("#tweeting");
 	//this.enemy.game.canvas.parentNode.innerHTML
 
-    //  When a bullet hits an alien we kill them both
-    bullet.kill();
-    enemy.kill();
-
-    this.explosionSound.play();
+    //console.log(this.enemy);
 
     if (this.enemy.key === "wasp") {
     	this.score += this.enemyKillPoint;
@@ -292,6 +291,12 @@ Rick.Game.prototype = {
     	this.score += this.enemyKillPoint2; // 30 points if kill enemy no. 2 (instead of 20 points)
     	this.scoreText.content = this.scoreString + this.score;
 	}
+
+    //  When a bullet hits an alien we kill them both
+    bullet.kill();
+    enemy.kill();
+
+    this.explosionSound.play();
 
     //  And create an explosion :)
     var explosion = this.explosions.getFirstDead();
