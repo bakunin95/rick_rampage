@@ -68,6 +68,7 @@ Rick.Game = function (game) {
   this.score = 0;
   this.scoreString;
   this.scoreText;
+  this.lastScore = 0;
 
 
   //Lives
@@ -140,17 +141,17 @@ Rick.Game.prototype = {
 
 
     // The score
-    this.scoreString = 'Score : ';
-    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { font: '20px "Press Start 2P"', fill: '#182450' });
+    this.scoreString = 'Score:';
+    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { font: '28px "Press Start 2P"', fill: '#182450' });
 
     // Lives display
     this.lives = this.game.add.group();
-    this.game.add.text(10, 450, 'Lives : ', { font: '20px "Press Start 2P"', fill: '#fff' });
+    this.game.add.text(10, 450, 'Lives:', { font: '20px "Press Start 2P"', fill: '#fff' });
 
     // The 3 lives as objects (head)
     for (var i = 0; i < 3; i++) 
     {
-        var head = this.lives.create(180 + (50 * i), 460, 'head');
+        var head = this.lives.create(160 + (50 * i), 460, 'head');
         head.anchor.setTo(0.5, 0.5);
         head.alpha = 0.4;
     }
@@ -209,6 +210,7 @@ Rick.Game.prototype = {
     } else if (this.keyboard.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
       this.player.body.velocity.y = -400;
       this.jumpcount++;
+      this.player.animations.play('doubleJump');
     }
   },
 
@@ -323,7 +325,7 @@ Rick.Game.prototype = {
     this.enemies.removeAll();
     this.music.stop();
 
-
+    this.lastScore = this.score;
     this.score = 0;
     this.nextEnemyTime = 3000;
 
@@ -348,7 +350,7 @@ Rick.Game.prototype = {
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
-
+    this.player.animations.add('doubleJump', [9], 10, false);
   },
 
   createEnemy: function () {
