@@ -9,13 +9,14 @@ body {
 	background-image: image-url('skulls.png');
 	background-repeat: no-repeat;
 	background-position: right top;
+	color:white;
 }
 
 h1 {
 	background-image: image-url('title.png');
 	width: 532px;
 	height: 176px;
-
+	margin-top: 0;
 	margin-bottom: 0;
 	
 	text-indent: 100%;

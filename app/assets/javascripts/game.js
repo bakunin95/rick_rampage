@@ -2,9 +2,8 @@
 
 //overriding the framework so rick doesn't get stuck on those platform transitions
 Phaser.Physics.Arcade.prototype.separate = function (body1, body2) {
-
-        this._result = (this.separateY(body1, body2) || this.separateX(body1, body2));
-    }
+  this._result = (this.separateY(body1, body2) || this.separateX(body1, body2));
+};
 
 Rick.Game = function (game) {
 
@@ -27,11 +26,13 @@ Rick.Game = function (game) {
   this.rnd; // the repeatable random number generator
 
   this.background;
+  //this.tunnerFilter;
 
   // platforms
   this.platforms;
   this.platformVelocity = -250;
   this.platformsTime = 0;
+  this.platformsTimeAdd = 2000;
 
   this.player;
   this.keyboard;
@@ -64,6 +65,10 @@ Rick.Game = function (game) {
   this.explosions;
   
 
+  // save amount of seconds passed at quitGame
+  this.speedTime= 0;
+
+
   // text
   this.score = 0;
   this.scoreString;
@@ -72,6 +77,14 @@ Rick.Game = function (game) {
 
   //Lives
   this.lives;
+
+  // Panic functionality
+  //this.panicButtonSprite; // pause button image
+  //this.panicButton;
+
+  // Rampage functionality
+  this.rampageKey; // rampage key is R
+  this.countRampage = 1;
 
 
   //	You can use any of these from any function within this State.
@@ -86,6 +99,8 @@ Rick.Game.prototype = {
   },
 
   create: function () {
+
+
 
   	// check if dead or not
   	
@@ -125,6 +140,7 @@ Rick.Game.prototype = {
     // Adds Keyboard controls
     this.keyboard = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.rampageKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
 
     // Add Enemies
     this.enemiesTime = this.game.time.now + this.nextEnemyTime;
@@ -141,19 +157,30 @@ Rick.Game.prototype = {
 
     // The score
     this.scoreString = 'Score : ';
-    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { fontSize: '34px', fill: '#fff' });
+    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { font: '20px "Press Start 2P"', fill: '#182450' });
 
     // Lives display
     this.lives = this.game.add.group();
-    this.game.add.text(10, 450, 'Lives : ', { fontSize: '34px', fill: '#fff' });
+    this.game.add.text(10, 450, 'Lives : ', { font: '20px "Press Start 2P"', fill: '#fff' });
 
     // The 3 lives as objects (head)
     for (var i = 0; i < 3; i++) 
     {
-        var head = this.lives.create(120 + (50 * i), 460, 'head');
+        var head = this.lives.create(180 + (50 * i), 460, 'head');
         head.anchor.setTo(0.5, 0.5);
         head.alpha = 0.4;
     }
+
+    // Pause button ('pause' is the pause spritesheet in preloader.js)
+    // IMPORTANT NOTE: MUST LOAD AFTER THE BACKGROUND
+    //this.pauseButton = this.add.button('pause')
+    
+    //this.panicButton = this.game.add.button(0, 0, 'panicButtonSprite', this.actionOnClick, this, 1, 2, 1);
+
+    // Background tunnel settings
+    //this.tunnelFilter = this.add.filter('Tunnel', 800, 500, this.background.desert);
+	//this.tunnelFilter.origin = 2.0;
+	//this.background.filters = [this.tunnelFilter];
 
   },
 
@@ -179,7 +206,8 @@ Rick.Game.prototype = {
     this.checkRickPosition();
 
     //Increase speed of platforms for every second
-    this.platformSpeedIncrease = (this.platformVelocity - this.game.time.totalElapsedSeconds());
+    this.updateSpeed();
+
 
     //  Firing?
     if (this.fireButton.isDown) {
@@ -196,6 +224,29 @@ Rick.Game.prototype = {
     	this.collisionHandlerFall(this.player);
     }
 
+	// Tunnel filter settings
+    //this.tunnelFilter.update();
+	//this.tunnelFilter.origin = this.tunnelFilter.origin + 0.001;
+
+	//  Want Rampage?
+    if (this.rampageKey.isDown) {
+      //console.log("R down actionRampage count: " + this.countRampage);
+      if (this.countRampage < 2) {
+      	this.actionRampage();
+      }
+    }
+
+  },
+
+  updateSpeed: function() {
+    if (this.game.time.now > this.speedTime) {
+      if (this.platformVelocity < -100){
+        this.platformVelocity -= 1;
+        this.platformsTimeAdd -= 10;
+        this.speedTime = this.game.time.now + 1000;
+      }
+      
+    }
   },
 
 
@@ -258,6 +309,8 @@ Rick.Game.prototype = {
     	player.kill();
       this.deathSound.play();
     	this.quitGame();
+      
+
     }
 
   	//  And create an explosion :)
@@ -294,8 +347,8 @@ Rick.Game.prototype = {
     if (this.lives.countLiving() < 1){
     	player.kill();
     	this.quitGame();
-      	this.deathSound.play();
-    	// this stops multiple deaths when he falls, set to false everywhere else
+      this.deathSound.play();
+      
     }
 
     //  And create an explosion :)
@@ -319,17 +372,24 @@ Rick.Game.prototype = {
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
     this.game.cache.destroy();
     this.enemies.removeAll();
+
+    this.platformVelocity = -250;
+    this.platformsTimeAdd = 2000;
+
     this.music.stop();
 
 
+	  this.countRampage = 1; // reset count rage so get one chance at Rampage on new game start
     this.score = 0;
     this.nextEnemyTime = 3000;
 
+    // reset the platform velocity
+
     this.player.revive();
     this.lives.callAll('revive');
-    this.music.stop();
 
-    this.game.state.start('MainMenu');
+    //this.game.state.start('MainMenu');
+    this.game.state.start('GameOver');
 
   },
 
@@ -386,10 +446,10 @@ Rick.Game.prototype = {
         this.platform.scale.setTo(2,2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
-        this.platform.body.velocity.x = this.platformSpeedIncrease;
         console.log(this.platform.body.velocity.x)
         this.platform.body.immovable = true;
-        this.platformsTime = this.game.time.now + 2000;
+        this.platformsTime = this.game.time.now + this.platformsTimeAdd;
+        console.log(this.platformsTimeAdd)
       }
     }
   },
@@ -428,15 +488,7 @@ Rick.Game.prototype = {
         console.log(data);
       });
 
-	  };
-
-  },
-
-  buildLedge: function () {
-    this.generatedLedge = this.platforms.create(this.getRandom(800, 1000), this.getRandom(250, 450), 'ground');
-    this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
-    this.generatedLedge.body.velocity.x = -190;
-    this.generatedLedge.body.immovable = true;
+    };
   },
 
   fireBullet: function() {
@@ -466,6 +518,17 @@ Rick.Game.prototype = {
 
       this.levelTime += this.changeLevelTime;
     }
+  },
+
+  actionRampage: function() {
+
+    //this.panicButton.destroy();
+    this.enemies.removeAll();
+
+    this.countRampage += 1; // increment so when R is pressed a second time it does not allow this function to load (i.e. you only get one rampage per game
+    //console.log("actionRampage count: " + this.countRampage);
+    //this.rampageKey = this.game.input.keyboard.removeKey(Phaser.Keyboard.R);
+
   }
 
 };
