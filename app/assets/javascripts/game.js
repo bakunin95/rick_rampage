@@ -56,11 +56,12 @@ Rick.Game = function (game) {
   this.levelTime;
   this.changeLevelTime = 5000; // interval
 
+  //Reset player position
+  this.posResetTime = 0;
+  this.posResetIntervalTime = 2000;
+
   // explosion
   this.explosions;
-
-
-  // check if dead or not
   
 
   // text
@@ -124,7 +125,6 @@ Rick.Game.prototype = {
     // Adds Keyboard controls
     this.keyboard = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    // this.pauseButton = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
     // Add Enemies
     this.enemiesTime = this.game.time.now + this.nextEnemyTime;
@@ -178,6 +178,11 @@ Rick.Game.prototype = {
 
     this.checkPlayerJump();
 
+    // Reset Ricks Position
+    this.checkRickPosition();
+
+    //Increase speed of platforms for every second
+    this.platformSpeedIncrease = (this.platformVelocity - this.game.time.totalElapsedSeconds());
 
     //  Firing?
     if (this.fireButton.isDown) {
@@ -207,6 +212,13 @@ Rick.Game.prototype = {
     } else if (this.keyboard.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
       this.player.body.velocity.y = -400;
       this.jumpcount++;
+    }
+  },
+
+  checkRickPosition: function() {
+    if (this.game.time.now > this.posResetTime) {
+      this.player.body.x = 100; 
+      this.posResetTime = this.game.time.now + this.posResetIntervalTime;
     }
   },
 
@@ -324,6 +336,7 @@ Rick.Game.prototype = {
   	// Create player
     this.player = this.game.add.sprite(100, 0, 'rick');
     this.player.body.setSize(60, 90, 0, 0);
+    this.player.fixedToCamera;
     this.player.anchor.setTo(0.5, 0.5);
     this.player.body.gravity.y = 10;
     // player will still die, but will survive if in the air at the time
@@ -371,6 +384,8 @@ Rick.Game.prototype = {
         this.platform.scale.setTo(2,2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
+        this.platform.body.velocity.x = this.platformSpeedIncrease;
+        console.log(this.platform.body.velocity.x)
         this.platform.body.immovable = true;
         this.platformsTime = this.game.time.now + 2000;
       }
