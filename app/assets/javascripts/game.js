@@ -258,6 +258,8 @@ Rick.Game.prototype = {
     	player.kill();
       this.deathSound.play();
     	this.quitGame();
+      
+
     }
 
   	//  And create an explosion :)
@@ -294,8 +296,8 @@ Rick.Game.prototype = {
     if (this.lives.countLiving() < 1){
     	player.kill();
     	this.quitGame();
-      	this.deathSound.play();
-    	// this stops multiple deaths when he falls, set to false everywhere else
+      this.deathSound.play();
+      
     }
 
     //  And create an explosion :)
@@ -329,7 +331,8 @@ Rick.Game.prototype = {
     this.lives.callAll('revive');
     this.music.stop();
 
-    this.game.state.start('MainMenu');
+    //this.game.state.start('MainMenu');
+    this.game.state.start('GameOver');
 
   },
 

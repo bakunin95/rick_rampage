@@ -19,4 +19,5 @@
 //= require mainMenu
 //= require game
 //= require scores
+//= require gameOver
 //= require_self

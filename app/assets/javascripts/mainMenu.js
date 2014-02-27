@@ -20,7 +20,7 @@ Rick.MainMenu.prototype = {
     this.musicMenu.play();
 
     this.add.button(100, 300, 'playButton', this.startGame, this, 1, 0);
-    this.add.button(350, 300, 'scoresButton', this.scoresMenu, this, 1, 0);
+    this.add.button(450, 300, 'scoresButton', this.scoresMenu, this, 1, 0);
 
 	  // Add Player Statistics
     this.playerStats($('.score_div'));
