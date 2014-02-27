@@ -82,6 +82,7 @@ Rick.Game = function (game) {
   this.rampageKey; // rampage key is R
   this.countRampage = 1;
 
+
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
 
@@ -229,8 +230,6 @@ Rick.Game.prototype = {
       	this.actionRampage();
       }
     }
-    
-
 
   },
 
@@ -509,6 +508,7 @@ Rick.Game.prototype = {
 
         //this.panicButton.destroy();
         this.enemies.removeAll(); 
+        
         this.countRampage += 1; // increment so when R is pressed a second time it does not allow this function to load (i.e. you only get one rampage per game 
         //console.log("actionRampage count: " + this.countRampage);
         //this.rampageKey = this.game.input.keyboard.removeKey(Phaser.Keyboard.R);
