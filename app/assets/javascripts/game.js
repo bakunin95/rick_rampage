@@ -64,6 +64,10 @@ Rick.Game = function (game) {
   this.explosions;
   
 
+  // save amount of seconds passed at quitGame
+  this.speedTime= 0;
+
+
   // text
   this.score = 0;
   this.scoreString;
@@ -179,7 +183,10 @@ Rick.Game.prototype = {
     this.checkRickPosition();
 
     //Increase speed of platforms for every second
-    this.platformSpeedIncrease = (this.platformVelocity - this.game.time.totalElapsedSeconds());
+    this.updateSpeed();
+
+
+    this.platformSpeedIncrease = (this.platformVelocity );
 
     //  Firing?
     if (this.fireButton.isDown) {
@@ -196,6 +203,13 @@ Rick.Game.prototype = {
     	this.collisionHandlerFall(this.player);
     }
 
+  },
+
+  updateSpeed: function() {
+    if (this.game.time.now > this.speedTime) {
+      this.platformVelocity -= 1;
+      this.speedTime = this.game.time.now + 1000;
+    }
   },
 
 
@@ -319,10 +333,13 @@ Rick.Game.prototype = {
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
     this.game.cache.destroy();
     this.enemies.removeAll();
+    this.platformVelocity = -250;
 
 
     this.score = 0;
     this.nextEnemyTime = 3000;
+
+    // reset the platform velocity
 
     this.player.revive();
     this.lives.callAll('revive');
@@ -385,7 +402,7 @@ Rick.Game.prototype = {
         this.platform.scale.setTo(2,2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
-        this.platform.body.velocity.x = this.platformSpeedIncrease;
+        // set the speed increase to the seconds passed minus the seconds passed last round
         console.log(this.platform.body.velocity.x)
         this.platform.body.immovable = true;
         this.platformsTime = this.game.time.now + 2000;

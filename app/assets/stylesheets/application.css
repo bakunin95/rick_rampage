@@ -12,7 +12,9 @@
  *= require_tree .
  */
 
-
+body {
+	font-family: 'Press Start 2P', cursive;
+}
 
 
 #gameContainer {
