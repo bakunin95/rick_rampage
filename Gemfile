@@ -56,6 +56,11 @@ group :development do
   gem 'pry-rails'
 end
 
+group :production do
+  # heroku needs that
+  gem 'rails_12factor'
+end
+
 # user friendly id & permalinks
 gem 'friendly_id'
 
