@@ -62,6 +62,11 @@ class ScoresController < ApplicationController
     end
   end
 
+  def top5
+    @scores = Score.order(points: :desc).limit(10)
+    render json: @scores
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_score
