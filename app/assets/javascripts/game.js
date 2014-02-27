@@ -51,7 +51,9 @@ Rick.Game = function (game) {
   this.enemiesTime = 0; // used to create enemies in a time interval
   this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
   this.enemyKillPoint = 20;
+  this.enemyKillPoint2 = 30;
   this.enemyVelocity = -400;
+  this.enemyVelocity2 = -500;
 
   // levels (of difficulty)
   this.levelTime;
@@ -273,13 +275,23 @@ Rick.Game.prototype = {
   },
 
   collisionHandler: function(bullet, enemy) {
+
+	//console.log(this.enemy.game.canvas.parentNode.childNodes($("#tweeting"));
+	//this.enemy.game.canvas.parentNode.innerHTML
+
     //  When a bullet hits an alien we kill them both
     bullet.kill();
     enemy.kill();
 
     this.explosionSound.play();
-    this.score += this.enemyKillPoint;
-    this.scoreText.content = this.scoreString + this.score;
+
+    if (this.enemy.key === "wasp") {
+    	this.score += this.enemyKillPoint;
+    	this.scoreText.content = this.scoreString + this.score;
+    } else if (this.enemy.key === "explode") {
+    	this.score += this.enemyKillPoint2; // 30 points if kill enemy no. 2 (instead of 20 points)
+    	this.scoreText.content = this.scoreString + this.score;
+	}
 
     //  And create an explosion :)
     var explosion = this.explosions.getFirstDead();
@@ -440,7 +452,7 @@ Rick.Game.prototype = {
       if (this.enemy2) {
         var yPos = [20, 30, 40, 50, 240, 255, 300];
         this.enemy2.reset(600, yPos[this.getRandom(0, yPos.length - 1)]);
-        this.enemy2.body.velocity.x = this.enemyVelocity;
+        this.enemy2.body.velocity.x = this.enemyVelocity2;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
     }
