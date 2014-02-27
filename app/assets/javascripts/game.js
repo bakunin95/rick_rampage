@@ -27,6 +27,7 @@ Rick.Game = function (game) {
   this.rnd; // the repeatable random number generator
 
   this.background;
+  //this.tunnerFilter;
 
   // platforms
   this.platforms;
@@ -72,6 +73,9 @@ Rick.Game = function (game) {
   //Lives
   this.lives;
 
+  // Panic functionality
+  this.panicButtonSprite; // pause button image
+  this.panicButton;
 
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -151,6 +155,16 @@ Rick.Game.prototype = {
         head.alpha = 0.4;
     }
 
+    // Pause button ('pause' is the pause spritesheet in preloader.js)
+    // IMPORTANT NOTE: MUST LOAD AFTER THE BACKGROUND
+    //this.pauseButton = this.add.button('pause')
+    this.panicButton = this.game.add.button(0, 0, 'panicButtonSprite', this.actionOnClick, this, 1, 2, 1);
+
+    // Background tunnel settings
+    //this.tunnelFilter = this.add.filter('Tunnel', 800, 500, this.background.desert);
+	//this.tunnelFilter.origin = 2.0;
+	//this.background.filters = [this.tunnelFilter];
+
   },
 
   update: function () {
@@ -187,6 +201,10 @@ Rick.Game.prototype = {
     if (this.player.x < -10 && !this.dead) {
     	this.collisionHandlerFall(this.player);
     }
+
+	// Tunnel filter settings
+    //this.tunnelFilter.update();
+	//this.tunnelFilter.origin = this.tunnelFilter.origin + 0.001;
 
   },
 
@@ -455,6 +473,13 @@ Rick.Game.prototype = {
 
       this.levelTime += this.changeLevelTime;
     }
+  },
+
+  actionOnClick: function() {
+
+        this.panicButton.destroy();
+        this.enemies.removeAll();
+
   }
 
 };

@@ -38,11 +38,13 @@ Rick.Preloader.prototype = {
     this.load.image('bullet', 'assets/bullet.png');
     this.load.image('desert', 'assets/desert.png');
     this.load.image('head', 'assets/rick_head.png');
+
     this.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
     this.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.load.spritesheet('rick', 'assets/rick.png', 94, 100);
     this.load.spritesheet('explosion', 'assets/enemy_explosion.png', 132, 262);
-
+    this.load.spritesheet('panicButtonSprite', 'assets/panic.png', 183, 125);
+    //this.load.script('tunnelFilter', 'assets/Tunnel.js'); // tunnel filter
 
   },
 
