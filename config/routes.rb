@@ -1,4 +1,6 @@
 RickRampage::Application.routes.draw do
+
+  get 'scores/top5' => 'scores#top5'
   resources :scores
 
   devise_for :users

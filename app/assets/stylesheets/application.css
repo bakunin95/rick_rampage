@@ -22,10 +22,12 @@
   /*position: absolute;*/
   z-index: -1;
   border: 22px solid #313844;
+  font-family: 'Press Start 2P', cursive;
 }
 
 #gameContainer > canvas {
   margin: 0 auto;
+  font-family: 'Press Start 2P', cursive;
 }
 
 #stats {
@@ -36,7 +38,7 @@
 	float:right;
 	margin-right: 20px;
 	color: white;
-	margin-top: -10px;
+	margin-top: 0px;
 }
 
 
