@@ -3,11 +3,18 @@ Rick.Scores = function (game) {
 };
 
 Rick.Scores.prototype = {
-  // preload: function () {
-  //   $.getJSON('/scores/top5', function (data){
-
-  //   });
-  // },
+  preload: function () {
+    $.ajax({
+      dataType: "json",
+      url: '/scores/top5',
+      success: function (data) {
+        for (var i = 0; i < data.length; i += 1) {
+          this.game.add.text(350, 200 + i * 40, data[i].points, { fontSize: '34px', fill: '#fff', align: 'center' });
+        }
+      },
+      context: this
+    });
+  },
 
   create: function () {
 
@@ -32,8 +39,6 @@ Rick.Scores.prototype = {
     this.game.state.start('MainMenu');
 
   }
-
-
 
 };
 

@@ -366,7 +366,7 @@ Rick.Game.prototype = {
 
   quitGame: function () {
 
-	this.updatePlayerStats(this.score, $('#player_id').html());
+	  this.updatePlayerStats(this.score, $('#player_id').html());
 
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
@@ -489,7 +489,6 @@ Rick.Game.prototype = {
       });
 
     };
-
   },
 
   fireBullet: function() {
