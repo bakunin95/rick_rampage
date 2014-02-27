@@ -75,8 +75,12 @@ Rick.Game = function (game) {
   this.lives;
 
   // Panic functionality
-  this.panicButtonSprite; // pause button image
-  this.panicButton;
+  //this.panicButtonSprite; // pause button image
+  //this.panicButton;
+
+  // Rampage functionality
+  this.rampageKey; // rampage key is R
+  this.countRampage = 1;
 
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -90,6 +94,8 @@ Rick.Game.prototype = {
   },
 
   create: function () {
+
+
 
   	// check if dead or not
   	
@@ -129,6 +135,7 @@ Rick.Game.prototype = {
     // Adds Keyboard controls
     this.keyboard = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.rampageKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
 
     // Add Enemies
     this.enemiesTime = this.game.time.now + this.nextEnemyTime;
@@ -162,7 +169,8 @@ Rick.Game.prototype = {
     // Pause button ('pause' is the pause spritesheet in preloader.js)
     // IMPORTANT NOTE: MUST LOAD AFTER THE BACKGROUND
     //this.pauseButton = this.add.button('pause')
-    this.panicButton = this.game.add.button(0, 0, 'panicButtonSprite', this.actionOnClick, this, 1, 2, 1);
+    
+    //this.panicButton = this.game.add.button(0, 0, 'panicButtonSprite', this.actionOnClick, this, 1, 2, 1);
 
     // Background tunnel settings
     //this.tunnelFilter = this.add.filter('Tunnel', 800, 500, this.background.desert);
@@ -213,6 +221,16 @@ Rick.Game.prototype = {
 	// Tunnel filter settings
     //this.tunnelFilter.update();
 	//this.tunnelFilter.origin = this.tunnelFilter.origin + 0.001;
+
+	//  Want Rampage?
+    if (this.rampageKey.isDown) {
+      //console.log("R down actionRampage count: " + this.countRampage);
+      if (this.countRampage < 2) {
+      	this.actionRampage();
+      }
+    }
+    
+
 
   },
 
@@ -338,7 +356,7 @@ Rick.Game.prototype = {
     this.game.cache.destroy();
     this.enemies.removeAll();
 
-
+	this.countRampage = 1; // reset count rage so get one chance at Rampage on new game start 
     this.score = 0;
     this.nextEnemyTime = 3000;
 
@@ -487,10 +505,13 @@ Rick.Game.prototype = {
     }
   },
 
-  actionOnClick: function() {
+  actionRampage: function() {
 
-        this.panicButton.destroy();
-        this.enemies.removeAll();
+        //this.panicButton.destroy();
+        this.enemies.removeAll(); 
+        this.countRampage += 1; // increment so when R is pressed a second time it does not allow this function to load (i.e. you only get one rampage per game 
+        //console.log("actionRampage count: " + this.countRampage);
+        //this.rampageKey = this.game.input.keyboard.removeKey(Phaser.Keyboard.R);
 
   }
 

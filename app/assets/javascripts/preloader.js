@@ -43,7 +43,7 @@ Rick.Preloader.prototype = {
     this.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.load.spritesheet('rick', 'assets/rick.png', 94, 100);
     this.load.spritesheet('explosion', 'assets/enemy_explosion.png', 132, 262);
-    this.load.spritesheet('panicButtonSprite', 'assets/panic.png', 183, 125);
+    //this.load.spritesheet('panicButtonSprite', 'assets/panic.png', 183, 125);
     //this.load.script('tunnelFilter', 'assets/Tunnel.js'); // tunnel filter
 
   },
