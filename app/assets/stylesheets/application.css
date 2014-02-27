@@ -50,7 +50,6 @@ body {
 
 /* display: none; */  /* default is not to display so it will fade in later than div called in game.js */
 
-
 }
 
 /* used in game.html.erb */
@@ -63,16 +62,27 @@ body {
 .score_div {
 	/* float: left; */
 	opacity: 50%;
-	float: left;
+	float: right;
 	margin-top: 0px;
 	/*z-index: 2;*/
 	position: relative;
 }
 
+/*
+* {
+	border: 1px solid white;
+}
+*/
+
 #tweeting {
 	/* margin-left: 600px; */ 
 	position: absolute;
-	margin-left: 20px;
+	margin-top: 40px;
+
+}
+
+#fb-like {
+	clear:left;
 }
 
 #stats { 

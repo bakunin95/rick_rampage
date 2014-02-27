@@ -319,6 +319,9 @@ Rick.Game.prototype = {
         player.kill();
         this.dieSound.play();
         this.enemies.removeAll();
+
+    	$('#tweeting').hide();
+
         this.createPlayer();
 
     }
