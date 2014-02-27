@@ -38,6 +38,7 @@ Rick.Preloader.prototype = {
 
     this.load.image('scoresBackground', 'assets/scoresBackground.png');
     this.load.image('gameOver', 'assets/gameOver.png');
+    
 
     this.load.spritesheet('playButton', 'assets/playButton.png', 229, 72);
     this.load.spritesheet('scoresButton', 'assets/scoresButton.png', 268, 72);
