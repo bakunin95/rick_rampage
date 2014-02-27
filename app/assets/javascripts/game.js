@@ -141,16 +141,16 @@ Rick.Game.prototype = {
 
     // The score
     this.scoreString = 'Score : ';
-    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { fontSize: '34px', fill: '#fff' });
+    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { font: '20px "Press Start 2P"', fill: '#182450' });
 
     // Lives display
     this.lives = this.game.add.group();
-    this.game.add.text(10, 450, 'Lives : ', { fontSize: '34px', fill: '#fff' });
+    this.game.add.text(10, 450, 'Lives : ', { font: '20px "Press Start 2P"', fill: '#fff' });
 
     // The 3 lives as objects (head)
     for (var i = 0; i < 3; i++) 
     {
-        var head = this.lives.create(120 + (50 * i), 460, 'head');
+        var head = this.lives.create(180 + (50 * i), 460, 'head');
         head.anchor.setTo(0.5, 0.5);
         head.alpha = 0.4;
     }
