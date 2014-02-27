@@ -50,7 +50,7 @@ Rick.Game = function (game) {
   this.enemiesTime = 0; // used to create enemies in a time interval
   this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
   this.enemyKillPoint = 20;
-  this.enemeyVelocity = -400;
+  this.enemyVelocity = -400;
 
   // levels (of difficulty)
   this.levelTime;
@@ -151,9 +151,6 @@ Rick.Game.prototype = {
         head.alpha = 0.4;
     }
 
-	  // Add Player Statistics
-    this.playerStats($('.score_div'));
-
   },
 
   update: function () {
@@ -220,6 +217,7 @@ Rick.Game.prototype = {
     var explosion = this.explosions.getFirstDead();
     explosion.reset(enemy.body.x + 50, enemy.body.y + 30);
     explosion.play('explosion', 30, false, true);
+
   },
 
   collisionHandlerHitEnemy: function(player, enemy) {
@@ -292,8 +290,7 @@ Rick.Game.prototype = {
     var explosion = this.explosions.getFirstDead();
     explosion.reset(player.body.x + 50, player.body.y + 30);
     explosion.play('explosion', 30, false, true);
-    
-   
+
   },
 
   setUpExplosions: function(explosion) {
@@ -303,6 +300,8 @@ Rick.Game.prototype = {
   },
 
   quitGame: function () {
+
+	this.updatePlayerStats(this.score, $('#player_id').html());
 
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
@@ -316,6 +315,7 @@ Rick.Game.prototype = {
     this.lives.callAll('revive');
 
     this.game.state.start('MainMenu');
+
   },
 
    createPlayer: function () {
@@ -329,6 +329,7 @@ Rick.Game.prototype = {
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
+
   },
 
   createEnemy: function () {
@@ -345,7 +346,7 @@ Rick.Game.prototype = {
       if (this.enemy) {
         var yPos = [100, 125, 150, 175, 200, 225, 250];
         this.enemy.reset(750, yPos[this.getRandom(0, yPos.length - 1)]);
-        this.enemy.body.velocity.x = this.enemeyVelocity;
+        this.enemy.body.velocity.x = this.enemyVelocity;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
     }
@@ -379,11 +380,40 @@ Rick.Game.prototype = {
     return Math.round(Math.random() * (max - min) + min);
   },
 
-  playerStats: function(node) {
-	node.fadeIn(300, function() {
-		$('.score_th').fadeIn( 1200 );
-	});
-	return false;
+  updatePlayerStats: function(latestScore, playerID) {
+
+	console.log(playerID);
+	console.log(latestScore);
+	// only store score if score not equal to zero and not the same score as the previous game score
+	if (latestScore !== 0 && latestScore !== $('#latest_score').html()) { 
+		var res = $.ajax({
+		  type: 'POST',
+		  url: "/scores",
+		  data: JSON.stringify({
+		  	"user_id":playerID,
+		    "points":latestScore
+		  }),
+		  error: function(e) {
+		    console.log(e);
+		  },
+		  dataType: "json",
+		  contentType: "application/json"
+		})
+
+		var addGameStats = function(data) {
+			console.log("data is: " + data);
+			$('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
+			$('#latest_score').html(data.points);
+
+		}
+
+		res.done(function(data, textStatus, xhr) {
+		  		addGameStats(data);
+		  		console.log(data);
+		})
+
+	};
+
   },
 
   buildLedge: function () {
