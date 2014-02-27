@@ -203,7 +203,7 @@ Rick.Game.prototype = {
 
     this.checkPlayerJump();
 
-    // Reset Ricks Position
+     // Reset Ricks Position
     this.checkRickPosition();
 
     //Increase speed of platforms for every second
@@ -306,6 +306,14 @@ Rick.Game.prototype = {
         this.enemies.removeAll();
         this.createPlayer();
 
+        // Create a new platform for him to land on
+    this.platform = this.game.add.sprite(0,0, 'ground');
+    this.platform.reset(200, 400);
+    this.platform.scale.setTo(4,2);
+    this.platform.body.velocity.x = this.platformVelocity;
+    this.platform.body.immovable = true;
+    this.platforms.add(this.platform);
+
     }
 
   	// When the player dies
@@ -346,6 +354,14 @@ Rick.Game.prototype = {
         this.enemies.removeAll();
         this.dieSound.play();
         this.createPlayer();
+
+        // Create a new platform for him to land on
+        this.platform = this.game.add.sprite(0,0, 'ground');
+        this.platform.reset(200, 400);
+        this.platform.scale.setTo(4,2);
+        this.platform.body.velocity.x = this.platformVelocity;
+        this.platform.body.immovable = true;
+        this.platforms.add(this.platform);
     }
   	// When the player dies
     if (this.lives.countLiving() < 1){
@@ -463,6 +479,7 @@ Rick.Game.prototype = {
   },
 
   updatePlayerStats: function(latestScore, playerID) {
+
 
     // only store score if score not equal to zero and not the same score as the previous game score
     if (latestScore !== 0 && latestScore !== $('#latest_score').html()) {
