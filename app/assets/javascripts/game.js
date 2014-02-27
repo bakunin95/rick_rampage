@@ -2,9 +2,8 @@
 
 //overriding the framework so rick doesn't get stuck on those platform transitions
 Phaser.Physics.Arcade.prototype.separate = function (body1, body2) {
-
-        this._result = (this.separateY(body1, body2) || this.separateX(body1, body2));
-    }
+  this._result = (this.separateY(body1, body2) || this.separateX(body1, body2));
+};
 
 Rick.Game = function (game) {
 
@@ -27,6 +26,7 @@ Rick.Game = function (game) {
   this.rnd; // the repeatable random number generator
 
   this.background;
+  //this.tunnerFilter;
 
   // platforms
   this.platforms;
@@ -73,10 +73,19 @@ Rick.Game = function (game) {
   this.score = 0;
   this.scoreString;
   this.scoreText;
+  this.lastScore = 0;
 
 
   //Lives
   this.lives;
+
+  // Panic functionality
+  //this.panicButtonSprite; // pause button image
+  //this.panicButton;
+
+  // Rampage functionality
+  this.rampageKey; // rampage key is R
+  this.countRampage = 1;
 
 
   //	You can use any of these from any function within this State.
@@ -91,6 +100,8 @@ Rick.Game.prototype = {
   },
 
   create: function () {
+
+
 
   	// check if dead or not
   	
@@ -130,6 +141,7 @@ Rick.Game.prototype = {
     // Adds Keyboard controls
     this.keyboard = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    this.rampageKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
 
     // Add Enemies
     this.enemiesTime = this.game.time.now + this.nextEnemyTime;
@@ -145,20 +157,31 @@ Rick.Game.prototype = {
 
 
     // The score
-    this.scoreString = 'Score : ';
-    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { font: '20px "Press Start 2P"', fill: '#182450' });
+    this.scoreString = 'Score:';
+    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { font: '28px "Press Start 2P"', fill: '#182450' });
 
     // Lives display
     this.lives = this.game.add.group();
-    this.game.add.text(10, 450, 'Lives : ', { font: '20px "Press Start 2P"', fill: '#fff' });
+    this.game.add.text(10, 450, 'Lives:', { font: '20px "Press Start 2P"', fill: '#fff' });
 
     // The 3 lives as objects (head)
     for (var i = 0; i < 3; i++) 
     {
-        var head = this.lives.create(180 + (50 * i), 460, 'head');
+        var head = this.lives.create(160 + (50 * i), 460, 'head');
         head.anchor.setTo(0.5, 0.5);
         head.alpha = 0.4;
     }
+
+    // Pause button ('pause' is the pause spritesheet in preloader.js)
+    // IMPORTANT NOTE: MUST LOAD AFTER THE BACKGROUND
+    //this.pauseButton = this.add.button('pause')
+    
+    //this.panicButton = this.game.add.button(0, 0, 'panicButtonSprite', this.actionOnClick, this, 1, 2, 1);
+
+    // Background tunnel settings
+    //this.tunnelFilter = this.add.filter('Tunnel', 800, 500, this.background.desert);
+	//this.tunnelFilter.origin = 2.0;
+	//this.background.filters = [this.tunnelFilter];
 
   },
 
@@ -180,7 +203,7 @@ Rick.Game.prototype = {
 
     this.checkPlayerJump();
 
-    // Reset Ricks Position
+     // Reset Ricks Position
     this.checkRickPosition();
 
     //Increase speed of platforms for every second
@@ -200,6 +223,18 @@ Rick.Game.prototype = {
     // Kill player if they go out of left side of screen
     if (this.player.x < -10 ) {
     	this.collisionHandlerFall(this.player);
+    }
+
+	// Tunnel filter settings
+    //this.tunnelFilter.update();
+	//this.tunnelFilter.origin = this.tunnelFilter.origin + 0.001;
+
+	//  Want Rampage?
+    if (this.rampageKey.isDown) {
+      //console.log("R down actionRampage count: " + this.countRampage);
+      if (this.countRampage < 2) {
+      	this.actionRampage();
+      }
     }
 
   },
@@ -228,6 +263,7 @@ Rick.Game.prototype = {
     } else if (this.keyboard.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
       this.player.body.velocity.y = -400;
       this.jumpcount++;
+      this.player.animations.play('doubleJump');
     }
   },
 
@@ -285,6 +321,8 @@ Rick.Game.prototype = {
     	player.kill();
       this.deathSound.play();
     	this.quitGame();
+      
+
     }
 
   	//  And create an explosion :)
@@ -329,8 +367,8 @@ Rick.Game.prototype = {
     if (this.lives.countLiving() < 1){
     	player.kill();
     	this.quitGame();
-      	this.deathSound.play();
-    	// this stops multiple deaths when he falls, set to false everywhere else
+      this.deathSound.play();
+      
     }
 
     //  And create an explosion :)
@@ -348,7 +386,7 @@ Rick.Game.prototype = {
 
   quitGame: function () {
 
-	this.updatePlayerStats(this.score, $('#player_id').html());
+	  this.updatePlayerStats(this.score, $('#player_id').html());
 
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
@@ -360,8 +398,8 @@ Rick.Game.prototype = {
 
     this.music.stop();
 
-
-
+    this.lastScore = this.score;
+	  this.countRampage = 1; // reset count rage so get one chance at Rampage on new game start
     this.score = 0;
     this.nextEnemyTime = 3000;
 
@@ -370,7 +408,8 @@ Rick.Game.prototype = {
     this.player.revive();
     this.lives.callAll('revive');
 
-    this.game.state.start('MainMenu');
+    //this.game.state.start('MainMenu');
+    this.game.state.start('GameOver');
 
   },
 
@@ -386,7 +425,7 @@ Rick.Game.prototype = {
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
-
+    this.player.animations.add('doubleJump', [9], 10, false);
   },
 
   createEnemy: function () {
@@ -441,48 +480,37 @@ Rick.Game.prototype = {
 
   updatePlayerStats: function(latestScore, playerID) {
 
-	console.log(playerID);
-	console.log(latestScore);
-	// only store score if score not equal to zero and not the same score as the previous game score
-	if (latestScore !== 0 && latestScore !== $('#latest_score').html()) { 
-		var res = $.ajax({
-		  type: 'POST',
-		  url: "/scores",
-		  data: JSON.stringify({
-		  	"user_id":playerID,
-		    "points":latestScore
-		  }),
-		  error: function(e) {
-		    console.log(e);
-		  },
-		  dataType: "json",
-		  contentType: "application/json"
-		})
 
-		var addGameStats = function(data) {
-			console.log("data is: " + data);
-			$('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
-			$('#latest_score').html(data.points);
+    // only store score if score not equal to zero and not the same score as the previous game score
+    if (latestScore !== 0 && latestScore !== $('#latest_score').html()) {
+      var res = $.ajax({
+        type: 'POST',
+        url: "/scores",
+        data: JSON.stringify({
+          "user_id":playerID,
+          "points":latestScore
+        }),
+        error: function(e) {
+          console.log(e);
+        },
+        dataType: "json",
+        contentType: "application/json"
+      });
 
-		}
+      var addGameStats = function(data) {
+        console.log("data is: " + data);
+        $('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
+        $('#latest_score').html(data.points);
 
-		res.done(function(data, textStatus, xhr) {
-		  		addGameStats(data);
-		  		console.log(data);
-		})
+      };
 
-	};
+      res.done(function(data, textStatus, xhr) {
+        addGameStats(data);
+        console.log(data);
+      });
 
+    };
   },
-
-
-  // IS THIS DEAD CODE?
-  // buildLedge: function () {
-  //   this.generatedLedge = this.platforms.create(this.getRandom(800, 1000), this.getRandom(250, 450), 'ground');
-  //   this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
-  //   this.generatedLedge.body.velocity.x = -190;
-  //   this.generatedLedge.body.immovable = true;
-  // },
 
   fireBullet: function() {
 
@@ -511,6 +539,17 @@ Rick.Game.prototype = {
 
       this.levelTime += this.changeLevelTime;
     }
+  },
+
+  actionRampage: function() {
+
+    //this.panicButton.destroy();
+    this.enemies.removeAll();
+
+    this.countRampage += 1; // increment so when R is pressed a second time it does not allow this function to load (i.e. you only get one rampage per game
+    //console.log("actionRampage count: " + this.countRampage);
+    //this.rampageKey = this.game.input.keyboard.removeKey(Phaser.Keyboard.R);
+
   }
 
 };

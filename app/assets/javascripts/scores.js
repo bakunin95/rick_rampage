@@ -4,8 +4,15 @@ Rick.Scores = function (game) {
 
 Rick.Scores.prototype = {
   preload: function () {
-    $.getJSON('/scores/top5', function (data){
-
+    $.ajax({
+      dataType: "json",
+      url: '/scores/top5',
+      success: function (data) {
+        for (var i = 0; i < data.length; i += 1) {
+          this.game.add.text(350, 200 + i * 40, data[i].points, { fontSize: '34px', fill: '#fff', align: 'center' });
+        }
+      },
+      context: this
     });
   },
 
@@ -16,12 +23,20 @@ Rick.Scores.prototype = {
     //	Naturally I expect you to do something significantly better :)
 
     this.add.sprite(0, 0, 'scoresBackground');
+    this.add.button(230, 410, 'mainMenuButton', this.mainMenu, this, 0, 1);
 
   },
 
   update: function () {
 
     //	Do some nice funky main menu effect here
+
+  },
+
+  mainMenu: function () {
+
+    //  And start the actual game
+    this.game.state.start('MainMenu');
 
   }
 
