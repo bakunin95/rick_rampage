@@ -24,20 +24,23 @@ Rick.Preloader.prototype = {
 
     //	Here we load the rest of the assets our game needs.
     //	As this is just a Project Template I've not provided these assets, swap them for your own.
-//    this.load.image('titlepage', 'images/title.jpg');
-      this.load.image('playButton', 'assets/playButton.jpeg');
-      this.load.audio('titleMusic', ['assets/soundtrack.mp3']);
-      this.load.audio('explosionSound', ['assets/explosion.mp3']);
-      this.load.audio('shootSound', ['assets/shoot.mp3']);
-      this.load.audio('dieSound', ['assets/kill.mp3']);
-      this.load.audio('deathSound', ['assets/death.mp3']);
-//    this.load.bitmapFont('caslon', 'fonts/caslon.png', 'fonts/caslon.xml');
-    //	+ lots of other required assets here
+    this.load.audio('titleMusic', ['assets/soundtrack.mp3']);
+    this.load.audio('explosionSound', ['assets/explosion.mp3']);
+    this.load.audio('shootSound', ['assets/shoot.mp3']);
+    this.load.audio('dieSound', ['assets/kill.mp3']);
+    this.load.audio('deathSound', ['assets/death.mp3']);
+    this.load.audio('mainMenuSound', ['assets/mainMenuSoundTrack.mp3']);
 
     this.load.image('ground', 'assets/platform4.png');
     this.load.image('bullet', 'assets/bullet.png');
     this.load.image('desert', 'assets/desert.png');
     this.load.image('head', 'assets/rick_head.png');
+    this.load.image('scoresBackground', 'assets/scoresBackground.png');
+
+    this.load.spritesheet('playButton', 'assets/playButton.png', 229, 72);
+    this.load.spritesheet('scoresButton', 'assets/scoresButton.png', 268, 72);
+    this.load.spritesheet('signinButton', 'assets/signinButton.png', 294, 72);
+
     this.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
     this.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.load.spritesheet('rick', 'assets/rick.png', 94, 100);
@@ -64,7 +67,7 @@ Rick.Preloader.prototype = {
     //	If you don't have any music in your game then put the game.state.start line into the create function and delete
     //	the update function completely.
 
-    if (this.cache.isSoundDecoded('titleMusic') && this.ready == false)
+    if (this.cache.isSoundDecoded('mainMenuSound') && this.ready == false)
     {
       this.ready = true;
       this.game.state.start('MainMenu');

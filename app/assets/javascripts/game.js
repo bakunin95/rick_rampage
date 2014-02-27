@@ -333,7 +333,11 @@ Rick.Game.prototype = {
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
     this.game.cache.destroy();
     this.enemies.removeAll();
+
     this.platformVelocity = -250;
+
+    this.music.stop();
+
 
 
     this.score = 0;
@@ -343,7 +347,6 @@ Rick.Game.prototype = {
 
     this.player.revive();
     this.lives.callAll('revive');
-    this.music.stop();
 
     this.game.state.start('MainMenu');
 
