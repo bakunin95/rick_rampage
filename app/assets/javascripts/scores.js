@@ -3,11 +3,11 @@ Rick.Scores = function (game) {
 };
 
 Rick.Scores.prototype = {
-  preload: function () {
-    $.getJSON('/scores/top5', function (data){
+  // preload: function () {
+  //   $.getJSON('/scores/top5', function (data){
 
-    });
-  },
+  //   });
+  // },
 
   create: function () {
 
@@ -16,6 +16,7 @@ Rick.Scores.prototype = {
     //	Naturally I expect you to do something significantly better :)
 
     this.add.sprite(0, 0, 'scoresBackground');
+    this.add.button(230, 410, 'mainMenuButton', this.mainMenu, this, 0, 1);
 
   },
 
@@ -23,7 +24,16 @@ Rick.Scores.prototype = {
 
     //	Do some nice funky main menu effect here
 
+  },
+
+  mainMenu: function () {
+
+    //  And start the actual game
+    this.game.state.start('MainMenu');
+
   }
+
+
 
 };
 
