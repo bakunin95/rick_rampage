@@ -290,11 +290,6 @@ Rick.Game.prototype = {
     var explosion = this.explosions.getFirstDead();
     explosion.reset(player.body.x + 50, player.body.y + 30);
     explosion.play('explosion', 30, false, true);
-    
-    player.kill();
-    this.dead = true;
-
-    this.quitGame();
 
   },
 
