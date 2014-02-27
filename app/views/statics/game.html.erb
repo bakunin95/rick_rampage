@@ -6,6 +6,8 @@
   <%= javascript_include_tag :game %>
 <% end %>
 
+<div id="container">
+
 <h1>Rick Rampage</h1>
 
 <div id="gameContainer" class="blockCenter"></div>
@@ -193,7 +195,9 @@ http://apidock.com/rails/ActionView/Helpers/FormHelper/form_for
 	<li><%#= latest_score %></li>
 </script>-->
 
-<script>
+</div> <!-- end container -->
+
+<!-- <script>
 
 	var url = '';
 	var urlPrefix = 'http://localhost:3000/scores/';
@@ -244,4 +248,4 @@ http://apidock.com/rails/ActionView/Helpers/FormHelper/form_for
 	//  	fetchLatestScores();
 	// })
 
-</script>
+</script> -->

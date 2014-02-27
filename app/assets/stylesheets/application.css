@@ -15,10 +15,12 @@
 #gameContainer {
   width: 800px;
   margin: 0 auto;
+
 }
 
 #gameContainer > canvas {
   margin: 0 auto;
+  margin-bottom: 200px;
 }
 
 /* used in game.html.erb */
@@ -42,6 +44,7 @@
 	margin-top: 0px;
 	z-index: 2;
 	position: relative;
+	display:none;
 }
 
 #topscores {
