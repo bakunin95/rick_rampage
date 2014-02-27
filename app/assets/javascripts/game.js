@@ -2,9 +2,8 @@
 
 //overriding the framework so rick doesn't get stuck on those platform transitions
 Phaser.Physics.Arcade.prototype.separate = function (body1, body2) {
-
-        this._result = (this.separateY(body1, body2) || this.separateX(body1, body2));
-    }
+  this._result = (this.separateY(body1, body2) || this.separateX(body1, body2));
+};
 
 Rick.Game = function (game) {
 
@@ -33,6 +32,7 @@ Rick.Game = function (game) {
   this.platforms;
   this.platformVelocity = -250;
   this.platformsTime = 0;
+  this.platformsTimeAdd = 2000;
 
   this.player;
   this.keyboard;
@@ -65,10 +65,15 @@ Rick.Game = function (game) {
   this.explosions;
   
 
+  // save amount of seconds passed at quitGame
+  this.speedTime= 0;
+
+
   // text
   this.score = 0;
   this.scoreString;
   this.scoreText;
+  this.lastScore = 0;
 
 
   //Lives
@@ -152,17 +157,17 @@ Rick.Game.prototype = {
 
 
     // The score
-    this.scoreString = 'Score : ';
-    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { font: '20px "Press Start 2P"', fill: '#182450' });
+    this.scoreString = 'Score:';
+    this.scoreText = this.game.add.text(10, 10, this.scoreString + this.score, { font: '28px "Press Start 2P"', fill: '#182450' });
 
     // Lives display
     this.lives = this.game.add.group();
-    this.game.add.text(10, 450, 'Lives : ', { font: '20px "Press Start 2P"', fill: '#fff' });
+    this.game.add.text(10, 450, 'Lives:', { font: '20px "Press Start 2P"', fill: '#fff' });
 
     // The 3 lives as objects (head)
     for (var i = 0; i < 3; i++) 
     {
-        var head = this.lives.create(180 + (50 * i), 460, 'head');
+        var head = this.lives.create(160 + (50 * i), 460, 'head');
         head.anchor.setTo(0.5, 0.5);
         head.alpha = 0.4;
     }
@@ -202,7 +207,8 @@ Rick.Game.prototype = {
     this.checkRickPosition();
 
     //Increase speed of platforms for every second
-    this.platformSpeedIncrease = (this.platformVelocity - this.game.time.totalElapsedSeconds());
+    this.updateSpeed();
+
 
     //  Firing?
     if (this.fireButton.isDown) {
@@ -233,6 +239,17 @@ Rick.Game.prototype = {
 
   },
 
+  updateSpeed: function() {
+    if (this.game.time.now > this.speedTime) {
+      if (this.platformVelocity < -100){
+        this.platformVelocity -= 1;
+        this.platformsTimeAdd -= 10;
+        this.speedTime = this.game.time.now + 1000;
+      }
+      
+    }
+  },
+
 
   checkPlayerJump: function() {
     if (this.keyboard.up.isDown && this.player.body.touching.down){
@@ -244,6 +261,7 @@ Rick.Game.prototype = {
     } else if (this.keyboard.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
       this.player.body.velocity.y = -400;
       this.jumpcount++;
+      this.player.animations.play('doubleJump');
     }
   },
 
@@ -350,21 +368,27 @@ Rick.Game.prototype = {
 
   quitGame: function () {
 
-	this.updatePlayerStats(this.score, $('#player_id').html());
+	  this.updatePlayerStats(this.score, $('#player_id').html());
 
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
     this.game.cache.destroy();
     this.enemies.removeAll();
+
+    this.platformVelocity = -250;
+    this.platformsTimeAdd = 2000;
+
     this.music.stop();
 
-	this.countRampage = 1; // reset count rage so get one chance at Rampage on new game start 
+    this.lastScore = this.score;
+	  this.countRampage = 1; // reset count rage so get one chance at Rampage on new game start
     this.score = 0;
     this.nextEnemyTime = 3000;
 
+    // reset the platform velocity
+
     this.player.revive();
     this.lives.callAll('revive');
-    this.music.stop();
 
     //this.game.state.start('MainMenu');
     this.game.state.start('GameOver');
@@ -383,7 +407,7 @@ Rick.Game.prototype = {
 
     this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
-
+    this.player.animations.add('doubleJump', [9], 10, false);
   },
 
   createEnemy: function () {
@@ -437,10 +461,10 @@ Rick.Game.prototype = {
         this.platform.scale.setTo(2,2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
-        this.platform.body.velocity.x = this.platformSpeedIncrease;
         console.log(this.platform.body.velocity.x)
         this.platform.body.immovable = true;
-        this.platformsTime = this.game.time.now + 2000;
+        this.platformsTime = this.game.time.now + this.platformsTimeAdd;
+        console.log(this.platformsTimeAdd)
       }
     }
   },
@@ -451,45 +475,35 @@ Rick.Game.prototype = {
 
   updatePlayerStats: function(latestScore, playerID) {
 
-	console.log(playerID);
-	console.log(latestScore);
-	// only store score if score not equal to zero and not the same score as the previous game score
-	if (latestScore !== 0 && latestScore !== $('#latest_score').html()) { 
-		var res = $.ajax({
-		  type: 'POST',
-		  url: "/scores",
-		  data: JSON.stringify({
-		  	"user_id":playerID,
-		    "points":latestScore
-		  }),
-		  error: function(e) {
-		    console.log(e);
-		  },
-		  dataType: "json",
-		  contentType: "application/json"
-		})
+    // only store score if score not equal to zero and not the same score as the previous game score
+    if (latestScore !== 0 && latestScore !== $('#latest_score').html()) {
+      var res = $.ajax({
+        type: 'POST',
+        url: "/scores",
+        data: JSON.stringify({
+          "user_id":playerID,
+          "points":latestScore
+        }),
+        error: function(e) {
+          console.log(e);
+        },
+        dataType: "json",
+        contentType: "application/json"
+      });
 
-		var addGameStats = function(data) {
-			console.log("data is: " + data);
-			$('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
-			$('#latest_score').html(data.points);
+      var addGameStats = function(data) {
+        console.log("data is: " + data);
+        $('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
+        $('#latest_score').html(data.points);
 
-		}
+      };
 
-		res.done(function(data, textStatus, xhr) {
-		  		addGameStats(data);
-		  		console.log(data);
-		})
+      res.done(function(data, textStatus, xhr) {
+        addGameStats(data);
+        console.log(data);
+      });
 
-	};
-
-  },
-
-  buildLedge: function () {
-    this.generatedLedge = this.platforms.create(this.getRandom(800, 1000), this.getRandom(250, 450), 'ground');
-    this.generatedLedge.scale.setTo(this.getRandom(2,3),1);
-    this.generatedLedge.body.velocity.x = -190;
-    this.generatedLedge.body.immovable = true;
+    };
   },
 
   fireBullet: function() {
@@ -523,12 +537,12 @@ Rick.Game.prototype = {
 
   actionRampage: function() {
 
-        //this.panicButton.destroy();
-        this.enemies.removeAll(); 
-        
-        this.countRampage += 1; // increment so when R is pressed a second time it does not allow this function to load (i.e. you only get one rampage per game 
-        //console.log("actionRampage count: " + this.countRampage);
-        //this.rampageKey = this.game.input.keyboard.removeKey(Phaser.Keyboard.R);
+    //this.panicButton.destroy();
+    this.enemies.removeAll();
+
+    this.countRampage += 1; // increment so when R is pressed a second time it does not allow this function to load (i.e. you only get one rampage per game
+    //console.log("actionRampage count: " + this.countRampage);
+    //this.rampageKey = this.game.input.keyboard.removeKey(Phaser.Keyboard.R);
 
   }
 

@@ -63,7 +63,7 @@ class ScoresController < ApplicationController
   end
 
   def top5
-    @scores = Score.order(points: :desc).limit(10)
+    @scores = Score.order(points: :desc).limit(5)
     render json: @scores
   end
 
