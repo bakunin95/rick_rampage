@@ -32,6 +32,7 @@ Rick.Game = function (game) {
   this.platforms;
   this.platformVelocity = -250;
   this.platformsTime = 0;
+  this.platformsTimeAdd = 2000;
 
   this.player;
   this.keyboard;
@@ -186,8 +187,6 @@ Rick.Game.prototype = {
     this.updateSpeed();
 
 
-    this.platformSpeedIncrease = (this.platformVelocity );
-
     //  Firing?
     if (this.fireButton.isDown) {
       this.fireBullet();
@@ -207,8 +206,12 @@ Rick.Game.prototype = {
 
   updateSpeed: function() {
     if (this.game.time.now > this.speedTime) {
-      this.platformVelocity -= 1;
-      this.speedTime = this.game.time.now + 1000;
+      if (this.platformVelocity < -100){
+        this.platformVelocity -= 1;
+        this.platformsTimeAdd -= 10;
+        this.speedTime = this.game.time.now + 1000;
+      }
+      
     }
   },
 
@@ -335,6 +338,7 @@ Rick.Game.prototype = {
     this.enemies.removeAll();
 
     this.platformVelocity = -250;
+    this.platformsTimeAdd = 2000;
 
     this.music.stop();
 
@@ -405,10 +409,10 @@ Rick.Game.prototype = {
         this.platform.scale.setTo(2,2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
-        // set the speed increase to the seconds passed minus the seconds passed last round
         console.log(this.platform.body.velocity.x)
         this.platform.body.immovable = true;
-        this.platformsTime = this.game.time.now + 2000;
+        this.platformsTime = this.game.time.now + this.platformsTimeAdd;
+        console.log(this.platformsTimeAdd)
       }
     }
   },
