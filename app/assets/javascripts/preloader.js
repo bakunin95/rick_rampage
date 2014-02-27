@@ -35,8 +35,12 @@ Rick.Preloader.prototype = {
     this.load.image('bullet', 'assets/bullet.png');
     this.load.image('desert', 'assets/desert.png');
     this.load.image('head', 'assets/rick_head.png');
+    this.load.image('scoresBackground', 'assets/scoresBackground.png');
 
     this.load.spritesheet('playButton', 'assets/playButton.png', 229, 72);
+    this.load.spritesheet('scoresButton', 'assets/scoresButton.png', 268, 72);
+    this.load.spritesheet('signinButton', 'assets/signinButton.png', 294, 72);
+
     this.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
     this.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
     this.load.spritesheet('rick', 'assets/rick.png', 94, 100);

@@ -19,7 +19,8 @@ Rick.MainMenu.prototype = {
     this.musicMenu = this.add.audio('mainMenuSound');
     this.musicMenu.play();
 
-    this.playButton = this.add.button(100, 300, 'playButton', this.startGame, this, 1, 0);
+    this.add.button(100, 300, 'playButton', this.startGame, this, 1, 0);
+    this.add.button(350, 300, 'scoresButton', this.scoresMenu, this, 1, 0);
 
 	  // Add Player Statistics
     this.playerStats($('.score_div'));
@@ -47,6 +48,13 @@ Rick.MainMenu.prototype = {
 
     //	And start the actual game
     this.game.state.start('Game');
+  },
+
+  scoresMenu: function () {
+
+    //	And start the actual game
+    this.game.state.start('Scores');
+
   }
 
 };

@@ -18,6 +18,7 @@
     game.state.add('Preloader', Rick.Preloader);
     game.state.add('MainMenu', Rick.MainMenu);
     game.state.add('Game', Rick.Game);
+    game.state.add('Scores', Rick.Scores);
 
     //game.state.start('Boot');
     game.state.start('Boot');
@@ -110,7 +111,7 @@
 			        	<td class="score_th" id="player_id">
 			        		<%= current_user.id %>
 			        	</td>	
-					<% elsif %>
+					<% else %>
 				        <td></td>
 					<% end %>
 
@@ -129,7 +130,7 @@
 				  	  			<% break %>
 				  	  		<% end %>
 				  	  	<% end %>	
-					<% elsif %>
+					<% else %>
 				        <td></td>
 					<% end %>
 
@@ -148,7 +149,7 @@
 				  	  		<% end %>
 				  	  		<% j = j - 1 %>
 				  	  	<% end %>	
-					<% elsif %>
+					<% else %>
 				        <td></td>
 					<% end %>
 		  </tr>
