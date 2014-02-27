@@ -9,7 +9,7 @@ Rick.Boot.prototype = {
   preload: function () {
 
     //  Here we load the assets required for our preloader (in this case a background and a loading bar)
-    this.load.image('preloaderBackground', 'assets/desert.png');
+    this.load.image('preloaderBackground', 'assets/menu-backdrop.png');
     this.load.image('preloaderBar', 'assets/bullet-2.png');
 
   },

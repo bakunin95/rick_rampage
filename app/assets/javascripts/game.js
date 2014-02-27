@@ -308,6 +308,7 @@ Rick.Game.prototype = {
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
     this.game.cache.destroy();
     this.enemies.removeAll();
+    this.music.stop();
 
     this.score = 0;
     this.nextEnemyTime = 3000;
