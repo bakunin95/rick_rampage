@@ -91,6 +91,12 @@ Rick.Game = function (game) {
   this.countRampage = 1;
 
 
+  // Keys
+  this.keysText;
+  this.hideKeysInterval = 3000;
+  this.hideKeysTime = 0;
+
+
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
 
@@ -167,6 +173,9 @@ Rick.Game.prototype = {
     this.lives = this.game.add.group();
     this.game.add.text(10, 450, 'Lives:', { font: '20px "Press Start 2P"', fill: '#fff' });
 
+    this.keysText = this.game.add.text(200, 230, 'Press spacebar to shoot \nPress up arrow key to jump:', { font: '20px "Press Start 2P"', fill: '#182450' });
+    this.hideKeysTime = this.game.time.now + this.hideKeysInterval;
+
     // The 3 lives as objects (head)
     for (var i = 0; i < 3; i++) 
     {
@@ -189,6 +198,8 @@ Rick.Game.prototype = {
   },
 
   update: function () {
+
+    this.hideKeys();
 
     this.createPlatform();
     this.setLevel();
@@ -252,6 +263,13 @@ Rick.Game.prototype = {
         this.speedTime = this.game.time.now + 1000;
       }
       
+    }
+  },
+
+  hideKeys: function () {
+    if (this.game.time.now > this.hideKeysTime) {
+      if (this.keysText.exists)
+        this.keysText.destroy();
     }
   },
 
