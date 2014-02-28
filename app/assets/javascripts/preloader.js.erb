@@ -16,6 +16,8 @@ Rick.Preloader.prototype = {
     //	A nice sparkly background and a loading progress bar
     this.background = this.add.sprite(0, 0, 'preloaderBackground');
     this.preloadBar = this.add.sprite(300, 400, 'preloaderBar');
+    this.add.text(300, 380, 'Loading...', { font: '20px "Press Start 2P"', fill: '#fff' });
+
 
     //	This sets the preloadBar sprite as a loader sprite.
     //	What that does is automatically crop the sprite from 0 to full-width
