@@ -21,6 +21,11 @@ body {
 	width: 960px;
 	margin: 0 auto;
 	color: white;
+	text-align: center;
+}
+
+#signIn form, #signUp form {
+	margin-bottom: 20px;
 }
 
 #gameContainer {
