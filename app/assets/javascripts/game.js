@@ -477,7 +477,7 @@ Rick.Game.prototype = {
       }
       if (this.enemy2) {
         var yPos = [20, 30, 40, 50, 240, 255, 300];
-        this.enemy2.reset(600, yPos[this.getRandom(0, yPos.length - 1)]);
+        this.enemy2.reset(750, yPos[this.getRandom(0, yPos.length - 1)]);
         this.enemy2.body.velocity.x = this.enemyVelocity2;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
