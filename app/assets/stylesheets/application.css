@@ -39,11 +39,10 @@ body {
 
 .navbar-text {
 	float:right;
-	margin-right: 20px;
+	margin-right: 40px;
 	color: white;
 	margin-top: 0px;
 }
-
 
 /* used in game.html.erb */
 .score_div {
