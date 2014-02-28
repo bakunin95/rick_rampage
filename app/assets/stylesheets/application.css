@@ -17,6 +17,17 @@ body {
 }
 
 
+#signIn, #signUp {
+	width: 960px;
+	margin: 0 auto;
+	color: white;
+	text-align: center;
+}
+
+#signIn form, #signUp form {
+	margin-bottom: 20px;
+}
+
 #gameContainer {
   width: 800px;
   margin: 0 auto;
