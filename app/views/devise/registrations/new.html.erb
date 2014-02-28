@@ -1,3 +1,7 @@
+<h1><a class="homelink" href="/">Rick Rampage</a></h1>
+
+<div id="signUp">
+
 <h2>Sign up</h2>
 
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
@@ -5,6 +9,8 @@
 
   <div><%= f.label :email %><br />
   <%= f.email_field :email, :autofocus => true %></div>
+
+    <p>OR</p>
 
   <div><%= f.label :twitter_handle %><br />
   <%= f.text_field :twitter_handle %></div>
@@ -19,3 +25,6 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+
+</div>
+

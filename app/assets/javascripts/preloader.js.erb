@@ -16,6 +16,8 @@ Rick.Preloader.prototype = {
     //	A nice sparkly background and a loading progress bar
     this.background = this.add.sprite(0, 0, 'preloaderBackground');
     this.preloadBar = this.add.sprite(300, 400, 'preloaderBar');
+    this.add.text(300, 380, 'Loading...', { font: '20px "Press Start 2P"', fill: '#fff' });
+
 
     //	This sets the preloadBar sprite as a loader sprite.
     //	What that does is automatically crop the sprite from 0 to full-width
@@ -24,32 +26,33 @@ Rick.Preloader.prototype = {
 
     //	Here we load the rest of the assets our game needs.
     //	As this is just a Project Template I've not provided these assets, swap them for your own.
-    this.load.audio('titleMusic', ['assets/soundtrack.mp3']);
-    this.load.audio('explosionSound', ['assets/explosion.mp3']);
-    this.load.audio('shootSound', ['assets/shoot.mp3']);
-    this.load.audio('dieSound', ['assets/kill.mp3']);
-    this.load.audio('deathSound', ['assets/death.mp3']);
-    this.load.audio('mainMenuSound', ['assets/mainMenuSoundTrack.mp3']);
+    this.load.audio('titleMusic', ['<%= asset_path 'soundtrack.mp3' %>']);
+    this.load.audio('explosionSound', ['<%= asset_path 'explosion.mp3' %>']);
+    this.load.audio('shootSound', ['<%= asset_path 'shoot.mp3' %>']);
+    this.load.audio('dieSound', ['<%= asset_path 'kill.mp3' %>']);
+    this.load.audio('deathSound', ['<%= asset_path 'death.mp3' %>']);
+    this.load.audio('mainMenuSound', ['<%= asset_path 'mainMenuSoundTrack.mp3' %>']);
 
-    this.load.image('ground', 'assets/platform4.png');
-    this.load.image('bullet', 'assets/bullet.png');
-    this.load.image('desert', 'assets/desert.png');
-    this.load.image('head', 'assets/rick_head.png');
+    this.load.image('ground', '<%= asset_path 'platform4.png' %>');
+    this.load.image('desert', '<%= asset_path 'desert.png' %>');
+    this.load.image('head', '<%= asset_path 'rick_head.png' %>');
 
-    this.load.image('scoresBackground', 'assets/scoresBackground.png');
-    this.load.image('gameOver', 'assets/gameOver.png');
+    this.load.image('scoresBackground', '<%= asset_path 'scoresBackground.png' %>');
+    this.load.image('gameOver', '<%= asset_path 'gameOver.png' %>');
 
-    this.load.spritesheet('playButton', 'assets/playButton.png', 229, 72);
-    this.load.spritesheet('scoresButton', 'assets/scoresButton.png', 268, 72);
-    this.load.spritesheet('signinButton', 'assets/signinButton.png', 294, 72);
-    this.load.spritesheet('mainMenuButton', 'assets/mainMenuButton.png', 345, 72);
-    this.load.spritesheet('playAgainButton', 'assets/playAgain.png', 413, 72);
-    this.load.spritesheet('rankButton', 'assets/rank.png', 229, 72);
 
-    this.load.spritesheet('bullets','assets/bullet-2.png', 42, 34);
-    this.load.spritesheet('wasp', 'assets/wasp-rough.png', 183, 125);
-    this.load.spritesheet('rick', 'assets/rick.png', 94, 100);
-    this.load.spritesheet('explosion', 'assets/enemy_explosion.png', 132, 262);
+    this.load.spritesheet('playButton', '<%= asset_path 'playButton.png' %>', 229, 72);
+    this.load.spritesheet('scoresButton', '<%= asset_path 'scoresButton.png' %>', 268, 72);
+    this.load.spritesheet('signinButton', '<%= asset_path 'signinButton.png' %>', 294, 72);
+    this.load.spritesheet('mainMenuButton', '<%= asset_path 'mainMenuButton.png' %>', 345, 72);
+    this.load.spritesheet('playAgainButton', '<%= asset_path 'playAgain.png' %>', 413, 72);
+    this.load.spritesheet('rankButton', '<%= asset_path 'rank.png' %>', 229, 72);
+
+    this.load.spritesheet('bullets','<%= asset_path 'bullet-2.png' %>', 42, 34);
+    this.load.spritesheet('wasp', '<%= asset_path 'wasp-rough.png' %>', 183, 125);
+    this.load.spritesheet('rick', '<%= asset_path 'rick.png' %>', 94, 100);
+    this.load.spritesheet('explosion', '<%= asset_path 'enemy_explosion.png' %>', 132, 262);
+    this.load.spritesheet('explode', '<%= asset_path 'explode.png' %>', 107, 106);
     //this.load.spritesheet('panicButtonSprite', 'assets/panic.png', 183, 125);
     //this.load.script('tunnelFilter', 'assets/Tunnel.js'); // tunnel filter
 

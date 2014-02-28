@@ -16,8 +16,11 @@ Rick.MainMenu.prototype = {
 
     this.add.sprite(0, 0, 'preloaderBackground');
 
-    this.musicMenu = this.add.audio('mainMenuSound');
-    this.musicMenu.play();
+    this.musicMenu = this.musicMenu || this.add.audio('mainMenuSound', 1 ,true);
+
+    if (!this.musicMenu.isPlaying) {
+      this.musicMenu.play();
+    }
 
     this.add.button(100, 300, 'playButton', this.startGame, this, 1, 0);
     this.add.button(450, 300, 'scoresButton', this.scoresMenu, this, 1, 0);

@@ -16,6 +16,12 @@ Rick.GameOver.prototype = {
 
     this.add.sprite(0, 0, 'gameOver');
 
+    $('#tweeting').fadeIn();
+    $('#tweeting').fadeOut();
+    $('#tweeting').fadeIn();
+    $('#tweeting').fadeOut();
+    $('#tweeting').fadeToggle();
+
     // The score
     this.scoreString = 'Your score is:';
     this.scoreText = this.game.add.text(75, 200, this.scoreString +this.game.state.states.Game.lastScore, { font: '36px "Press Start 2P"', fill: '#182450' });

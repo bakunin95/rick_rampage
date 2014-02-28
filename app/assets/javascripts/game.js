@@ -50,8 +50,11 @@ Rick.Game = function (game) {
   this.enemies;
   this.enemiesTime = 0; // used to create enemies in a time interval
   this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
+  this.nextEnemy2Time = 10000;
   this.enemyKillPoint = 20;
+  this.enemyKillPoint2 = 30;
   this.enemyVelocity = -400;
+  this.enemyVelocity2 = -500;
 
   // levels (of difficulty)
   this.levelTime;
@@ -88,6 +91,12 @@ Rick.Game = function (game) {
   this.countRampage = 1;
 
 
+  // Keys
+  this.keysText;
+  this.hideKeysInterval = 3000;
+  this.hideKeysTime = 0;
+
+
   //	You can use any of these from any function within this State.
   //	But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
 
@@ -107,9 +116,9 @@ Rick.Game.prototype = {
   	
 
     // Rock!!!
-    this.music = this.add.audio('titleMusic');
-    this.explosionSound = this.add.audio('explosionSound');
-    this.shootSound = this.add.audio('shootSound');
+    this.music = this.add.audio('titleMusic', 1, true);
+    this.explosionSound = this.add.audio('explosionSound', 0.4);
+    this.shootSound = this.add.audio('shootSound', 0.3);
     this.dieSound = this.add.audio('dieSound');
     this.deathSound = this.add.audio('deathSound');
     this.music.play();
@@ -164,6 +173,9 @@ Rick.Game.prototype = {
     this.lives = this.game.add.group();
     this.game.add.text(10, 450, 'Lives:', { font: '20px "Press Start 2P"', fill: '#fff' });
 
+    this.keysText = this.game.add.text(200, 230, 'Press spacebar to shoot \nPress up arrow key to jump:', { font: '20px "Press Start 2P"', fill: '#182450' });
+    this.hideKeysTime = this.game.time.now + this.hideKeysInterval;
+
     // The 3 lives as objects (head)
     for (var i = 0; i < 3; i++) 
     {
@@ -186,6 +198,8 @@ Rick.Game.prototype = {
   },
 
   update: function () {
+
+    this.hideKeys();
 
     this.createPlatform();
     this.setLevel();
@@ -243,12 +257,19 @@ Rick.Game.prototype = {
     if (this.game.time.now > this.speedTime) {
       if (this.platformVelocity < -100){
         this.platformVelocity -= 1;
-        if (this.platformsTimeAdd > 300){
+        if (this.platformsTimeAdd > 500){
             this.platformsTimeAdd -= 10;
         }
         this.speedTime = this.game.time.now + 1000;
       }
       
+    }
+  },
+
+  hideKeys: function () {
+    if (this.game.time.now > this.hideKeysTime) {
+      if (this.keysText.exists)
+        this.keysText.destroy();
     }
   },
 
@@ -275,13 +296,28 @@ Rick.Game.prototype = {
   },
 
   collisionHandler: function(bullet, enemy) {
+
+	//console.log(this.enemy.game.canvas.parentNode.childNodes[1].style.display);
+	//this.enemy.game.canvas.parentNode.childNodes[1].style.display = "inline-block";
+
+	//console.log(this.enemy.game.canvas.parentNode.childNodes.$("#tweeting");
+	//this.enemy.game.canvas.parentNode.innerHTML
+
+    //console.log(this.enemy);
+
+    if (this.enemy.key === "wasp") {
+    	this.score += this.enemyKillPoint;
+    	this.scoreText.content = this.scoreString + this.score;
+    } else if (this.enemy.key === "explode") {
+    	this.score += this.enemyKillPoint2; // 30 points if kill enemy no. 2 (instead of 20 points)
+    	this.scoreText.content = this.scoreString + this.score;
+	}
+
     //  When a bullet hits an alien we kill them both
     bullet.kill();
     enemy.kill();
 
     this.explosionSound.play();
-    this.score += this.enemyKillPoint;
-    this.scoreText.content = this.scoreString + this.score;
 
     //  And create an explosion :)
     var explosion = this.explosions.getFirstDead();
@@ -304,6 +340,9 @@ Rick.Game.prototype = {
         player.kill();
         this.dieSound.play();
         this.enemies.removeAll();
+
+    	$('#tweeting').fadeOut();
+
         this.createPlayer();
 
         // Create a new platform for him to land on
@@ -388,6 +427,9 @@ Rick.Game.prototype = {
 
 	  this.updatePlayerStats(this.score, $('#player_id').html());
 
+	  // add game score to tweet button
+    //$('#tweeting').find('a').attr("data-text", "My Latest Score: " + this.score);
+
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
     this.game.cache.destroy();
@@ -431,13 +473,20 @@ Rick.Game.prototype = {
   createEnemy: function () {
     if (this.game.time.now > this.enemiesTime) {
       this.enemy = this.game.add.sprite(600, 100, 'wasp');
+//      this.enemy2 = this.game.add.sprite(535, 106, 'explode');
+
       // this sets the bounding box (collision area) to be smaller, for more precise collision
       this.enemy.body.setSize(170, 110, 0, 0);
+//      this.enemy2.body.setSize(107, 106, 0, 0);
       this.enemy.animations.add('left', [0,1,2], 10, true);
       this.enemy.animations.play('left');
+//      this.enemy2.animations.add('right', [0,1,2,3,4], 20, true);
+//      this.enemy2.animations.play('right');
       this.enemy.outOfBoundsKill =  true;
+//      this.enemy2.outOfBoundsKill =  true;
 
       this.enemies.add(this.enemy);
+//      this.enemies.add(this.enemy2);
 
       if (this.enemy) {
         var yPos = [100, 125, 150, 175, 200, 225, 250];
@@ -445,6 +494,12 @@ Rick.Game.prototype = {
         this.enemy.body.velocity.x = this.enemyVelocity;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
+//      if (this.enemy2) {
+//        var yPos = [20, 30, 40, 50, 240, 255, 300];
+//        this.enemy2.reset(750, yPos[this.getRandom(0, yPos.length - 1)]);
+//        this.enemy2.body.velocity.x = this.enemyVelocity2;
+//        this.enemiesTime = this.game.time.now + this.nextEnemy2Time;
+//      }
     }
   },
 

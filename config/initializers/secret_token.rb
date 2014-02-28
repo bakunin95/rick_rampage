@@ -9,4 +9,4 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-RickRampage::Application.config.secret_key_base = '533a128473c196577f6abbfd8067eb1dc2cc3b309ae158723163aa0b7d35d9c29a6676ffe732a83f403a3b1f9b07e6a2067b1eac22aab041e490bde8997099f0'
+RickRampage::Application.config.secret_key_base = ENV['RAILS_SECRET_KEY_BASE']
