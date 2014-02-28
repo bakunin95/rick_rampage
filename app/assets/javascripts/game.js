@@ -109,9 +109,9 @@ Rick.Game.prototype = {
   	
 
     // Rock!!!
-    this.music = this.add.audio('titleMusic');
-    this.explosionSound = this.add.audio('explosionSound');
-    this.shootSound = this.add.audio('shootSound');
+    this.music = this.add.audio('titleMusic', 1, true);
+    this.explosionSound = this.add.audio('explosionSound', 0.4);
+    this.shootSound = this.add.audio('shootSound', 0.3);
     this.dieSound = this.add.audio('dieSound');
     this.deathSound = this.add.audio('deathSound');
     this.music.play();
