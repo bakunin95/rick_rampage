@@ -425,9 +425,9 @@ Rick.Game.prototype = {
 
   quitGame: function () {
 
-	// this.updatePlayerStats(this.score, $('#player_id').html());
+	  this.updatePlayerStats(this.score, $('#player_id').html());
 
-	// add game score to tweet button
+	  // add game score to tweet button
     //$('#tweeting').find('a').attr("data-text", "My Latest Score: " + this.score);
 
     // Here you should destroy anything you no longer need.
