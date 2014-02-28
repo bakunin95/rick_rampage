@@ -321,6 +321,9 @@ Rick.Game.prototype = {
         player.kill();
         this.dieSound.play();
         this.enemies.removeAll();
+
+    	$('#tweeting').fadeOut();
+
         this.createPlayer();
 
         // Create a new platform for him to land on
