@@ -320,7 +320,7 @@ Rick.Game.prototype = {
         this.dieSound.play();
         this.enemies.removeAll();
 
-    	$('#tweeting').hide();
+    	$('#tweeting').fadeOut();
 
         this.createPlayer();
 
