@@ -50,6 +50,7 @@ Rick.Game = function (game) {
   this.enemies;
   this.enemiesTime = 0; // used to create enemies in a time interval
   this.nextEnemyTime = 3000; // time span. Will decrease to increase difficult level
+  this.nextEnemy2Time = 10000;
   this.enemyKillPoint = 20;
   this.enemyKillPoint2 = 30;
   this.enemyVelocity = -400;
@@ -454,20 +455,20 @@ Rick.Game.prototype = {
   createEnemy: function () {
     if (this.game.time.now > this.enemiesTime) {
       this.enemy = this.game.add.sprite(600, 100, 'wasp');
-      this.enemy2 = this.game.add.sprite(535, 106, 'explode');
+//      this.enemy2 = this.game.add.sprite(535, 106, 'explode');
 
       // this sets the bounding box (collision area) to be smaller, for more precise collision
       this.enemy.body.setSize(170, 110, 0, 0);
-      this.enemy2.body.setSize(107, 106, 0, 0);
+//      this.enemy2.body.setSize(107, 106, 0, 0);
       this.enemy.animations.add('left', [0,1,2], 10, true);
       this.enemy.animations.play('left');
-      this.enemy2.animations.add('right', [0,1,2,3,4], 20, true);
-      this.enemy2.animations.play('right');
+//      this.enemy2.animations.add('right', [0,1,2,3,4], 20, true);
+//      this.enemy2.animations.play('right');
       this.enemy.outOfBoundsKill =  true;
-      this.enemy2.outOfBoundsKill =  true;
+//      this.enemy2.outOfBoundsKill =  true;
 
       this.enemies.add(this.enemy);
-      this.enemies.add(this.enemy2);
+//      this.enemies.add(this.enemy2);
 
       if (this.enemy) {
         var yPos = [100, 125, 150, 175, 200, 225, 250];
@@ -475,12 +476,12 @@ Rick.Game.prototype = {
         this.enemy.body.velocity.x = this.enemyVelocity;
         this.enemiesTime = this.game.time.now + this.nextEnemyTime;
       }
-      if (this.enemy2) {
-        var yPos = [20, 30, 40, 50, 240, 255, 300];
-        this.enemy2.reset(750, yPos[this.getRandom(0, yPos.length - 1)]);
-        this.enemy2.body.velocity.x = this.enemyVelocity2;
-        this.enemiesTime = this.game.time.now + this.nextEnemyTime;
-      }
+//      if (this.enemy2) {
+//        var yPos = [20, 30, 40, 50, 240, 255, 300];
+//        this.enemy2.reset(750, yPos[this.getRandom(0, yPos.length - 1)]);
+//        this.enemy2.body.velocity.x = this.enemyVelocity2;
+//        this.enemiesTime = this.game.time.now + this.nextEnemy2Time;
+//      }
     }
   },
 
