@@ -19,6 +19,25 @@
 
 </script>
 
+</head>
+<body>
+
+<!-- Facebook Like Button -->
+<div id="fb-root"></div>
+
+<%= render "/layouts/header" %>
+
+<%= yield %>
+
+<!-- Facebook Like Button Script -->
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 <script>
 	// Include the UserVoice JavaScript SDK (only needed once on a page)
 	UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/7yIm6iKtinsv4MdwYYQkxA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
@@ -53,23 +72,6 @@
 	// Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
 	UserVoice.push(['autoprompt', {}]);
 </script>
-
-</head>
-<body>
-
-<!-- Facebook Like Button -->
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-<%= render "/layouts/header" %>
-
-<%= yield %>
 
 </body>
 </html>
