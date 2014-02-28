@@ -13,11 +13,13 @@ body {
 }
 
 
-h1 a{
-	background: image-url('titleSmall.png');
-	width: 243px;
-	height: 90px;
-	margin-left: 150px;
+h1 {
+	background: image-url('title.png');
+	width: 532px;
+	height: 180px;
+	margin-left: 0;
+	margin-top: 5px;
+	margin-bottom: 0;
 	display:block;
 	
 	text-indent: 100%;

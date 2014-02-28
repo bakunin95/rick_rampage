@@ -50,6 +50,7 @@ gem 'omniauth'
 gem 'omniauth-facebook'
 
 # Environment private vars
+gem 'dotenv', group: :production
 gem 'dotenv-rails', groups: [:development, :test]
 
 group :development do
