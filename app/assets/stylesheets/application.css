@@ -16,6 +16,13 @@ body {
 	font-family: 'Press Start 2P', cursive;
 }
 
+#ga {
+	position: relative;
+	float: right;
+	clear: right;
+	z-index: 3;
+	margin-right: 20px;
+}
 
 #gameContainer {
   width: 800px;
