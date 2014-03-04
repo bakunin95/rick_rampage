@@ -1,5 +1,6 @@
 class ScoresController < ApplicationController
   before_action :set_score, only: [:show, :edit, :update, :destroy]
+  before_action :retrieve_top5, only: [:create, :top5]
 
   # GET /scores
   # GET /scores.json
@@ -26,6 +27,9 @@ class ScoresController < ApplicationController
   def create
 
     @score = Score.new(score_params)
+
+    min_score = @scores.min.points
+    return if @score.points <= min_score
 
     respond_to do |format|
       if @score.save
@@ -63,7 +67,6 @@ class ScoresController < ApplicationController
   end
 
   def top5
-    @scores = Score.order(points: :desc).limit(5)
     render json: @scores
   end
 
@@ -76,5 +79,9 @@ class ScoresController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def score_params
       params.require(:score).permit(:points, :user_id)
+    end
+
+    def retrieve_top5
+      @scores = Score.order(points: :desc).limit(5)
     end
 end
