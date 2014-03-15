@@ -4,15 +4,17 @@ Rick.Scores = function (game) {
 
 Rick.Scores.prototype = {
   preload: function () {
-    $.ajax({
+    var top5 = $.ajax({
       dataType: "json",
       url: '/scores/top5',
-      success: function (data) {
-        for (var i = 0; i < data.length; i += 1) {
-          this.game.add.text(350, 200 + i * 40, data[i].points, { fontSize: '34px', fill: '#fff', align: 'center' });
-        }
-      },
       context: this
+    });
+
+    top5.then(function (data) {
+      for (var i = 0; i < data.length; i += 1) {
+        this.game.add.text(200, 150 + i * 40, data[i].username || 'NO NAME', { font: '30px "Press Start 2P"', fill: '#fff', align: 'center' });
+        this.game.add.text(500, 150 + i * 40, data[i].points, { font: '30px "Press Start 2P"', fill: '#fff', align: 'center' });
+      }
     });
   },
 

@@ -20,4 +20,5 @@
 //= require game
 //= require scores
 //= require gameOver
+//= require top
 //= require_self

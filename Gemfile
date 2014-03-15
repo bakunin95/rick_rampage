@@ -44,9 +44,6 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-# Authentication
-gem 'devise'
-
 # Environment private vars
 gem 'dotenv', group: :production
 gem 'dotenv-rails', groups: [:development, :test]
