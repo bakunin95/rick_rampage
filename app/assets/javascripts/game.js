@@ -44,7 +44,7 @@ Rick.Game = function (game) {
   // bullets
   this.bullets;
   this.bullet;
-  this.bulletTime  = 0;
+  this.bulletTime = 0;
 
   // enemies
   this.enemies;
@@ -66,10 +66,10 @@ Rick.Game = function (game) {
 
   // explosion
   this.explosions;
-  
+
 
   // save amount of seconds passed at quitGame
-  this.speedTime= 0;
+  this.speedTime = 0;
 
 
   // text
@@ -78,18 +78,8 @@ Rick.Game = function (game) {
   this.scoreText;
   this.lastScore = 0;
 
-
   //Lives
   this.lives;
-
-  // Panic functionality
-  //this.panicButtonSprite; // pause button image
-  //this.panicButton;
-
-  // Rampage functionality
-  this.rampageKey; // rampage key is R
-  this.countRampage = 1;
-
 
   // Keys
   this.keysText;
@@ -110,10 +100,11 @@ Rick.Game.prototype = {
 
   create: function () {
 
+    $('#userName').addClass('hidden');
 
 
-  	// check if dead or not
-  	
+    // check if dead or not
+
 
     // Rock!!!
     this.music = this.add.audio('titleMusic', 1, true);
@@ -136,9 +127,9 @@ Rick.Game.prototype = {
     //  The platforms group contains the ground and the 2 ledges we can jump on
     this.platforms = this.game.add.group();
 
-    this.platform = this.game.add.sprite(0,0, 'ground');
+    this.platform = this.game.add.sprite(0, 0, 'ground');
     this.platform.reset(200, 400);
-    this.platform.scale.setTo(4,2);
+    this.platform.scale.setTo(4, 2);
     this.platform.body.velocity.x = this.platformVelocity;
     this.platform.body.immovable = true;
 
@@ -150,7 +141,6 @@ Rick.Game.prototype = {
     // Adds Keyboard controls
     this.keyboard = this.game.input.keyboard.createCursorKeys();
     this.fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    this.rampageKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
 
     // Add Enemies
     this.enemiesTime = this.game.time.now + this.nextEnemyTime;
@@ -177,23 +167,22 @@ Rick.Game.prototype = {
     this.hideKeysTime = this.game.time.now + this.hideKeysInterval;
 
     // The 3 lives as objects (head)
-    for (var i = 0; i < 3; i++) 
-    {
-        var head = this.lives.create(160 + (50 * i), 460, 'head');
-        head.anchor.setTo(0.5, 0.5);
-        head.alpha = 0.4;
+    for (var i = 0; i < 3; i++) {
+      var head = this.lives.create(160 + (50 * i), 460, 'head');
+      head.anchor.setTo(0.5, 0.5);
+      head.alpha = 0.4;
     }
 
     // Pause button ('pause' is the pause spritesheet in preloader.js)
     // IMPORTANT NOTE: MUST LOAD AFTER THE BACKGROUND
     //this.pauseButton = this.add.button('pause')
-    
+
     //this.panicButton = this.game.add.button(0, 0, 'panicButtonSprite', this.actionOnClick, this, 1, 2, 1);
 
     // Background tunnel settings
     //this.tunnelFilter = this.add.filter('Tunnel', 800, 500, this.background.desert);
-	//this.tunnelFilter.origin = 2.0;
-	//this.background.filters = [this.tunnelFilter];
+    //this.tunnelFilter.origin = 2.0;
+    //this.background.filters = [this.tunnelFilter];
 
   },
 
@@ -211,13 +200,13 @@ Rick.Game.prototype = {
     this.game.physics.collide(this.player, this.enemies, this.collisionHandlerHitEnemy, null, this);
 
     if (this.player.body.touching.down) {
-    	this.player.animations.play('right');
+      this.player.animations.play('right');
     }
 
 
     this.checkPlayerJump();
 
-     // Reset Ricks Position
+    // Reset Ricks Position
     this.checkRickPosition();
 
     //Increase speed of platforms for every second
@@ -230,39 +219,26 @@ Rick.Game.prototype = {
     }
 
     // Kill player if they touch the ground
-    if (this.player.y > 450 ) {
-    	this.collisionHandlerFall(this.player);
+    if (this.player.y > 450) {
+      this.collisionHandlerFall(this.player);
     }
 
     // Kill player if they go out of left side of screen
-    if (this.player.x < -10 ) {
-    	this.collisionHandlerFall(this.player);
+    if (this.player.x < -10) {
+      this.collisionHandlerFall(this.player);
     }
-
-	// Tunnel filter settings
-    //this.tunnelFilter.update();
-	//this.tunnelFilter.origin = this.tunnelFilter.origin + 0.001;
-
-	//  Want Rampage?
-    if (this.rampageKey.isDown) {
-      //console.log("R down actionRampage count: " + this.countRampage);
-      if (this.countRampage < 2) {
-      	this.actionRampage();
-      }
-    }
-
   },
 
-  updateSpeed: function() {
+  updateSpeed: function () {
     if (this.game.time.now > this.speedTime) {
-      if (this.platformVelocity < -100){
+      if (this.platformVelocity < -100) {
         this.platformVelocity -= 1;
-        if (this.platformsTimeAdd > 500){
-            this.platformsTimeAdd -= 10;
+        if (this.platformsTimeAdd > 500) {
+          this.platformsTimeAdd -= 10;
         }
         this.speedTime = this.game.time.now + 1000;
       }
-      
+
     }
   },
 
@@ -273,45 +249,44 @@ Rick.Game.prototype = {
     }
   },
 
-
-  checkPlayerJump: function() {
-    if (this.keyboard.up.isDown && this.player.body.touching.down){
+  checkPlayerJump: function () {
+    if (this.keyboard.up.isDown && this.player.body.touching.down) {
       this.jumpcount = 0;
       this.player.animations.play('jump');
       this.player.body.velocity.y = -350;
       this.jumpcount++;
       this.jumpTimeBegin = this.game.time.now + 300;
-    } else if (this.keyboard.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1){
+    } else if (this.keyboard.up.isDown && this.game.time.now > this.jumpTimeBegin && this.jumpcount === 1) {
       this.player.body.velocity.y = -400;
       this.jumpcount++;
       this.player.animations.play('doubleJump');
     }
   },
 
-  checkRickPosition: function() {
+  checkRickPosition: function () {
     if (this.game.time.now > this.posResetTime) {
-      this.player.body.x = 100; 
+      this.player.body.x = 100;
       this.posResetTime = this.game.time.now + this.posResetIntervalTime;
     }
   },
 
-  collisionHandler: function(bullet, enemy) {
+  collisionHandler: function (bullet, enemy) {
 
-	//console.log(this.enemy.game.canvas.parentNode.childNodes[1].style.display);
-	//this.enemy.game.canvas.parentNode.childNodes[1].style.display = "inline-block";
+    //console.log(this.enemy.game.canvas.parentNode.childNodes[1].style.display);
+    //this.enemy.game.canvas.parentNode.childNodes[1].style.display = "inline-block";
 
-	//console.log(this.enemy.game.canvas.parentNode.childNodes.$("#tweeting");
-	//this.enemy.game.canvas.parentNode.innerHTML
+    //console.log(this.enemy.game.canvas.parentNode.childNodes.$("#tweeting");
+    //this.enemy.game.canvas.parentNode.innerHTML
 
     //console.log(this.enemy);
 
     if (this.enemy.key === "wasp") {
-    	this.score += this.enemyKillPoint;
-    	this.scoreText.content = this.scoreString + this.score;
+      this.score += this.enemyKillPoint;
+      this.scoreText.content = this.scoreString + this.score;
     } else if (this.enemy.key === "explode") {
-    	this.score += this.enemyKillPoint2; // 30 points if kill enemy no. 2 (instead of 20 points)
-    	this.scoreText.content = this.scoreString + this.score;
-	}
+      this.score += this.enemyKillPoint2; // 30 points if kill enemy no. 2 (instead of 20 points)
+      this.scoreText.content = this.scoreString + this.score;
+    }
 
     //  When a bullet hits an alien we kill them both
     bullet.kill();
@@ -326,45 +301,16 @@ Rick.Game.prototype = {
 
   },
 
-  collisionHandlerHitEnemy: function(player, enemy) {
-  	enemy.kill();
+  collisionHandlerHitEnemy: function (player, enemy) {
+    enemy.kill();
     this.explosionSound.play();
 
-  	// get the first head (out of the 3 that exist)
-  	var live = this.lives.getFirstAlive();
+    // get the first head (out of the 3 that exist)
+    var live = this.lives.getFirstAlive();
 
-  	// if any lives exist, kill them
-  	if (live)
-    {
-        live.kill();
-        player.kill();
-        this.dieSound.play();
-        this.enemies.removeAll();
+    this.checkPlayerLives(live, player);
 
-    	$('#tweeting').fadeOut();
-
-        this.createPlayer();
-
-        // Create a new platform for him to land on
-    this.platform = this.game.add.sprite(0,0, 'ground');
-    this.platform.reset(200, 400);
-    this.platform.scale.setTo(4,2);
-    this.platform.body.velocity.x = this.platformVelocity;
-    this.platform.body.immovable = true;
-    this.platforms.add(this.platform);
-
-    }
-
-  	// When the player dies
-    if (this.lives.countLiving() < 1){
-    	player.kill();
-      this.deathSound.play();
-    	this.quitGame();
-      
-
-    }
-
-  	//  And create an explosion :)
+    //  And create an explosion :)
     var explosion = this.explosions.getFirstDead();
     explosion.reset(enemy.body.x + 50, enemy.body.y + 30);
     explosion.play('explosion', 30, false, true);
@@ -376,39 +322,12 @@ Rick.Game.prototype = {
 
   },
 
+  collisionHandlerFall: function (player) {
 
-
-  collisionHandlerFall: function(player){
-
-  	
     // get the first head (out of the 3 that exist)
-  	var live = this.lives.getFirstAlive();
-  	
+    var live = this.lives.getFirstAlive();
 
-  	// if any lives exist, kill them
-  	if (live)
-    {
-        live.kill();
-        player.kill();
-        this.enemies.removeAll();
-        this.dieSound.play();
-        this.createPlayer();
-
-        // Create a new platform for him to land on
-        this.platform = this.game.add.sprite(0,0, 'ground');
-        this.platform.reset(200, 400);
-        this.platform.scale.setTo(4,2);
-        this.platform.body.velocity.x = this.platformVelocity;
-        this.platform.body.immovable = true;
-        this.platforms.add(this.platform);
-    }
-  	// When the player dies
-    if (this.lives.countLiving() < 1){
-    	player.kill();
-    	this.quitGame();
-      this.deathSound.play();
-      
-    }
+    this.checkPlayerLives(live, player);
 
     //  And create an explosion :)
     var explosion = this.explosions.getFirstDead();
@@ -417,7 +336,32 @@ Rick.Game.prototype = {
 
   },
 
-  setUpExplosions: function(explosion) {
+  checkPlayerLives: function (live, player) {
+    // if any lives exist, kill them
+    if (live) {
+      live.kill();
+      player.kill();
+      this.enemies.removeAll();
+      this.dieSound.play();
+      this.createPlayer();
+
+      // Create a new platform for him to land on
+      this.platform = this.game.add.sprite(0, 0, 'ground');
+      this.platform.reset(200, 400);
+      this.platform.scale.setTo(4, 2);
+      this.platform.body.velocity.x = this.platformVelocity;
+      this.platform.body.immovable = true;
+      this.platforms.add(this.platform);
+    }
+    // When the player dies
+    if (this.lives.countLiving() < 1) {
+      player.kill();
+      this.quitGame();
+      this.deathSound.play();
+    }
+  },
+
+  setUpExplosions: function (explosion) {
     explosion.anchor.x = 0.5;
     explosion.anchor.y = 0.5;
     explosion.animations.add('explosion');
@@ -425,10 +369,7 @@ Rick.Game.prototype = {
 
   quitGame: function () {
 
-	  this.updatePlayerStats(this.score, $('#player_id').html());
-
-	  // add game score to tweet button
-    //$('#tweeting').find('a').attr("data-text", "My Latest Score: " + this.score);
+    var top5 = this.getTop5();
 
     // Here you should destroy anything you no longer need.
     // Stop music, delete sprites, purge caches, free resources, all that good stuff.
@@ -441,7 +382,7 @@ Rick.Game.prototype = {
     this.music.stop();
 
     this.lastScore = this.score;
-	  this.countRampage = 1; // reset count rage so get one chance at Rampage on new game start
+    this.countRampage = 1; // reset count rage so get one chance at Rampage on new game start
     this.score = 0;
     this.nextEnemyTime = 3000;
 
@@ -450,13 +391,27 @@ Rick.Game.prototype = {
     this.player.revive();
     this.lives.callAll('revive');
 
-    //this.game.state.start('MainMenu');
-    this.game.state.start('GameOver');
-
+    if (this.lastScore < this._minPoint(top5)) {
+      this.game.state.start('GameOver');
+    } else {
+      this.game.state.start('Top5');
+    }
   },
 
-   createPlayer: function () {
-  	// Create player
+  _minPoint: function (array) {
+    if (array.length === 0)
+      return 0;
+
+    for (var i = 1, min = array[0].points; i < array.length; i += 1) {
+      if (min > array[i].points)
+        min = array[i].points;
+    }
+
+    return min;
+  },
+
+  createPlayer: function () {
+    // Create player
     this.player = this.game.add.sprite(100, 0, 'rick');
     this.player.body.setSize(60, 90, 0, 0);
     this.player.fixedToCamera;
@@ -465,7 +420,7 @@ Rick.Game.prototype = {
     // player will still die, but will survive if in the air at the time
     this.player.body.collideWorldBounds = false;
 
-    this.player.animations.add('right', [0,1,2,3,4,5,6,7], 10, true);
+    this.player.animations.add('right', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
     this.player.animations.add('jump', [8], 10, false);
     this.player.animations.add('doubleJump', [9], 10, false);
   },
@@ -478,11 +433,11 @@ Rick.Game.prototype = {
       // this sets the bounding box (collision area) to be smaller, for more precise collision
       this.enemy.body.setSize(170, 110, 0, 0);
 //      this.enemy2.body.setSize(107, 106, 0, 0);
-      this.enemy.animations.add('left', [0,1,2], 10, true);
+      this.enemy.animations.add('left', [0, 1, 2], 10, true);
       this.enemy.animations.play('left');
 //      this.enemy2.animations.add('right', [0,1,2,3,4], 20, true);
 //      this.enemy2.animations.play('right');
-      this.enemy.outOfBoundsKill =  true;
+      this.enemy.outOfBoundsKill = true;
 //      this.enemy2.outOfBoundsKill =  true;
 
       this.enemies.add(this.enemy);
@@ -503,8 +458,8 @@ Rick.Game.prototype = {
     }
   },
 
-  createPlatform: function() {
-    this.platforms.forEachAlive(function(platform){
+  createPlatform: function () {
+    this.platforms.forEachAlive(function (platform) {
       if (platform.offset.x < 0) {
         platform.outOfBoundsKill = true;
       }
@@ -518,7 +473,7 @@ Rick.Game.prototype = {
       if (this.platform) {
         var xPos = [800, 900];
         var yPos = [350, 400, 450];
-        this.platform.scale.setTo(2,2);
+        this.platform.scale.setTo(2, 2);
         this.platform.reset(xPos[this.getRandom(0, xPos.length - 1)], yPos[this.getRandom(0, yPos.length - 1)]);
         this.platform.body.velocity.x = this.platformVelocity;
         console.log(this.platform.body.velocity.x)
@@ -533,41 +488,22 @@ Rick.Game.prototype = {
     return Math.round(Math.random() * (max - min) + min);
   },
 
-  updatePlayerStats: function(latestScore, playerID) {
+  getTop5: function () {
+    var top5 = [];
+    $.ajax({
+      dataType: "json",
+      url: '/scores/top5',
+      context: this,
+      async: false,
+      success: function(data) {
+        top5 = data;
+      }
+    });
 
-
-    // only store score if score not equal to zero and not the same score as the previous game score
-    if (latestScore !== 0 && latestScore !== $('#latest_score').html()) {
-      var res = $.ajax({
-        type: 'POST',
-        url: "/scores",
-        data: JSON.stringify({
-          "user_id":playerID,
-          "points":latestScore
-        }),
-        error: function(e) {
-          console.log(e);
-        },
-        dataType: "json",
-        contentType: "application/json"
-      });
-
-      var addGameStats = function(data) {
-        console.log("data is: " + data);
-        $('#tweeting').find('a').attr("data-text", "<%= My Latest Score: @email_string %>");
-        $('#latest_score').html(data.points);
-
-      };
-
-      res.done(function(data, textStatus, xhr) {
-        addGameStats(data);
-        console.log(data);
-      });
-
-    };
+    return top5;
   },
 
-  fireBullet: function() {
+  fireBullet: function () {
 
     //  To avoid them being allowed to fire too fast we set a time limit
     if (this.game.time.now > this.bulletTime) {
@@ -585,7 +521,7 @@ Rick.Game.prototype = {
 
   },
 
-  setLevel: function() {
+  setLevel: function () {
     // increase difficult
     if (this.game.time.now > this.levelTime) {
       if (this.nextEnemyTime > 500) {
@@ -594,17 +530,6 @@ Rick.Game.prototype = {
 
       this.levelTime += this.changeLevelTime;
     }
-  },
-
-  actionRampage: function() {
-
-    //this.panicButton.destroy();
-    this.enemies.removeAll();
-
-    this.countRampage += 1; // increment so when R is pressed a second time it does not allow this function to load (i.e. you only get one rampage per game
-    //console.log("actionRampage count: " + this.countRampage);
-    //this.rampageKey = this.game.input.keyboard.removeKey(Phaser.Keyboard.R);
-
   }
 
 };
