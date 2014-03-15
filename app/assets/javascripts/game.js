@@ -534,7 +534,18 @@ Rick.Game.prototype = {
   },
 
   updatePlayerStats: function(latestScore, playerID) {
+    $.ajax({
+      dataType: "json",
+      url: '/scores/top5',
+      success: function (data) {
+        for (var i = 0; i < data.length; i += 1) {
+          this.game.add.text(350, 200 + i * 40, data[i].points, { fontSize: '34px', fill: '#fff', align: 'center' });
+        }
+      },
+      context: this
+    });
 
+    var player = prompt("Insert you name");
 
     // only store score if score not equal to zero and not the same score as the previous game score
     if (latestScore !== 0 && latestScore !== $('#latest_score').html()) {

@@ -24,7 +24,7 @@ Rick.GameOver.prototype = {
 
     // The score
     this.scoreString = 'Your score is:';
-    this.scoreText = this.game.add.text(75, 200, this.scoreString +this.game.state.states.Game.lastScore, { font: '36px "Press Start 2P"', fill: '#182450' });
+    this.scoreText = this.game.add.text(75, 200, this.scoreString + this.game.state.states.Game.lastScore, { font: '36px "Press Start 2P"', fill: '#182450' });
 
     this.add.button(293, 260, 'rankButton', this.scoresMenu, this, 0, 1);
     this.add.button(198, 342, 'playAgainButton', this.startGame, this, 1, 0);
