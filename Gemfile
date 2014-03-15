@@ -44,11 +44,6 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-# Authentication
-gem 'devise'
-gem 'omniauth'
-gem 'omniauth-facebook'
-
 # Environment private vars
 gem 'dotenv-rails', groups: [:development, :test]
 
@@ -60,10 +55,3 @@ group :production do
   # heroku needs that
   gem 'rails_12factor'
 end
-
-# user friendly id & permalinks
-gem 'friendly_id'
-
-# for testing
-gem 'rspec-rails'
-gem 'capybara'
