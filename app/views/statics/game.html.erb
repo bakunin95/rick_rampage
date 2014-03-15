@@ -32,7 +32,7 @@
 
 <div id="gameContainer" class="blockCenter">
 
-
+  <input type="text" id="userName" placeholder="Enter your name" class="gameUserInput hidden">
 
 </div> <!-- end gameContainer -->
 
@@ -46,8 +46,8 @@
     game.state.add('Game', Rick.Game);
     game.state.add('Scores', Rick.Scores);
     game.state.add('GameOver', Rick.GameOver);
+    game.state.add('Top5', Rick.Top5);
 
-    //game.state.start('Boot');
     game.state.start('Boot');
   });
 </script>

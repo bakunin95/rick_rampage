@@ -1,68 +1,18 @@
 class ScoresController < ApplicationController
-  before_action :set_score, only: [:show, :edit, :update, :destroy]
   before_action :retrieve_top5, only: [:create, :top5]
 
-  # GET /scores
-  # GET /scores.json
-  def index
-    @scores = Score.all
-  end
+  respond_to :json
 
-  # GET /scores/1
-  # GET /scores/1.json
-  def show
-  end
-
-  # GET /scores/new
-  def new
-    @score = Score.new
-  end
-
-  # GET /scores/1/edit
-  def edit
-  end
-
-  # POST /scores
-  # POST /scores.json
   def create
-
     @score = Score.new(score_params)
 
-    min_score = @scores.min.points
+    min_score = @scores.any? ? @scores.min.points : 0
     return if @score.points <= min_score
 
-    respond_to do |format|
-      if @score.save
-        format.html { redirect_to @score, notice: 'Score was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @score }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @score.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /scores/1
-  # PATCH/PUT /scores/1.json
-  def update
-    respond_to do |format|
-      if @score.update(score_params)
-        format.html { redirect_to @score, notice: 'Score was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @score.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /scores/1
-  # DELETE /scores/1.json
-  def destroy
-    @score.destroy
-    respond_to do |format|
-      format.html { redirect_to scores_url }
-      format.json { head :no_content }
+    if @score.save
+      render json: @score, status: :created, location: @score
+    else
+      render json: @score.errors, status: :unprocessable_entity
     end
   end
 
@@ -71,14 +21,8 @@ class ScoresController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_score
-      @score = Score.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
     def score_params
-      params.require(:score).permit(:points, :user_id)
+      params.require(:score).permit(:points, :username)
     end
 
     def retrieve_top5

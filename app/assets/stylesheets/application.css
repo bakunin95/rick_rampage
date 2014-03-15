@@ -119,3 +119,20 @@ body {
 .score_table {
 	border: 1px solid gray;
 }
+
+
+.gameUserInput {
+  display: block;
+  position: absolute;
+  height: 40px;
+  width: 330px;
+  line-height: 40px;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 20px;
+  color: #333333;
+}
+
+.hidden {
+  display: none;
+  visibility: hidden;
+}

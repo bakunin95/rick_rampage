@@ -16,11 +16,12 @@ Rick.GameOver.prototype = {
 
     this.add.sprite(0, 0, 'gameOver');
 
-    $('#tweeting').fadeIn();
-    $('#tweeting').fadeOut();
-    $('#tweeting').fadeIn();
-    $('#tweeting').fadeOut();
-    $('#tweeting').fadeToggle();
+    $('#tweeting')
+      .fadeIn()
+      .fadeOut()
+      .fadeIn()
+      .fadeOut()
+      .fadeToggle();
 
     // The score
     this.scoreString = 'Your score is:';
@@ -31,7 +32,7 @@ Rick.GameOver.prototype = {
     this.add.button(232, 425, 'mainMenuButton', this.mainMenu, this, 0, 1);
 
   },
-  
+
 
   update: function () {
 

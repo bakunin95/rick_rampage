@@ -1,4 +1,3 @@
-
 Rick.MainMenu = function (game) {
 
   this.music = null;
@@ -16,7 +15,7 @@ Rick.MainMenu.prototype = {
 
     this.add.sprite(0, 0, 'preloaderBackground');
 
-    this.musicMenu = this.musicMenu || this.add.audio('mainMenuSound', 1 ,true);
+    this.musicMenu = this.musicMenu || this.add.audio('mainMenuSound', 1, true);
 
     if (!this.musicMenu.isPlaying) {
       this.musicMenu.play();
@@ -25,7 +24,7 @@ Rick.MainMenu.prototype = {
     this.add.button(100, 300, 'playButton', this.startGame, this, 1, 0);
     this.add.button(450, 300, 'scoresButton', this.scoresMenu, this, 1, 0);
 
-	  // Add Player Statistics
+    // Add Player Statistics
     this.playerStats($('.score_div'));
 
   },
@@ -36,9 +35,9 @@ Rick.MainMenu.prototype = {
 
   },
 
-  playerStats: function(node) { // player states load
-  	
-	  node.fadeIn( 1200 );
+  playerStats: function (node) { // player states load
+
+    node.fadeIn(1200);
 
   },
 
@@ -47,7 +46,7 @@ Rick.MainMenu.prototype = {
     this.musicMenu.stop();
 
     // hide stats menus
-    $('.score_div').fadeOut( 1200 );
+    $('.score_div').fadeOut(1200);
 
     //	And start the actual game
     this.game.state.start('Game');
