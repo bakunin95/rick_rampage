@@ -21,7 +21,7 @@
 //= require gameOver
 //= require top
 //= require_self
-(function() {
+$(document).ready(function(){
   if ($) {
     var token = $( 'meta[name="csrf-token"]' ).attr( 'content' );
 
@@ -31,4 +31,4 @@
       }
     });
   }
-})();
+});
