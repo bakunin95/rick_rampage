@@ -6,8 +6,8 @@ class ScoresController < ApplicationController
   def create
     @score = Score.new(score_params)
 
-    min_score = @scores.any? ? @scores.min.points : 0
-    return if @score.points <= min_score
+    #min_score = @scores.any? ? @scores.min.points : 0
+    #return if @score.points <= min_score
 
     if @score.save
       render json: @score, status: :created, location: @score

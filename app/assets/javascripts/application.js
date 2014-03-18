@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require phaser
 //= require boot
 //= require preloader
@@ -22,3 +21,14 @@
 //= require gameOver
 //= require top
 //= require_self
+$(document).ready(function(){
+  if ($) {
+    var token = $( 'meta[name="csrf-token"]' ).attr( 'content' );
+
+    $.ajaxSetup( {
+      beforeSend: function ( xhr ) {
+        xhr.setRequestHeader( 'X-CSRF-Token', token );
+      }
+    });
+  }
+});
