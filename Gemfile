@@ -45,6 +45,7 @@ end
 # gem 'debugger', group: [:development, :test]
 
 # Environment private vars
+gem 'dotenv', group: :production
 gem 'dotenv-rails', groups: [:development, :test]
 
 group :development do
