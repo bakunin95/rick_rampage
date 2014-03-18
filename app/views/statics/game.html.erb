@@ -1,55 +1,62 @@
-<div class="score_div" id="tweeting">
-	<br>
-	<a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-hashtags="rickrampage" data-text="Rick Rampage! (Launch Release)" data-url="http://rickrampage.herokuapp.com"></a>
-	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
-	</script>
-
-	<br><br>
-
-	<div class="fb-like" data-href="http://rickrampage.herokuapp.com" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true">
-	</div>
-
-	<br><br>
-
-
-	<!-- Place this tag where you want the +1 button to render. -->
-	<div class="g-plusone" data-annotation="inline" data-width="140" data-callback="gplus" data-href="http://rickrampage.herokuapp.com"></div>
-
-	<!-- Place this tag after the last +1 button tag. -->
-	<script type="text/javascript">
-	  (function() {
-	    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-	    po.src = 'https://apis.google.com/js/platform.js';
-	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-	  })();
-	</script>
-
-</div>
-
 <div id="container">
 
-<!--<h1>Rick Rampage</h1>-->
+<div id="empty-left"></div>
 
-<div id="gameContainer" class="blockCenter">
+    <div id="center-wrapper">
 
-  <input type="text" id="userName" placeholder="Enter your name" class="gameUserInput hidden">
+        <div id="gameContainer" class="blockCenter">
 
-</div> <!-- end gameContainer -->
+          <input type="text" id="userName" placeholder="Enter your name" class="gameUserInput hidden">
 
-<script>
-  $(document).ready(function(){
-    var game = new Phaser.Game(800, 500, Phaser.AUTO, 'gameContainer');
+        </div> <!-- end gameContainer -->
 
-    game.state.add('Boot', Rick.Boot);
-    game.state.add('Preloader', Rick.Preloader);
-    game.state.add('MainMenu', Rick.MainMenu);
-    game.state.add('Game', Rick.Game);
-    game.state.add('Scores', Rick.Scores);
-    game.state.add('GameOver', Rick.GameOver);
-    game.state.add('Top5', Rick.Top5);
+    </div>
 
-    game.state.start('Boot');
-  });
-</script>
+    <script>
+      $(document).ready(function(){
+        var game = new Phaser.Game(800, 500, Phaser.AUTO, 'gameContainer');
+
+        game.state.add('Boot', Rick.Boot);
+        game.state.add('Preloader', Rick.Preloader);
+        game.state.add('MainMenu', Rick.MainMenu);
+        game.state.add('Game', Rick.Game);
+        game.state.add('Scores', Rick.Scores);
+        game.state.add('GameOver', Rick.GameOver);
+        game.state.add('Top5', Rick.Top5);
+
+        game.state.start('Boot');
+      });
+    </script>
+
+
+    <div id="social-media">
+      <div class="score_div" id="tweeting">
+            <br>
+            <a href="https://twitter.com/share" class="twitter-share-button" data-size="large" data-hashtags="rickrampage" data-text="Rick Rampage! (Launch Release)" data-url="http://rickrampage.herokuapp.com"></a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+            </script>
+
+            <br><br>
+
+            <div class="fb-like" data-href="http://rickrampage.herokuapp.com" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true">
+            </div>
+
+            <br><br>
+
+
+            <!-- Place this tag where you want the +1 button to render. -->
+            <div class="g-plusone" data-annotation="inline" data-width="140" data-callback="gplus" data-href="http://rickrampage.herokuapp.com"></div>
+
+            <!-- Place this tag after the last +1 button tag. -->
+            <script type="text/javascript">
+              (function() {
+                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                po.src = 'https://apis.google.com/js/platform.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+              })();
+            </script>
+
+      </div> 
+    </div><!-- end social media div -->
 
 </div> <!-- end container -->

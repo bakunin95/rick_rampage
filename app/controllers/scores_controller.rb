@@ -7,7 +7,10 @@ class ScoresController < ApplicationController
     @score = Score.new(score_params)
 
     min_score = @scores.any? ? @scores.min.points : 0
-    return if @score.points <= min_score
+    if @score.points <= min_score
+      render json: {}
+      return
+    end
 
     if @score.save
       render json: @score, status: :created, location: @score

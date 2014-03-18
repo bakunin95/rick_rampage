@@ -1,11 +1,118 @@
+<div class="about-container">
+    <div id="about-wrapper">
+
+      <div id="game-about">
+        <aside id="blurb">
+          <h2>About the game</h2>
+          <p>Rick Rampage is a collaborative project, produced in General Assembly's Web Development Immersive course in Sydney, Australia. It was built using Phaser.js, Javascript, jQuery, & Ruby on Rails.</p>
+          <p>General Assembly is a quickly expanding global tech school. Learn more about it <a href="https://generalassemb.ly/education/web-development-immersive?utm_campaign=2014+Q1+Other+%5Bsydney%5D+wdi3-student-project&utm_medium=ga_public_engagement&utm_source=rickrampage">here</a>.</p>
+          <div class="clear"></div>
+        </aside>
+
+        <aside id="GA"></aside>
+
+      </div>
+
+      <h2>The Team</h2>
+
+      <div class="prof-wrapper">
+          <div class="profile">
+            <aside class="picture nick"></aside>
+            <section>
+              <h2>Nick Morgan</h2>
+              <p>Team Manager, Creative Director, Front-End Developer</p>
+              <br><a href="https://github.com/cptnmrgn">Github.</a>
+            </section>
+          </div>
+
+          <div class="dropdown">
+            <section class="drop">
+              <p>Hailing from New York City, Nick is an artist, designer, and aspiring developer. Check out his work in the links below.</p>
+            </section>
+          </div> 
+
+      </div>
+
+      <div class="prof-wrapper">
+          <div class="profile">
+            <aside class="picture alberto"></aside>
+            <section>
+              <h2>Alberto Forni</h3>
+              <p>Lead Developer, Game Developer</p>
+              <br><br><a href="https://github.com/albertodotcom">Github.</a>
+            </section>
+          </div>
+
+           <div class="dropdown">
+            <section class="drop">
+              <p>Developer, Designer, Artist</p>
+            </section>
+          </div> 
+      </div>
+      
+      <div class="prof-wrapper">
+          <div class="profile">
+            <aside class="picture ed"></aside>
+            <section>
+              <h2>Ed Fastovski</h2>
+              <p>Game Developer, Front-End Developer</p>
+              <br><br><a href="https://github.com/ed-fast">Github.</a>
+            </section>
+          </div>
+
+           <div class="dropdown">
+            <section class="drop">
+              <p>Developer, Designer, Artist</p>
+            </section>
+          </div> 
+      </div> 
+      
+      <div class="prof-wrapper">
+          <div class="profile" id="luke">
+            <aside class="picture luke"></aside>
+            <section>
+              <h2>Luke Schoen</h2>
+              <p>Back-End Developer, Social Media/Analytics Strategist</p>
+              <br><a href="https://github.com/ltfschoen">Github.</a>
+            </section>
+          </div>
+
+           <div class="dropdown">
+            <section class="drop">
+              <p>Developer, Designer, Artist</p>
+            </section>
+          </div> 
+      </div> 
 
 
-<div id="container">
 
-<div id="aboutcontainer"></div>	
-<h1><a class="homelink" href="/">Rick Rampage</a></h1>
-<h2>About Us</h2>
-<p>Created by WDI Sydney</p>
-
+    </div>  
 
 </div>
+
+<script>
+
+var dropdown = function(){
+  var area = $(this).closest('.prof-wrapper').find('.dropdown');
+  area.stop().css('display','block').animate({height:'150px'}, 300);
+  // area.slideDown();
+};
+
+var close = function(){
+  var area = $(this).find('.dropdown');
+  area.css('display','none').animate({height:'0px'}, 300);
+  // area.slideUp();
+};
+
+var scroll = function(){
+  $("html, body").animate({ scrollTop: $(document).height() }, 1000);
+};
+
+$('.profile').on('mouseenter', dropdown);
+$('.prof-wrapper').on('mouseleave', close);
+
+$('#luke').on('mouseenter', scroll);
+
+
+  
+</script>
