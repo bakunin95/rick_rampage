@@ -18,7 +18,7 @@ Rick.Top5.prototype = {
       .removeClass('hidden')
       .focus();
 
-    this.add.button(this.game.stage.offset.x + 265, this.game.stage.offset.y + 260, 'saveButton', this.saveScore, this, 0, 1);
+    this.add.button(this.game.stage.offset.x + 265, this.game.stage.offset.y + 160, 'saveButton', this.saveScore, this, 0, 1);
   },
 
   saveScore: function () {
